@@ -2,8 +2,6 @@ package account
 
 import (
 	"time"
-
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/contact"
 )
 
 // Тип аккаунта
@@ -26,8 +24,10 @@ type Account struct {
 	Id int
 	// Тип
 	Type AccountType
-	// Контактная информация
-	contact.ContactInfo
+	// Номер телефона
+	PhoneNumber string
+	// Электронная почта
+	Email string
 	// Дата создания
 	CreatedAt time.Time
 	// Хэшированный пароль

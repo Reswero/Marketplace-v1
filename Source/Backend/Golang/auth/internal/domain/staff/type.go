@@ -1,7 +1,6 @@
 package staff
 
 import (
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/contact"
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/person"
 )
 
@@ -11,6 +10,4 @@ type Staff struct {
 	AccountId int
 	// Личная информация
 	person.Person
-	// Контактная информация
-	contact.ContactInfo
 }

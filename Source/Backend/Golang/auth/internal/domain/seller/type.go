@@ -1,7 +1,6 @@
 package seller
 
 import (
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/contact"
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/person"
 )
 
@@ -11,8 +10,6 @@ type Seller struct {
 	AccountId int
 	// Личная информация
 	person.Person
-	// Контактная информация
-	contact.ContactInfo
 	// Название компании
 	CompanyName string
 }
