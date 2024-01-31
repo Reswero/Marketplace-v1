@@ -35,3 +35,14 @@ type Account struct {
 	// Соль пароля
 	Salt string
 }
+
+func New(accType AccountType, phoneNumber, email, password, salt string) *Account {
+	return &Account{
+		Type:        accType,
+		PhoneNumber: phoneNumber,
+		Email:       email,
+		CreatedAt:   time.Now(),
+		Password:    password,
+		Salt:        salt,
+	}
+}
