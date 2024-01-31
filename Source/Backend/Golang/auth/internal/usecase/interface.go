@@ -14,5 +14,4 @@ type Account interface {
 
 	Get(ctx context.Context, id int) (*account.Account, error)
 	Update(ctx context.Context, acc *account.Account) error
-	Delete(ctx context.Context, id int) error
 }

@@ -131,3 +131,27 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.CustomerAccountD
 
 	return id, nil
 }
+
+// Получение аккаунта по идентификатору
+func (u *UseCase) Get(ctx context.Context, id int) (*account.Account, error) {
+	const op = "usecase.account.Get"
+
+	acc, err := u.repo.GetAccount(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return acc, nil
+}
+
+// Обновление аккаунта
+func (u *UseCase) Update(ctx context.Context, acc *account.Account) error {
+	const op = "usecase.account.Update"
+
+	err := u.repo.UpdateAccount(ctx, acc)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	return nil
+}
