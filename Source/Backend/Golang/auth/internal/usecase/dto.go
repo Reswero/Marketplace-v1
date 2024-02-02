@@ -1,5 +1,7 @@
 package usecase
 
+import "github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+
 type PersonDto struct {
 	FirstName string
 	LastName  string
@@ -31,4 +33,10 @@ type StaffAccountDto struct {
 type AdminAccountDto struct {
 	AccountDto
 	PersonDto
+}
+
+type CredentialsDto struct {
+	PhoneNumber string
+	AccountType account.AccountType
+	Password    string
 }

@@ -2,6 +2,8 @@ package account
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/password"
@@ -154,4 +156,26 @@ func (u *UseCase) Update(ctx context.Context, acc *account.Account) error {
 	}
 
 	return nil
+}
+
+// Проверяет верность учетных данных.
+// В случае, если данные верные, возвращает аккаунт, иначе nil
+func (u *UseCase) ValidateCredentials(ctx context.Context, dto *usecase.CredentialsDto) (*account.Account, bool, error) {
+	const op = "usecase.account.ValidatePassword"
+
+	acc, err := u.repo.GetAccountByPhoneNumber(ctx, dto.PhoneNumber, dto.AccountType)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, false, usecase.ErrAccountNotFound
+		}
+
+		return nil, false, formatter.FmtError(op, err)
+	}
+
+	valid := password.Validate(acc.Password, dto.Password, acc.Salt)
+	if !valid {
+		return nil, false, nil
+	}
+
+	return acc, true, nil
 }
