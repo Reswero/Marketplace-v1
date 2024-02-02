@@ -24,6 +24,7 @@ func New(logger *slog.Logger, ucAccount usecase.Account, ucSession usecase.Sessi
 
 	d.router = echo.New()
 	d.AddAccountRoutes()
+	d.AddSessionRoutes()
 
 	return d
 }
