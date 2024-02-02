@@ -2,12 +2,12 @@ package account
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/password"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase/adapters/repository"
+	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 )
 
 type UseCase struct {
@@ -26,7 +26,7 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 
 	pass, salt, err := password.Hash(acc.Password)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	dAcc := account.New(
@@ -39,7 +39,7 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 
 	id, err := u.repo.CreateAccount(ctx, dAcc)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	// Call to Users Microservice
@@ -54,7 +54,7 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.CustomerAccount
 
 	pass, salt, err := password.Hash(acc.Password)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	dAcc := account.New(
@@ -67,7 +67,7 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.CustomerAccount
 
 	id, err := u.repo.CreateAccount(ctx, dAcc)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	// Call to Users Microservice
@@ -82,7 +82,7 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.CustomerAccountD
 
 	pass, salt, err := password.Hash(acc.Password)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	dAcc := account.New(
@@ -95,7 +95,7 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.CustomerAccountD
 
 	id, err := u.repo.CreateAccount(ctx, dAcc)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	// Call to Users Microservice
@@ -110,7 +110,7 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.CustomerAccountD
 
 	pass, salt, err := password.Hash(acc.Password)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	dAcc := account.New(
@@ -123,7 +123,7 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.CustomerAccountD
 
 	id, err := u.repo.CreateAccount(ctx, dAcc)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	// Call to Users Microservice
@@ -138,7 +138,7 @@ func (u *UseCase) Get(ctx context.Context, id int) (*account.Account, error) {
 
 	acc, err := u.repo.GetAccount(ctx, id)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, formatter.FmtError(op, err)
 	}
 
 	return acc, nil
@@ -150,7 +150,7 @@ func (u *UseCase) Update(ctx context.Context, acc *account.Account) error {
 
 	err := u.repo.UpdateAccount(ctx, acc)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return formatter.FmtError(op, err)
 	}
 
 	return nil

@@ -4,11 +4,11 @@ import (
 	"context"
 	sqldb "database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
 )
 
@@ -35,12 +35,12 @@ func (r *Repository) CreateAccount(ctx context.Context, acc *account.Account) (i
 		Suffix(`RETURNING "Id"`).
 		ToSql()
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&acc.Id)
 	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return 0, formatter.FmtError(op, err)
 	}
 
 	return acc.Id, nil
@@ -55,7 +55,7 @@ func (r *Repository) GetAccount(ctx context.Context, id int) (*account.Account, 
 		Where(squirrel.Eq{"id": id}).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, formatter.FmtError(op, err)
 	}
 
 	acc := &account.Account{}
@@ -66,7 +66,7 @@ func (r *Repository) GetAccount(ctx context.Context, id int) (*account.Account, 
 		if errors.Is(err, sqldb.ErrNoRows) {
 			return nil, err
 		}
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, formatter.FmtError(op, err)
 	}
 
 	return acc, nil
@@ -84,12 +84,12 @@ func (r *Repository) UpdateAccount(ctx context.Context, acc *account.Account) er
 		Where(squirrel.Eq{"id": acc.Id}).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return formatter.FmtError(op, err)
 	}
 
 	_, err = r.Pool.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return formatter.FmtError(op, err)
 	}
 
 	return nil
@@ -103,12 +103,12 @@ func (r *Repository) DeleteAccount(ctx context.Context, acc *account.Account) er
 		Where(squirrel.Eq{"id": acc.Id}).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return formatter.FmtError(op, err)
 	}
 
 	_, err = r.Pool.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return formatter.FmtError(op, err)
 	}
 
 	return nil
