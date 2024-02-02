@@ -1,10 +1,10 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/account"
+	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -12,6 +12,9 @@ func (d *Delivery) AddAccountRoutes() {
 	g := d.router.Group("/accounts")
 
 	g.POST("/customers", d.CreateCustomer)
+	g.POST("/sellers", d.CreateSeller)
+	g.POST("/staffs", d.CreateStaff)
+	g.POST("/admins", d.CreateAdmin)
 }
 
 func (d *Delivery) CreateCustomer(c echo.Context) error {
@@ -32,9 +35,19 @@ func (d *Delivery) CreateCustomer(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrAccountNotCreated))
 	}
 
-	// Create session
+	acc, err := d.ucAccount.Get(ctx, id)
+	if err != nil {
+		d.logError(op, ErrAccountNotRetrieved, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrAccountNotRetrieved))
+	}
 
-	return c.String(http.StatusOK, fmt.Sprintf("%d", id)) // Return session id
+	sessionId, err := d.ucSession.Create(ctx, acc)
+	if err != nil {
+		d.logError(op, ErrSessionNotCreated, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrSessionNotCreated))
+	}
+
+	return c.JSON(http.StatusCreated, &session.SessionVm{Id: sessionId})
 }
 
 func (d *Delivery) CreateSeller(c echo.Context) error {
@@ -55,9 +68,19 @@ func (d *Delivery) CreateSeller(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrAccountNotCreated))
 	}
 
-	// Create session
+	acc, err := d.ucAccount.Get(ctx, id)
+	if err != nil {
+		d.logError(op, ErrAccountNotRetrieved, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrAccountNotRetrieved))
+	}
 
-	return c.String(http.StatusOK, fmt.Sprintf("%d", id)) // Return session id
+	sessionId, err := d.ucSession.Create(ctx, acc)
+	if err != nil {
+		d.logError(op, ErrSessionNotCreated, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrSessionNotCreated))
+	}
+
+	return c.JSON(http.StatusCreated, &session.SessionVm{Id: sessionId})
 }
 
 func (d *Delivery) CreateStaff(c echo.Context) error {

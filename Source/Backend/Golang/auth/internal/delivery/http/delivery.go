@@ -11,13 +11,15 @@ import (
 type Delivery struct {
 	logger    *slog.Logger
 	ucAccount usecase.Account
+	ucSession usecase.Session
 	router    *echo.Echo
 }
 
-func New(logger *slog.Logger, ucAccount usecase.Account) *Delivery {
+func New(logger *slog.Logger, ucAccount usecase.Account, ucSession usecase.Session) *Delivery {
 	d := &Delivery{
 		logger:    logger,
 		ucAccount: ucAccount,
+		ucSession: ucSession,
 	}
 
 	d.router = echo.New()
