@@ -1,14 +1,14 @@
 package account
 
 type PersonVm struct {
-	FirstName string
-	LastName  string
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }
 
 type AccountCreateVm struct {
-	PhoneNumber string
-	Email       string
-	Password    string
+	PhoneNumber string `json:"phoneNumber"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
 }
 
 type CustomerAccountCreateVm struct {
@@ -19,7 +19,7 @@ type CustomerAccountCreateVm struct {
 type SellerAccountCreateVm struct {
 	AccountCreateVm
 	PersonVm
-	CompanyName string
+	CompanyName string `json:"companyName"`
 }
 
 type StaffAccountCreateVm struct {
@@ -33,10 +33,10 @@ type AdminAccountCreateVm struct {
 }
 
 type AccountVm struct {
-	Id          int
-	PhoneNumber string
-	Email       string
-	Password    string
+	Id          int    `json:"id"`
+	PhoneNumber string `json:"phoneNumber"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
 }
 
 type AccountCreatedVm struct {
