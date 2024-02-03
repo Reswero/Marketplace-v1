@@ -40,3 +40,9 @@ type CredentialsDto struct {
 	AccountType account.AccountType
 	Password    string
 }
+
+type ChangePasswordDto struct {
+	AccountId   int
+	OldPassword string
+	NewPassword string
+}

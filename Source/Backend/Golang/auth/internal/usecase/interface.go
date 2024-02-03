@@ -17,6 +17,8 @@ type Account interface {
 	Update(ctx context.Context, acc *account.Account) error
 
 	ValidateCredentials(ctx context.Context, dto *CredentialsDto) (*account.Account, bool, error)
+
+	ChangePassword(ctx context.Context, dto *ChangePasswordDto) (bool, error)
 }
 
 type Session interface {

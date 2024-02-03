@@ -46,3 +46,8 @@ func New(accType AccountType, phoneNumber, email, password, salt string) *Accoun
 		Salt:        salt,
 	}
 }
+
+func (acc *Account) ChangePassword(newPassword, newSalt string) {
+	acc.Password = newPassword
+	acc.Salt = newSalt
+}
