@@ -36,7 +36,7 @@ func (r *Repository) CreateAccount(ctx context.Context, acc *account.Account) (i
 			"created_at", "password", "salt").
 		Values(acc.Type, acc.PhoneNumber, acc.Email,
 			time.Now(), acc.Password, acc.Salt).
-		Suffix(`RETURNING "Id"`).
+		Suffix("RETURNING id").
 		ToSql()
 	if err != nil {
 		return 0, formatter.FmtError(op, err)
@@ -115,11 +115,11 @@ func (r *Repository) UpdateAccount(ctx context.Context, acc *account.Account) er
 }
 
 // Удаление аккаунта
-func (r *Repository) DeleteAccount(ctx context.Context, acc *account.Account) error {
+func (r *Repository) DeleteAccount(ctx context.Context, id int) error {
 	const op = "repository.account.DeleteAccount"
 
 	sql, args, err := r.Builder.Delete(accountsTable).
-		Where(squirrel.Eq{"id": acc.Id}).
+		Where(squirrel.Eq{"id": id}).
 		ToSql()
 	if err != nil {
 		return formatter.FmtError(op, err)
