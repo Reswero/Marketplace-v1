@@ -10,6 +10,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
+	"github.com/jackc/pgx/v5"
 )
 
 const (
@@ -64,6 +65,10 @@ func (r *Repository) GetAccount(ctx context.Context, id int) (*account.Account, 
 
 	acc, err := r.getAccountFromQuery(ctx, sql, args...)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, err
+		}
+
 		return nil, formatter.FmtError(op, err)
 	}
 
@@ -85,6 +90,10 @@ func (r *Repository) GetAccountByPhoneNumber(ctx context.Context, phoneNumber st
 
 	acc, err := r.getAccountFromQuery(ctx, sql, args...)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, err
+		}
+
 		return nil, formatter.FmtError(op, err)
 	}
 
@@ -140,8 +149,8 @@ func (r *Repository) getAccountFromQuery(ctx context.Context, sql string, args .
 	err := r.Pool.QueryRow(ctx, sql, args...).Scan(&acc.Id, &acc.Type, &acc.PhoneNumber,
 		&acc.Email, &acc.CreatedAt, &acc.Password, &acc.Salt)
 	if err != nil {
-		if errors.Is(err, sqldb.ErrNoRows) {
-			return nil, err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, sqldb.ErrNoRows
 		}
 
 		return nil, formatter.FmtError(op, err)

@@ -140,6 +140,10 @@ func (u *UseCase) Get(ctx context.Context, id int) (*account.Account, error) {
 
 	acc, err := u.repo.GetAccount(ctx, id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, usecase.ErrAccountNotFound
+		}
+
 		return nil, formatter.FmtError(op, err)
 	}
 
