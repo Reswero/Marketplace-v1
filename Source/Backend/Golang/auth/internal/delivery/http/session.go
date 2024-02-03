@@ -3,14 +3,44 @@ package http
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/session"
+	sessionPkg "github.com/Reswero/Marketplace-v1/auth/internal/pkg/session"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
 
 func (d *Delivery) AddSessionRoutes() {
+	d.router.GET("", d.Authorize)
 	d.router.POST("/login", d.Login)
+}
+
+func (d *Delivery) Authorize(c echo.Context) error {
+	const op = "delivery.http.Authorize"
+	ctx := c.Request().Context()
+
+	auth, ok := c.Request().Header["Authorization"]
+	if !ok || len(auth) == 0 {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
+	sessionId := auth[0]
+	session, err := d.ucSession.Get(ctx, sessionId)
+	if err != nil {
+		if errors.Is(err, sessionPkg.ErrSessionNotFound) {
+			return c.JSON(http.StatusUnauthorized, NewStatusResp(http.StatusUnauthorized, ErrSessionExpired))
+		}
+
+		d.logError(op, ErrSessionNotRetrieved, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrSessionNotRetrieved))
+	}
+
+	accId := strconv.Itoa(session.AccountId)
+	c.Response().Header().Set("X-Account-Id", accId)
+	c.Response().Header().Set("X-Account-Type", string(session.AccountType))
+
+	return c.NoContent(http.StatusOK)
 }
 
 func (d *Delivery) Login(c echo.Context) error {
