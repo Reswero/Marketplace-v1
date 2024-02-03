@@ -81,12 +81,11 @@ func (m *SessionManager) GetSession(ctx context.Context, id string) (*session.Se
 	return sess, nil
 }
 
-func (m *SessionManager) generateId(ctx context.Context) (string, error) {
+func (m *SessionManager) generateId(ctx context.Context) (id string, err error) {
 	const op = "session.redis.generateId"
 
-	var id string
 	for id == "" {
-		id, err := generator.GetRandomAsciiString(idLen)
+		id, err = generator.GetRandomAsciiString(idLen)
 		if err != nil {
 			return "", formatter.FmtError(op, err)
 		}
