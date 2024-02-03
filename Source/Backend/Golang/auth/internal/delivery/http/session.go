@@ -8,6 +8,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/session"
 	sessionPkg "github.com/Reswero/Marketplace-v1/auth/internal/pkg/session"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
+	"github.com/Reswero/Marketplace-v1/pkg/authorization"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,7 +21,7 @@ func (d *Delivery) Authorize(c echo.Context) error {
 	const op = "delivery.http.Authorize"
 	ctx := c.Request().Context()
 
-	auth, ok := c.Request().Header["Authorization"]
+	auth, ok := c.Request().Header[authorization.AuthorizationHeader]
 	if !ok || len(auth) == 0 {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -37,8 +38,8 @@ func (d *Delivery) Authorize(c echo.Context) error {
 	}
 
 	accId := strconv.Itoa(session.AccountId)
-	c.Response().Header().Set("X-Account-Id", accId)
-	c.Response().Header().Set("X-Account-Type", string(session.AccountType))
+	c.Response().Header().Set(authorization.AccountIdHeader, accId)
+	c.Response().Header().Set(authorization.AccountTypeHeader, string(session.AccountType))
 
 	return c.NoContent(http.StatusOK)
 }

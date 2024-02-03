@@ -5,6 +5,8 @@ import (
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/session"
+	domain "github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+	"github.com/Reswero/Marketplace-v1/pkg/authorization"
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,8 +15,8 @@ func (d *Delivery) AddAccountRoutes() {
 
 	g.POST("/customers", d.CreateCustomer)
 	g.POST("/sellers", d.CreateSeller)
-	g.POST("/staffs", d.CreateStaff)
-	g.POST("/admins", d.CreateAdmin)
+	g.POST("/staffs", d.CreateStaff, authorization.Middleware)
+	g.POST("/admins", d.CreateAdmin, authorization.Middleware)
 }
 
 func (d *Delivery) CreateCustomer(c echo.Context) error {
@@ -87,13 +89,16 @@ func (d *Delivery) CreateStaff(c echo.Context) error {
 	const op = "delivery.account.CreateStaff"
 	ctx := c.Request().Context()
 
+	claims := authorization.GetClaims(c)
+	if claims.AccountType != string(domain.Administrator) {
+		return c.NoContent(http.StatusForbidden)
+	}
+
 	var vm *account.StaffAccountCreateVm
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
-
-	// Check user claims. Only admin can create staff
 
 	dto := account.MapToStaffAccountDto(vm)
 
@@ -110,13 +115,16 @@ func (d *Delivery) CreateAdmin(c echo.Context) error {
 	const op = "delivery.account.CreateAdmin"
 	ctx := c.Request().Context()
 
+	claims := authorization.GetClaims(c)
+	if claims.AccountType != string(domain.Administrator) {
+		return c.NoContent(http.StatusForbidden)
+	}
+
 	var vm *account.AdminAccountCreateVm
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
-
-	// Check user claims. Only admin can create admin
 
 	dto := account.MapToAdminAccountDto(vm)
 
