@@ -8,4 +8,5 @@ import (
 
 type Manager interface {
 	CreateSession(ctx context.Context, acc *account.Account) (string, error)
+	GetSession(ctx context.Context, id string) (*Session, error)
 }

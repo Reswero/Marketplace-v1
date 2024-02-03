@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/session"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"github.com/Reswero/Marketplace-v1/pkg/redis"
+	redisdb "github.com/redis/go-redis/v9"
 )
 
 const (
@@ -41,9 +43,9 @@ func (m *SessionManager) CreateSession(ctx context.Context, acc *account.Account
 	}
 
 	key := fmt.Sprintf(sessionKey, id)
-	session := session.New(acc)
+	sess := session.New(acc)
 
-	val, err := json.Marshal(session)
+	val, err := json.Marshal(sess)
 	if err != nil {
 		return "", formatter.FmtError(op, err)
 	}
@@ -54,6 +56,29 @@ func (m *SessionManager) CreateSession(ctx context.Context, acc *account.Account
 	}
 
 	return id, nil
+}
+
+func (m *SessionManager) GetSession(ctx context.Context, id string) (*session.Session, error) {
+	const op = "session.redis.GetSession"
+
+	key := fmt.Sprintf(sessionKey, id)
+
+	val, err := m.Client.Get(ctx, key).Result()
+	if err != nil {
+		if errors.Is(err, redisdb.Nil) {
+			return nil, session.ErrSessionNotFound
+		}
+
+		return nil, formatter.FmtError(op, err)
+	}
+
+	sess := &session.Session{}
+	err = json.Unmarshal([]byte(val), &sess)
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	return sess, nil
 }
 
 func (m *SessionManager) generateId(ctx context.Context) (string, error) {
