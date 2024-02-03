@@ -36,7 +36,6 @@ type AccountVm struct {
 	Id          int    `json:"id"`
 	PhoneNumber string `json:"phoneNumber"`
 	Email       string `json:"email"`
-	Password    string `json:"password"`
 }
 
 type AccountCreatedVm struct {

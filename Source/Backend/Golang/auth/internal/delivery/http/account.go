@@ -1,11 +1,14 @@
 package http
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/session"
 	domain "github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/pkg/authorization"
 	"github.com/labstack/echo/v4"
 )
@@ -17,6 +20,8 @@ func (d *Delivery) AddAccountRoutes() {
 	g.POST("/sellers", d.CreateSeller)
 	g.POST("/staffs", d.CreateStaff, authorization.Middleware)
 	g.POST("/admins", d.CreateAdmin, authorization.Middleware)
+
+	g.GET("/:id", d.GetAccount, authorization.Middleware)
 }
 
 func (d *Delivery) CreateCustomer(c echo.Context) error {
@@ -135,4 +140,34 @@ func (d *Delivery) CreateAdmin(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, &account.AccountCreatedVm{Id: id})
+}
+
+func (d *Delivery) GetAccount(c echo.Context) error {
+	const op = "delivery.account.GetAccount"
+	ctx := c.Request().Context()
+
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
+	}
+
+	claims := authorization.GetClaims(c)
+	if claims.AccountId != id && claims.AccountType != string(domain.Administrator) {
+		return c.NoContent(http.StatusForbidden)
+	}
+
+	acc, err := d.ucAccount.Get(ctx, id)
+	if err != nil {
+		if errors.Is(err, usecase.ErrAccountNotFound) {
+			return c.JSON(http.StatusNotFound, NewStatusResp(http.StatusNotFound, ErrAccountNotFound))
+		}
+
+		d.logError(op, ErrAccountNotRetrieved, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrAccountNotRetrieved))
+	}
+
+	vm := account.MapToAccountVm(acc)
+
+	return c.JSON(http.StatusOK, vm)
 }
