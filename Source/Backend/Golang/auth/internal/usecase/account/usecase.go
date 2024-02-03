@@ -51,7 +51,7 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 }
 
 // Создание аккаунта продавца
-func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.CustomerAccountDto) (int, error) {
+func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.SellerAccountDto) (int, error) {
 	const op = "usecase.account.CreateSeller"
 
 	pass, salt, err := password.Hash(acc.Password)
@@ -79,7 +79,7 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.CustomerAccount
 }
 
 // Создание аккаунта персонала
-func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.CustomerAccountDto) (int, error) {
+func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.StaffAccountDto) (int, error) {
 	const op = "usecase.account.CreateStaff"
 
 	pass, salt, err := password.Hash(acc.Password)
@@ -107,7 +107,7 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.CustomerAccountD
 }
 
 // Создание аккаунта администратора
-func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.CustomerAccountDto) (int, error) {
+func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.AdminAccountDto) (int, error) {
 	const op = "usecase.account.CreateAdmin"
 
 	pass, salt, err := password.Hash(acc.Password)
