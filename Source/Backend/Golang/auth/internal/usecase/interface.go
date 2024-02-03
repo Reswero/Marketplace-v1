@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/session"
 )
 
 type Account interface {
@@ -20,4 +21,5 @@ type Account interface {
 
 type Session interface {
 	Create(ctx context.Context, acc *account.Account) (string, error)
+	Get(ctx context.Context, id string) (*session.Session, error)
 }
