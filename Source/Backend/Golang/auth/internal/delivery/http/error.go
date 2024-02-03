@@ -12,4 +12,5 @@ const (
 	ErrSessionExpired       = "Срок действия сессии истек"
 	ErrSessionNotRetrieved  = "Ошибка при получении сессии"
 	ErrPasswordNotChanged   = "Ошибка при смене пароля"
+	ErrEmailNotChanged      = "Ошибка при смене почты"
 )

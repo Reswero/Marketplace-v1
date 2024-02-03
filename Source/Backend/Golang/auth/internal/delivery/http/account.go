@@ -22,6 +22,8 @@ func (d *Delivery) AddAccountRoutes() {
 	g.POST("/admins", d.CreateAdmin, authorization.Middleware)
 
 	g.GET("/:id", d.GetAccount, authorization.Middleware)
+	g.PUT("/:id/password", d.ChangePassword, authorization.Middleware)
+	g.PUT("/:id/email", d.ChangeEmail, authorization.Middleware)
 }
 
 func (d *Delivery) CreateCustomer(c echo.Context) error {
@@ -146,7 +148,7 @@ func (d *Delivery) GetAccount(c echo.Context) error {
 	const op = "delivery.account.GetAccount"
 	ctx := c.Request().Context()
 
-	id, err := GetId(c)
+	id, err := getId(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
 	}
@@ -175,13 +177,13 @@ func (d *Delivery) ChangePassword(c echo.Context) error {
 	const op = "delivery.account.ChangePassword"
 	ctx := c.Request().Context()
 
-	id, err := GetId(c)
+	id, err := getId(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
 	}
 
 	claims := authorization.GetClaims(c)
-	if claims.AccountId != id && claims.AccountType != string(domain.Administrator) {
+	if claims.AccountId != id {
 		return c.NoContent(http.StatusForbidden)
 	}
 
@@ -206,7 +208,42 @@ func (d *Delivery) ChangePassword(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func GetId(c echo.Context) (int, error) {
+func (d *Delivery) ChangeEmail(c echo.Context) error {
+	const op = "delivery.account.ChangeEmail"
+	ctx := c.Request().Context()
+
+	id, err := getId(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
+	}
+
+	claims := authorization.GetClaims(c)
+	if claims.AccountId != id {
+		return c.NoContent(http.StatusForbidden)
+	}
+
+	var vm *account.ChangeEmailVm
+	err = c.Bind(&vm)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	dto := account.MapToChangeEmailDto(id, vm)
+
+	ok, err := d.ucAccount.ChangeEmail(ctx, dto)
+	if err != nil {
+		d.logError(op, ErrEmailNotChanged, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrEmailNotChanged))
+	}
+
+	if !ok {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrWrongPassword))
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
+func getId(c echo.Context) (int, error) {
 	idParam := c.Param("id")
 	return strconv.Atoi(idParam)
 }
