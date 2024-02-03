@@ -69,3 +69,11 @@ func MapToAccountVm(acc *account.Account) *AccountVm {
 		Email:       acc.Email,
 	}
 }
+
+func MapToChangePasswordDto(id int, vm *ChangePasswordVm) *usecase.ChangePasswordDto {
+	return &usecase.ChangePasswordDto{
+		AccountId:   id,
+		OldPassword: vm.OldPassword,
+		NewPassword: vm.NewPassword,
+	}
+}

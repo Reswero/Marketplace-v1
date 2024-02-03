@@ -8,6 +8,8 @@ const (
 	ErrAccountNotFound      = "Аккаунт не найден"
 	ErrSessionNotCreated    = "Ошибка при создании сессии"
 	ErrWrongPhoneOrPassword = "Неверный номер телефона или пароль"
+	ErrWrongPassword        = "Неверный пароль"
 	ErrSessionExpired       = "Срок действия сессии истек"
 	ErrSessionNotRetrieved  = "Ошибка при получении сессии"
+	ErrPasswordNotChanged   = "Ошибка при смене пароля"
 )

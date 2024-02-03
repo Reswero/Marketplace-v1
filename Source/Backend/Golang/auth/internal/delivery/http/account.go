@@ -146,8 +146,7 @@ func (d *Delivery) GetAccount(c echo.Context) error {
 	const op = "delivery.account.GetAccount"
 	ctx := c.Request().Context()
 
-	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
+	id, err := GetId(c)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
 	}
@@ -170,4 +169,44 @@ func (d *Delivery) GetAccount(c echo.Context) error {
 	vm := account.MapToAccountVm(acc)
 
 	return c.JSON(http.StatusOK, vm)
+}
+
+func (d *Delivery) ChangePassword(c echo.Context) error {
+	const op = "delivery.account.ChangePassword"
+	ctx := c.Request().Context()
+
+	id, err := GetId(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidParam))
+	}
+
+	claims := authorization.GetClaims(c)
+	if claims.AccountId != id && claims.AccountType != string(domain.Administrator) {
+		return c.NoContent(http.StatusForbidden)
+	}
+
+	var vm *account.ChangePasswordVm
+	err = c.Bind(&vm)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	dto := account.MapToChangePasswordDto(id, vm)
+
+	ok, err := d.ucAccount.ChangePassword(ctx, dto)
+	if err != nil {
+		d.logError(op, ErrPasswordNotChanged, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrPasswordNotChanged))
+	}
+
+	if !ok {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrWrongPassword))
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
+func GetId(c echo.Context) (int, error) {
+	idParam := c.Param("id")
+	return strconv.Atoi(idParam)
 }

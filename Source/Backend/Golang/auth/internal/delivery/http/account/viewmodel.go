@@ -41,3 +41,8 @@ type AccountVm struct {
 type AccountCreatedVm struct {
 	Id int `json:"id"`
 }
+
+type ChangePasswordVm struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
