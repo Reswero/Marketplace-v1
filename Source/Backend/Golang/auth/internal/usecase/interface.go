@@ -22,4 +22,5 @@ type Account interface {
 type Session interface {
 	Create(ctx context.Context, acc *account.Account) (string, error)
 	Get(ctx context.Context, id string) (*session.Session, error)
+	Delete(ctx context.Context, id string) error
 }

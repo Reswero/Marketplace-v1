@@ -15,6 +15,7 @@ import (
 func (d *Delivery) AddSessionRoutes() {
 	d.router.GET("", d.Authorize)
 	d.router.POST("/login", d.Login)
+	d.router.GET("/logout", d.Logout)
 }
 
 func (d *Delivery) Authorize(c echo.Context) error {
@@ -77,4 +78,23 @@ func (d *Delivery) Login(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, &session.SessionVm{Id: sessionId})
+}
+
+func (d *Delivery) Logout(c echo.Context) error {
+	const op = "delivery.http.Logout"
+	ctx := c.Request().Context()
+
+	auth, ok := c.Request().Header[authorization.AuthorizationHeader]
+	if !ok {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
+	sessionId := auth[0]
+	err := d.ucSession.Delete(ctx, sessionId)
+	if err != nil {
+		d.logError(op, ErrSessionNotRetrieved, err)
+		return c.JSON(http.StatusInternalServerError, NewStatusResp(http.StatusInternalServerError, ErrSessionNotRetrieved))
+	}
+
+	return c.NoContent(http.StatusOK)
 }
