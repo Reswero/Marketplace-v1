@@ -46,3 +46,9 @@ type ChangePasswordDto struct {
 	OldPassword string
 	NewPassword string
 }
+
+type ChangeEmailDto struct {
+	AccountId int
+	NewEmail  string
+	Password  string
+}

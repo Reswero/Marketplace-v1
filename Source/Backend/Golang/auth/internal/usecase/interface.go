@@ -19,6 +19,7 @@ type Account interface {
 	ValidateCredentials(ctx context.Context, dto *CredentialsDto) (*account.Account, bool, error)
 
 	ChangePassword(ctx context.Context, dto *ChangePasswordDto) (bool, error)
+	ChangeEmail(ctx context.Context, dto *ChangeEmailDto) (bool, error)
 }
 
 type Session interface {

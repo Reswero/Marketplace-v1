@@ -211,3 +211,27 @@ func (u *UseCase) ChangePassword(ctx context.Context, dto *usecase.ChangePasswor
 
 	return true, nil
 }
+
+// Изменяет почту аккаунта на новую
+func (u *UseCase) ChangeEmail(ctx context.Context, dto *usecase.ChangeEmailDto) (bool, error) {
+	const op = "usecase.account.ChangeEmail"
+
+	acc, err := u.repo.GetAccount(ctx, dto.AccountId)
+	if err != nil {
+		return false, formatter.FmtError(op, err)
+	}
+
+	valid := password.Validate(acc.Password, dto.Password, acc.Salt)
+	if !valid {
+		return false, nil
+	}
+
+	acc.ChangeEmail(dto.NewEmail)
+
+	err = u.repo.UpdateAccount(ctx, acc)
+	if err != nil {
+		return false, formatter.FmtError(op, err)
+	}
+
+	return true, nil
+}
