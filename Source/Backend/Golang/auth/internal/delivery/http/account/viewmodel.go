@@ -36,9 +36,18 @@ type AccountVm struct {
 	Id          int    `json:"id"`
 	PhoneNumber string `json:"phoneNumber"`
 	Email       string `json:"email"`
-	Password    string `json:"password"`
 }
 
 type AccountCreatedVm struct {
 	Id int `json:"id"`
+}
+
+type ChangePasswordVm struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
+type ChangeEmailVm struct {
+	NewEmail string `json:"newEmail"`
+	Password string `json:"password"`
 }

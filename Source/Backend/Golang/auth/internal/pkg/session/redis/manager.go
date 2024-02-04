@@ -81,6 +81,19 @@ func (m *SessionManager) GetSession(ctx context.Context, id string) (*session.Se
 	return sess, nil
 }
 
+func (m *SessionManager) DeleteSession(ctx context.Context, id string) error {
+	const op = "session.redis.DeleteSession"
+
+	key := fmt.Sprintf(sessionKey, id)
+
+	_, err := m.Client.Del(ctx, key).Result()
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	return nil
+}
+
 func (m *SessionManager) generateId(ctx context.Context) (id string, err error) {
 	const op = "session.redis.generateId"
 

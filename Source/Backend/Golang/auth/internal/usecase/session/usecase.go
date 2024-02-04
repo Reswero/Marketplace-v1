@@ -44,3 +44,14 @@ func (u *UseCase) Get(ctx context.Context, id string) (*session.Session, error) 
 
 	return sess, nil
 }
+
+func (u *UseCase) Delete(ctx context.Context, id string) error {
+	const op = "usecase.session.Delete"
+
+	err := u.manager.DeleteSession(ctx, id)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	return nil
+}

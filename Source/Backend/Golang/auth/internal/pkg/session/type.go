@@ -13,13 +13,13 @@ type Session struct {
 	// Тип аккаунта
 	AccountType account.AccountType `json:"accountType"`
 	// Дата создания сессии
-	CreateAt time.Time
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 func New(acc *account.Account) *Session {
 	return &Session{
 		AccountId:   acc.Id,
 		AccountType: acc.Type,
-		CreateAt:    time.Now(),
+		CreatedAt:   time.Now(),
 	}
 }

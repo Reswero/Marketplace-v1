@@ -1,6 +1,9 @@
 package account
 
-import "github.com/Reswero/Marketplace-v1/auth/internal/usecase"
+import (
+	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
+	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
+)
 
 func MapToCustomerAccountDto(vm *CustomerAccountCreateVm) *usecase.CustomerAccountDto {
 	return &usecase.CustomerAccountDto{
@@ -56,5 +59,29 @@ func MapToAdminAccountDto(vm *AdminAccountCreateVm) *usecase.AdminAccountDto {
 			FirstName: vm.FirstName,
 			LastName:  vm.LastName,
 		},
+	}
+}
+
+func MapToAccountVm(acc *account.Account) *AccountVm {
+	return &AccountVm{
+		Id:          acc.Id,
+		PhoneNumber: acc.PhoneNumber,
+		Email:       acc.Email,
+	}
+}
+
+func MapToChangePasswordDto(id int, vm *ChangePasswordVm) *usecase.ChangePasswordDto {
+	return &usecase.ChangePasswordDto{
+		AccountId:   id,
+		OldPassword: vm.OldPassword,
+		NewPassword: vm.NewPassword,
+	}
+}
+
+func MapToChangeEmailDto(id int, vm *ChangeEmailVm) *usecase.ChangeEmailDto {
+	return &usecase.ChangeEmailDto{
+		AccountId: id,
+		NewEmail:  vm.NewEmail,
+		Password:  vm.Password,
 	}
 }
