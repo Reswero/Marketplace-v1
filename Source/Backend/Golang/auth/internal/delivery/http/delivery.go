@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,6 +24,9 @@ func New(logger *slog.Logger, ucAccount usecase.Account, ucSession usecase.Sessi
 	}
 
 	d.router = echo.New()
+
+	d.router.Validator = &CustomValidator{validator: validator.New()}
+
 	d.AddAccountRoutes()
 	d.AddSessionRoutes()
 

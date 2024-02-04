@@ -36,6 +36,10 @@ func (d *Delivery) CreateCustomer(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToCustomerAccountDto(vm)
 
 	id, err := d.ucAccount.CreateCustomer(ctx, dto)
@@ -67,6 +71,10 @@ func (d *Delivery) CreateSeller(c echo.Context) error {
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToSellerAccountDto(vm)
@@ -107,6 +115,10 @@ func (d *Delivery) CreateStaff(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToStaffAccountDto(vm)
 
 	id, err := d.ucAccount.CreateStaff(ctx, dto)
@@ -131,6 +143,10 @@ func (d *Delivery) CreateAdmin(c echo.Context) error {
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToAdminAccountDto(vm)
@@ -193,6 +209,10 @@ func (d *Delivery) ChangePassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToChangePasswordDto(id, vm)
 
 	ok, err := d.ucAccount.ChangePassword(ctx, dto)
@@ -226,6 +246,10 @@ func (d *Delivery) ChangeEmail(c echo.Context) error {
 	err = c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToChangeEmailDto(id, vm)
