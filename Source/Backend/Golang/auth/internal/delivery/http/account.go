@@ -14,7 +14,7 @@ import (
 )
 
 func (d *Delivery) AddAccountRoutes() {
-	g := d.router.Group("/accounts")
+	g := d.router.Group("/v1/accounts")
 
 	g.POST("/customers", d.CreateCustomer)
 	g.POST("/sellers", d.CreateSeller)
@@ -26,6 +26,17 @@ func (d *Delivery) AddAccountRoutes() {
 	g.PUT("/:id/email", d.ChangeEmail, authorization.Middleware)
 }
 
+// @Summary Создание покупателя
+// @Description Создание аккаунта покупателя
+// @ID create-customer
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param account body account.CustomerAccountCreateVm true "customer account"
+// @Success 201 {object} session.SessionVm
+// @Failure 400 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/customers [post]
 func (d *Delivery) CreateCustomer(c echo.Context) error {
 	const op = "delivery.account.CreateCustomer"
 	ctx := c.Request().Context()
@@ -34,6 +45,10 @@ func (d *Delivery) CreateCustomer(c echo.Context) error {
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToCustomerAccountDto(vm)
@@ -59,6 +74,17 @@ func (d *Delivery) CreateCustomer(c echo.Context) error {
 	return c.JSON(http.StatusCreated, &session.SessionVm{Id: sessionId})
 }
 
+// @Summary Создание продавца
+// @Description Создание аккаунта продавца
+// @ID create-seller
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param account body account.SellerAccountCreateVm true "seller account"
+// @Success 201 {object} session.SessionVm
+// @Failure 400 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/sellers [post]
 func (d *Delivery) CreateSeller(c echo.Context) error {
 	const op = "delivery.account.CreateSeller"
 	ctx := c.Request().Context()
@@ -67,6 +93,10 @@ func (d *Delivery) CreateSeller(c echo.Context) error {
 	err := c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToSellerAccountDto(vm)
@@ -92,6 +122,19 @@ func (d *Delivery) CreateSeller(c echo.Context) error {
 	return c.JSON(http.StatusCreated, &session.SessionVm{Id: sessionId})
 }
 
+// @Summary Создание персонала
+// @Description Создание аккаунта персонала
+// @Security AccountId
+// @Security AccountType
+// @ID create-staff
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param account body account.StaffAccountCreateVm true "staff account"
+// @Success 201 {object} account.AccountCreatedVm
+// @Failure 400 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/staffs [post]
 func (d *Delivery) CreateStaff(c echo.Context) error {
 	const op = "delivery.account.CreateStaff"
 	ctx := c.Request().Context()
@@ -107,6 +150,10 @@ func (d *Delivery) CreateStaff(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToStaffAccountDto(vm)
 
 	id, err := d.ucAccount.CreateStaff(ctx, dto)
@@ -118,6 +165,19 @@ func (d *Delivery) CreateStaff(c echo.Context) error {
 	return c.JSON(http.StatusCreated, &account.AccountCreatedVm{Id: id})
 }
 
+// @Summary Создание администратора
+// @Description Создание аккаунта администратора
+// @Security AccountId
+// @Security AccountType
+// @ID create-admin
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param account body account.AdminAccountCreateVm true "admin account"
+// @Success 201 {object} account.AccountCreatedVm
+// @Failure 400 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/admins [post]
 func (d *Delivery) CreateAdmin(c echo.Context) error {
 	const op = "delivery.account.CreateAdmin"
 	ctx := c.Request().Context()
@@ -133,6 +193,10 @@ func (d *Delivery) CreateAdmin(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToAdminAccountDto(vm)
 
 	id, err := d.ucAccount.CreateAdmin(ctx, dto)
@@ -144,6 +208,21 @@ func (d *Delivery) CreateAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, &account.AccountCreatedVm{Id: id})
 }
 
+// @Summary Получение аккаунта
+// @Description Получение аккаунта пользователя
+// @Security AccountId
+// @Security AccountType
+// @ID get-account
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "account id"
+// @Success 200 {object} account.AccountVm
+// @Failure 400 {object} StatusResponse
+// @Failure 403
+// @Failure 404
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/{id} [get]
 func (d *Delivery) GetAccount(c echo.Context) error {
 	const op = "delivery.account.GetAccount"
 	ctx := c.Request().Context()
@@ -161,7 +240,7 @@ func (d *Delivery) GetAccount(c echo.Context) error {
 	acc, err := d.ucAccount.Get(ctx, id)
 	if err != nil {
 		if errors.Is(err, usecase.ErrAccountNotFound) {
-			return c.JSON(http.StatusNotFound, NewStatusResp(http.StatusNotFound, ErrAccountNotFound))
+			return c.JSON(http.StatusNotFound, NewStatusResp(http.StatusNotFound, ErrAccountNotFound)) // change to no content
 		}
 
 		d.logError(op, ErrAccountNotRetrieved, err)
@@ -173,6 +252,20 @@ func (d *Delivery) GetAccount(c echo.Context) error {
 	return c.JSON(http.StatusOK, vm)
 }
 
+// @Summary Изменение пароля
+// @Description Изменение пароля аккаунта
+// @Security AccountId
+// @Security AccountType
+// @ID change-account-password
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "account id"
+// @Success 200
+// @Failure 400 {object} StatusResponse
+// @Failure 403
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/{id}/password [put]
 func (d *Delivery) ChangePassword(c echo.Context) error {
 	const op = "delivery.account.ChangePassword"
 	ctx := c.Request().Context()
@@ -193,6 +286,10 @@ func (d *Delivery) ChangePassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
 	}
 
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
+	}
+
 	dto := account.MapToChangePasswordDto(id, vm)
 
 	ok, err := d.ucAccount.ChangePassword(ctx, dto)
@@ -208,6 +305,20 @@ func (d *Delivery) ChangePassword(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// @Summary Изменение почты
+// @Description Изменение почты аккаунта
+// @Security AccountId
+// @Security AccountType
+// @ID change-account-email
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "account id"
+// @Success 200
+// @Failure 400 {object} StatusResponse
+// @Failure 403
+// @Failure 500 {object} StatusResponse
+// @Router /accounts/{id}/email [put]
 func (d *Delivery) ChangeEmail(c echo.Context) error {
 	const op = "delivery.account.ChangeEmail"
 	ctx := c.Request().Context()
@@ -226,6 +337,10 @@ func (d *Delivery) ChangeEmail(c echo.Context) error {
 	err = c.Bind(&vm)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, ErrInvalidRequestBody))
+	}
+
+	if err = c.Validate(vm); err != nil {
+		return c.JSON(http.StatusBadRequest, NewStatusResp(http.StatusBadRequest, err.Error()))
 	}
 
 	dto := account.MapToChangeEmailDto(id, vm)

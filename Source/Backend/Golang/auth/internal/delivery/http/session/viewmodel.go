@@ -5,7 +5,7 @@ type SessionVm struct {
 }
 
 type CredentialsVm struct {
-	PhoneNumber string `json:"phoneNumber"`
-	AccountType string `json:"accountType"`
-	Password    string `json:"password"`
+	PhoneNumber string `json:"phoneNumber" validate:"required,e164"`
+	AccountType string `json:"accountType" validate:"required"`
+	Password    string `json:"password" validate:"required"`
 }
