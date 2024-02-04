@@ -14,7 +14,7 @@ import (
 )
 
 func (d *Delivery) AddAccountRoutes() {
-	g := d.router.Group("/accounts")
+	g := d.router.Group("/v1/accounts")
 
 	g.POST("/customers", d.CreateCustomer)
 	g.POST("/sellers", d.CreateSeller)

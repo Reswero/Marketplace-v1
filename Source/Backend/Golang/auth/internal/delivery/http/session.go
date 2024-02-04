@@ -14,8 +14,8 @@ import (
 
 func (d *Delivery) AddSessionRoutes() {
 	d.router.GET("", d.Authorize)
-	d.router.POST("/login", d.Login)
-	d.router.GET("/logout", d.Logout)
+	d.router.POST("/v1/login", d.Login)
+	d.router.GET("/v1/logout", d.Logout)
 }
 
 func (d *Delivery) Authorize(c echo.Context) error {
