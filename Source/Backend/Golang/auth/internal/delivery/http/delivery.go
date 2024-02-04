@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log/slog"
 
+	_ "github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/docs"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type Delivery struct {
@@ -16,7 +18,8 @@ type Delivery struct {
 	router    *echo.Echo
 }
 
-func New(logger *slog.Logger, ucAccount usecase.Account, ucSession usecase.Session) *Delivery {
+func New(logger *slog.Logger, env string,
+	ucAccount usecase.Account, ucSession usecase.Session) *Delivery {
 	d := &Delivery{
 		logger:    logger,
 		ucAccount: ucAccount,
@@ -24,8 +27,11 @@ func New(logger *slog.Logger, ucAccount usecase.Account, ucSession usecase.Sessi
 	}
 
 	d.router = echo.New()
-
 	d.router.Validator = &CustomValidator{validator: validator.New()}
+
+	if env == "dev" {
+		d.router.GET("/swagger/*", echoSwagger.WrapHandler)
+	}
 
 	d.AddAccountRoutes()
 	d.AddSessionRoutes()

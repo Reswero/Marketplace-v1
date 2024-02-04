@@ -13,11 +13,26 @@ import (
 )
 
 func (d *Delivery) AddSessionRoutes() {
-	d.router.GET("", d.Authorize)
-	d.router.POST("/v1/login", d.Login)
-	d.router.GET("/v1/logout", d.Logout)
+	g := d.router.Group("/v1")
+
+	g.GET("/", d.Authorize)
+	g.POST("/login", d.Login)
+	g.GET("/logout", d.Logout)
 }
 
+// @Summary Авторизация
+// @Description Помещение авторизационных данных в заголовки ответа
+// @Security SessionId
+// @ID sessions-authorize
+// @Tags sessions
+// @Accept json
+// @Produce json
+// @Header 200 {string} X-Account-Id "account id"
+// @Header 200 {string} X-Account-Type "account type"
+// @Success 200
+// @Failure 401 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router / [get]
 func (d *Delivery) Authorize(c echo.Context) error {
 	const op = "delivery.http.Authorize"
 	ctx := c.Request().Context()
@@ -45,6 +60,17 @@ func (d *Delivery) Authorize(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// @Summary Вход в аккаунт
+// @Description Создание пользовательской сессии
+// @ID sessions-login
+// @Tags sessions
+// @Accept json
+// @Produce json
+// @Param credentials body session.CredentialsVm true "account credentials"
+// @Success 200 {object} session.SessionVm
+// @Failure 400 {object} StatusResponse
+// @Failure 500 {object} StatusResponse
+// @Router /login [post]
 func (d *Delivery) Login(c echo.Context) error {
 	const op = "delivery.http.Login"
 	ctx := c.Request().Context()
@@ -80,6 +106,17 @@ func (d *Delivery) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, &session.SessionVm{Id: sessionId})
 }
 
+// @Summary Выход из аккаунта
+// @Description Завершение пользовательской сессии
+// @Security SessionId
+// @ID sessions-logout
+// @Tags sessions
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 401
+// @Failure 500 {object} StatusResponse
+// @Router /logout [get]
 func (d *Delivery) Logout(c echo.Context) error {
 	const op = "delivery.http.Logout"
 	ctx := c.Request().Context()

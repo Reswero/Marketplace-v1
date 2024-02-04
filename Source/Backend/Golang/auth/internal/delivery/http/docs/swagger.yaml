@@ -1,0 +1,477 @@
+basePath: /v1
+definitions:
+  account.AccountCreatedVm:
+    properties:
+      id:
+        type: integer
+    type: object
+  account.AccountVm:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      phoneNumber:
+        type: string
+    type: object
+  account.AdminAccountCreateVm:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 40
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - phoneNumber
+    type: object
+  account.CustomerAccountCreateVm:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 40
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - phoneNumber
+    type: object
+  account.SellerAccountCreateVm:
+    properties:
+      companyName:
+        maxLength: 100
+        minLength: 6
+        type: string
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 40
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - companyName
+    - email
+    - firstName
+    - lastName
+    - password
+    - phoneNumber
+    type: object
+  account.StaffAccountCreateVm:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 40
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 6
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - phoneNumber
+    type: object
+  http.StatusResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  session.CredentialsVm:
+    properties:
+      accountType:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - accountType
+    - password
+    - phoneNumber
+    type: object
+  session.SessionVm:
+    properties:
+      id:
+        type: string
+    type: object
+host: localhost:8085
+info:
+  contact: {}
+  description: Сервис аутентификации, авторизации и регистрации пользователей
+  title: Auth Service
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Помещение авторизационных данных в заголовки ответа
+      operationId: sessions-authorize
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - SessionId: []
+      summary: Авторизация
+      tags:
+      - sessions
+  /accounts/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получение аккаунта пользователя
+      operationId: get-account
+      parameters:
+      - description: account id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.AccountVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Получение аккаунта
+      tags:
+      - accounts
+  /accounts/{id}/email:
+    put:
+      consumes:
+      - application/json
+      description: Изменение почты аккаунта
+      operationId: change-account-email
+      parameters:
+      - description: account id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Изменение почты
+      tags:
+      - accounts
+  /accounts/{id}/password:
+    put:
+      consumes:
+      - application/json
+      description: Изменение пароля аккаунта
+      operationId: change-account-password
+      parameters:
+      - description: account id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Изменение пароля
+      tags:
+      - accounts
+  /accounts/admins:
+    post:
+      consumes:
+      - application/json
+      description: Создание аккаунта администратора
+      operationId: create-admin
+      parameters:
+      - description: admin account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.AdminAccountCreateVm'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/account.AccountCreatedVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Создание администратора
+      tags:
+      - accounts
+  /accounts/customers:
+    post:
+      consumes:
+      - application/json
+      description: Создание аккаунта покупателя
+      operationId: create-customer
+      parameters:
+      - description: customer account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.CustomerAccountCreateVm'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/session.SessionVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      summary: Создание покупателя
+      tags:
+      - accounts
+  /accounts/sellers:
+    post:
+      consumes:
+      - application/json
+      description: Создание аккаунта продавца
+      operationId: create-seller
+      parameters:
+      - description: seller account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.SellerAccountCreateVm'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/session.SessionVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      summary: Создание продавца
+      tags:
+      - accounts
+  /accounts/staffs:
+    post:
+      consumes:
+      - application/json
+      description: Создание аккаунта персонала
+      operationId: create-staff
+      parameters:
+      - description: staff account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/account.StaffAccountCreateVm'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/account.AccountCreatedVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Создание персонала
+      tags:
+      - accounts
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Создание пользовательской сессии
+      operationId: sessions-login
+      parameters:
+      - description: account credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/session.CredentialsVm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/session.SessionVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      summary: Вход в аккаунт
+      tags:
+      - sessions
+  /logout:
+    get:
+      consumes:
+      - application/json
+      description: Завершение пользовательской сессии
+      operationId: sessions-logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.StatusResponse'
+      security:
+      - SessionId: []
+      summary: Выход из аккаунта
+      tags:
+      - sessions
+securityDefinitions:
+  AccountId:
+    in: header
+    name: X-Account-Id
+    type: apiKey
+  AccountType:
+    in: header
+    name: X-Account-Type
+    type: apiKey
+  SessionId:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
