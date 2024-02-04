@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/Reswero/Marketplace-v1/auth/internal/config"
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http"
 	sessionRedis "github.com/Reswero/Marketplace-v1/auth/internal/pkg/session/redis"
 	accountRepository "github.com/Reswero/Marketplace-v1/auth/internal/repository/account"
@@ -32,17 +33,19 @@ import (
 // @host localhost:8085
 // @BasePath /v1
 func main() {
+	cfg := config.MustLoad()
+
 	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})
 	logger := slog.New(handler)
 
-	storage, err := postgres.New("postgres://postgres:root@localhost:5432/go-auth")
+	storage, err := postgres.New(cfg.Db.ConnString)
 	if err != nil {
 		logger.Error("failed to create postgres connection", slog.String("error", err.Error()))
 		panic(err)
 	}
 	defer storage.Close()
 
-	cache, err := redis.New("localhost:6379")
+	cache, err := redis.New(cfg.Cache.Address)
 	if err != nil {
 		logger.Error("failed to create redis connection", slog.String("error", err.Error()))
 		panic(err)
@@ -55,9 +58,8 @@ func main() {
 	ucAccount := accountUsecase.New(accRepo)
 	ucSession := session.New(sessManager)
 
-	env := "dev"
-	d := http.New(logger, env, ucAccount, ucSession)
-	if err := d.Start(":8085"); err != nil {
+	d := http.New(logger, cfg.Environment, ucAccount, ucSession)
+	if err := d.Start(cfg.HttpServer.Address); err != nil {
 		logger.Error("failed while running http server", slog.String("error", err.Error()))
 		panic(err)
 	}
