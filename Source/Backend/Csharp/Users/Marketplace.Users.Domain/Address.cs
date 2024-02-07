@@ -3,16 +3,27 @@
 /// <summary>
 /// Адрес покупателя
 /// </summary>
-/// <param name="accountId">Идентификатор аккаунта</param>
-/// <param name="location">Местоположение</param>
-public class Address(int accountId, string location)
+public class Address
 {
+    private Address() { }
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="accountId">Идентификатор аккаунта</param>
+    /// <param name="location">Местоположение</param>
+    public Address(int accountId, string location)
+    {
+        AccountId = accountId;
+        Location = location;
+    }
+
     /// <summary>
     /// Идентификатор аккаунта
     /// </summary>
-    public int AccountId { get; set; } = accountId;
+    public int AccountId { get; private set; }
     /// <summary>
     /// Местоположение
     /// </summary>
-    public string Location { get; set; } = location;
+    public string Location { get; private set; } = null!;
 }
