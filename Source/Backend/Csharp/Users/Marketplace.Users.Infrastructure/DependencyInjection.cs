@@ -18,8 +18,18 @@ public static class DependencyInjection
             opt.UseNpgsql(connectionString);
         });
 
+        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<MarketplaceContext>());
         services.AddScoped<ICustomersRepository, CustomersRepository>();
 
         return services;
+    }
+
+    public static void InitializeDatabase(this IServiceProvider provider)
+    {
+        using var scope = provider.CreateScope();
+        using var db = scope.ServiceProvider.GetRequiredService<MarketplaceContext>();
+
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
     }
 }

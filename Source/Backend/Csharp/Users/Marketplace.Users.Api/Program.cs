@@ -21,6 +21,8 @@ namespace Marketplace.Users.Api
 
             var app = builder.Build();
 
+            app.Services.InitializeDatabase();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
