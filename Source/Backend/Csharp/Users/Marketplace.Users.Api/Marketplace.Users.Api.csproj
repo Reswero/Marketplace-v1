@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Marketplace.Users.Application\Marketplace.Users.Application.csproj" />
     <ProjectReference Include="..\Marketplace.Users.Infrastructure\Marketplace.Users.Infrastructure.csproj" />
   </ItemGroup>
