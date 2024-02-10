@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Marketplace.Users.Domain\Marketplace.Users.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Sellers\" />
-  </ItemGroup>
-
 </Project>
