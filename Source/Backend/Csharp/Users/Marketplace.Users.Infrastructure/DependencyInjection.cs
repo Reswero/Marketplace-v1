@@ -1,4 +1,5 @@
 ﻿using Marketplace.Users.Application.Common.Interfaces;
+using Marketplace.Users.Infrastructure.Administrators.Persistence;
 using Marketplace.Users.Infrastructure.Common.Persistence;
 using Marketplace.Users.Infrastructure.Customers.Persistence;
 using Marketplace.Users.Infrastructure.Sellers.Persistence;
@@ -24,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<ICustomersRepository, CustomersRepository>();
         services.AddScoped<ISellersRepository, SellersRepository>();
         services.AddScoped<IStaffsRepository, StaffsRepository>();
+        services.AddScoped<IAdministratorsRepository, AdministratorsRepository>();
 
         return services;
     }
