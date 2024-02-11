@@ -2,6 +2,7 @@
 using Marketplace.Users.Infrastructure.Common.Persistence;
 using Marketplace.Users.Infrastructure.Customers.Persistence;
 using Marketplace.Users.Infrastructure.Sellers.Persistence;
+using Marketplace.Users.Infrastructure.Staffs.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<MarketplaceContext>());
         services.AddScoped<ICustomersRepository, CustomersRepository>();
         services.AddScoped<ISellersRepository, SellersRepository>();
+        services.AddScoped<IStaffsRepository, StaffsRepository>();
 
         return services;
     }
