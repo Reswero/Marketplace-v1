@@ -1,6 +1,7 @@
 ﻿using Marketplace.Common.Authorization.Attributes;
 using Marketplace.Common.Authorization.Extensions;
 using Marketplace.Common.Authorization.Models;
+using Marketplace.Common.Responses;
 using Marketplace.Users.Application.Sellers.Commands.CreateSeller;
 using Marketplace.Users.Application.Sellers.Commands.UpdateSeller;
 using Marketplace.Users.Application.Sellers.Queries.GetSeller;
@@ -40,6 +41,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(Seller), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetSeller(int accountId)
     {
         if (HttpContext.CheckAccessById(accountId) is false)

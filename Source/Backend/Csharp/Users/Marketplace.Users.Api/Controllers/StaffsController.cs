@@ -1,6 +1,7 @@
 ﻿using Marketplace.Common.Authorization.Attributes;
 using Marketplace.Common.Authorization.Extensions;
 using Marketplace.Common.Authorization.Models;
+using Marketplace.Common.Responses;
 using Marketplace.Users.Application.Staffs.Commands.CreateStaff;
 using Marketplace.Users.Application.Staffs.Commands.UpdateStaff;
 using Marketplace.Users.Application.Staffs.Queries.GetStaff;
@@ -40,6 +41,7 @@ public class StaffsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(Staff), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult>GetStaff(int accountId)
     {
         if (HttpContext.CheckAccessById(accountId) is false)
