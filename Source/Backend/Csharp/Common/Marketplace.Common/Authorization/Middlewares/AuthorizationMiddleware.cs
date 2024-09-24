@@ -21,7 +21,7 @@ public class AuthorizationMiddleware(RequestDelegate next)
         if (idExists && typeExists)
         {
             _ = int.TryParse(idString, out id);
-            _ = Enum.TryParse(typeString, out type);
+            _ = Enum.TryParse(typeString, true, out type);
         }
 
         context.Items[AuthorizationConsts.ClaimsKey] = new AuthorizationClaims(id, type);
