@@ -9,5 +9,7 @@ internal class AddressConfiguration : IEntityTypeConfiguration<Address>
     public void Configure(EntityTypeBuilder<Address> builder)
     {
         builder.HasKey(a => new { a.AccountId, a.Location });
+
+        builder.HasIndex(a => new { a.AccountId, a.Location }).IsUnique();
     }
 }

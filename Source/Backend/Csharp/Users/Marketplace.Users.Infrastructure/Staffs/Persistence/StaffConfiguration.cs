@@ -10,6 +10,8 @@ internal class StaffConfiguration : IEntityTypeConfiguration<Staff>
     {
         builder.HasKey(s => s.AccountId);
 
+        builder.HasIndex(s => s.AccountId).IsUnique();
+
         builder.Property(s => s.AccountId).ValueGeneratedNever();
 
         builder.Property(s => s.FirstName).HasMaxLength(20);

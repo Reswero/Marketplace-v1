@@ -10,6 +10,8 @@ internal class AdministratorConfiguration : IEntityTypeConfiguration<Administrat
     {
         builder.HasKey(a => a.AccountId);
 
+        builder.HasIndex(a => a.AccountId).IsUnique();
+
         builder.Property(a => a.AccountId).ValueGeneratedNever();
 
         builder.Property(a => a.FirstName).HasMaxLength(20);
