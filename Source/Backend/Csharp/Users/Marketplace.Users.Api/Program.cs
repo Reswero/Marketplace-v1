@@ -1,6 +1,7 @@
 using Marketplace.Common.Authorization.Extensions;
 using Marketplace.Users.Application;
 using Marketplace.Users.Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Marketplace.Users.Api
 {
@@ -15,8 +16,13 @@ namespace Marketplace.Users.Api
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(opt =>
+            {
+                opt.AddHeaderAuthorization();
+            });
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -31,10 +37,7 @@ namespace Marketplace.Users.Api
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseHeaderAuthorization();
-
 
             app.MapControllers();
 
