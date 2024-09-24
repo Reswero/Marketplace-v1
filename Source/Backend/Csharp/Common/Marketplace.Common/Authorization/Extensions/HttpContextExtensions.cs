@@ -14,7 +14,7 @@ public static class HttpContextExtensions
     /// <param name="context"></param>
     public static AuthorizationClaims GetClaims(this HttpContext context)
         => context.Items.TryGetValue(AuthorizationConsts.ClaimsKey, out var claims) ?
-            (AuthorizationClaims) claims : new AuthorizationClaims();
+            (AuthorizationClaims) claims! : new AuthorizationClaims();
     
     /// <summary>
     /// Проверка доступа к аккаунта по идентификатору

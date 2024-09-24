@@ -43,7 +43,6 @@ public static class DependencyInjection
         using var scope = provider.CreateScope();
         using var db = scope.ServiceProvider.GetRequiredService<MarketplaceContext>();
 
-        db.Database.EnsureDeleted();
-        db.Database.EnsureCreated();
+        db.Database.Migrate();
     }
 }
