@@ -20,7 +20,16 @@ public class Staff
         LastName = lastName;
     }
 
+    /// <summary>
+    /// Идентификатор аккаунта
+    /// </summary>
     public int AccountId { get; private set; }
+    /// <summary>
+    /// Имя
+    /// </summary>
     public string FirstName { get; private set; } = null!;
+    /// <summary>
+    /// Фамилия
+    /// </summary>
     public string LastName { get; private set; } = null!;
 }

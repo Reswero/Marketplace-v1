@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Administrators.Commands.UpdateAdmin;
 
+/// <summary>
+/// Обновление профиля администратора
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class UpdateAdminCommandHandler(IAdministratorsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateAdminCommand>
 {

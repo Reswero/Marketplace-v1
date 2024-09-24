@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Sellers.Commands.UpdateSeller;
 
+/// <summary>
+/// Обновление профиля продавца
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class UpdateSellerCommandHandler(ISellersRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateSellerCommand>
 {

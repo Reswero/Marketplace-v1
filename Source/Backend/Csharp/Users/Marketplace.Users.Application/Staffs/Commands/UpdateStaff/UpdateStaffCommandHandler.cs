@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Staffs.Commands.UpdateStaff;
 
+/// <summary>
+/// Обновление профиля персонала
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class UpdateStaffCommandHandler(IStaffsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateStaffCommand>
 {

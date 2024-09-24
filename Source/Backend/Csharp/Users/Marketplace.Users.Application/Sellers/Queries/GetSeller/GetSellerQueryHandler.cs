@@ -4,6 +4,10 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Sellers.Queries.GetSeller;
 
+/// <summary>
+/// Получение профиля продавца
+/// </summary>
+/// <param name="repository"></param>
 internal class GetSellerQueryHandler(ISellersRepository repository) : IRequestHandler<GetSellerQuery, Seller>
 {
     private readonly ISellersRepository _repository = repository;

@@ -10,8 +10,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Marketplace.Users.Infrastructure;
 
+/// <summary>
+/// Иъекция зависимостей слоя инфраструктуры
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Добавить слой инфраструктуры
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");

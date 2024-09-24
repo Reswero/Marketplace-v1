@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Administrators.Commands.CreateAdmin;
 
+/// <summary>
+/// Создание профиля администратора
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class CreateAdminCommandHandler(IAdministratorsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<CreateAdminCommand>
 {

@@ -4,6 +4,10 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Staffs.Queries.GetStaff;
 
+/// <summary>
+/// Получение профиля персонала
+/// </summary>
+/// <param name="repository"></param>
 internal class GetStaffQueryHandler(IStaffsRepository repository) : IRequestHandler<GetStaffQuery, Staff>
 {
     private readonly IStaffsRepository _repository = repository;

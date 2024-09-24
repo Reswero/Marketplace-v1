@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Staffs.Commands.CreateStaff;
 
+/// <summary>
+/// Создание профиля персонала
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class CreateStaffCommandHandler(IStaffsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<CreateStaffCommand>
 {
