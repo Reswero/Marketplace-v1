@@ -1,4 +1,5 @@
 using Marketplace.Common.Authorization.Extensions;
+using Marketplace.Users.Api.Extensions;
 using Marketplace.Users.Application;
 using Marketplace.Users.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -37,6 +38,7 @@ namespace Marketplace.Users.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseGlobalExceptionHandler();
             app.UseHeaderAuthorization();
 
             app.MapControllers();
