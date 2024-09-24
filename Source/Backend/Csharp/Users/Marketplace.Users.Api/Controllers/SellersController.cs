@@ -42,7 +42,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetSeller(int accountId)
     {
-        if (HttpContext.CheckAccessById(accountId))
+        if (HttpContext.CheckAccessById(accountId) is false)
             return Forbid();
 
         var seller = await _mediator.Send(new GetSellerQuery(accountId));
@@ -60,7 +60,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateSeller(int accountId, UpdateSellerCommand cmd)
     {
-        if (HttpContext.CheckAccessById(accountId))
+        if (HttpContext.CheckAccessById(accountId) is false)
             return Forbid();
         
         await _mediator.Send(cmd);

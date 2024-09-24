@@ -1,4 +1,6 @@
-﻿using Marketplace.Common.Authorization.Extensions;
+﻿using Marketplace.Common.Authorization.Attributes;
+using Marketplace.Common.Authorization.Extensions;
+using Marketplace.Common.Authorization.Models;
 using Marketplace.Users.Application.Staffs.Commands.CreateStaff;
 using Marketplace.Users.Application.Staffs.Commands.UpdateStaff;
 using Marketplace.Users.Application.Staffs.Queries.GetStaff;
@@ -33,13 +35,14 @@ public class StaffsController(IMediator mediator) : ControllerBase
     /// Получение профиля персонала
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
+    [AccountTypeAuthorize(AccountType.Staff)]
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(Staff), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult>GetStaff(int accountId)
     {
-        if (HttpContext.CheckAccessById(accountId))
+        if (HttpContext.CheckAccessById(accountId) is false)
             return Forbid();
 
         var staff = await _mediator.Send(new GetStaffQuery(accountId));
@@ -50,13 +53,14 @@ public class StaffsController(IMediator mediator) : ControllerBase
     /// Обновление профиля персонала
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
+    [AccountTypeAuthorize(AccountType.Staff)]
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult>UpdateStaff(int accountId, UpdateStaffCommand cmd)
     {
-        if (HttpContext.CheckAccessById(accountId))
+        if (HttpContext.CheckAccessById(accountId) is false)
             return Forbid();
 
         await _mediator.Send(cmd);

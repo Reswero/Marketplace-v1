@@ -2,7 +2,7 @@
 using Marketplace.Common.Authorization.Models;
 using Marketplace.Users.Application.Administrators.Commands.CreateAdmin;
 using Marketplace.Users.Application.Administrators.Commands.UpdateAdmin;
-using Marketplace.Users.Application.Administrators.Queries;
+using Marketplace.Users.Application.Administrators.Queries.GetAdmin;
 using Marketplace.Users.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
