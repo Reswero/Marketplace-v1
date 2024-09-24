@@ -1,3 +1,4 @@
+using Marketplace.Common.Authorization.Extensions;
 using Marketplace.Users.Application;
 using Marketplace.Users.Infrastructure;
 
@@ -32,7 +33,7 @@ namespace Marketplace.Users.Api
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseHeaderAuthorization();
 
 
             app.MapControllers();
