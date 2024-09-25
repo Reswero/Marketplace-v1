@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace Marketplace.Users.Application.Common.Behaviors;
+namespace Marketplace.Common.Mediator.Behaviors;
 
-internal class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) :
+public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) :
     IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
