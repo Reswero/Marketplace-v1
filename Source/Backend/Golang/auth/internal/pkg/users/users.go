@@ -9,10 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/customer"
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/seller"
-	"github.com/Reswero/Marketplace-v1/auth/internal/domain/staff"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 )
 
@@ -35,84 +31,69 @@ func New(serviceAddress string) *Users {
 	}
 }
 
-// Создание профиля администратора
-func (u *Users) CreateAdministrator(ctx context.Context, acc *account.Account) error {
-	const op = "users.CreateAdministrator"
-
-	url := fmt.Sprintf("%s/internal/v1/administrators", u.ServiceAddress)
-
-	body, err := json.Marshal(acc)
-	if err != nil {
-		return formatter.FmtError(op, err)
-	}
-
-	err = u.doCreateRequest(ctx, url, body)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // Создание профиля покупателя
-func (u *Users) CreateCustomer(ctx context.Context, cus *customer.Customer) error {
+func (u *Users) CreateCustomer(ctx context.Context, dto *CreateCustomerDto) error {
 	const op = "users.CreateCustomer"
 
 	url := fmt.Sprintf("%s/internal/v1/customers", u.ServiceAddress)
 
-	body, err := json.Marshal(cus)
+	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
 		return formatter.FmtError(op, err)
-	}
-
-	err = u.doCreateRequest(ctx, url, body)
-	if err != nil {
-		return err
 	}
 
 	return nil
 }
 
 // Создание профиля продавца
-func (u *Users) CreateSeller(ctx context.Context, sel *seller.Seller) error {
+func (u *Users) CreateSeller(ctx context.Context, dto *CreateSellerDto) error {
 	const op = "users.CreateSeller"
 
 	url := fmt.Sprintf("%s/internal/v1/sellers", u.ServiceAddress)
 
-	body, err := json.Marshal(sel)
+	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
 		return formatter.FmtError(op, err)
-	}
-
-	err = u.doCreateRequest(ctx, url, body)
-	if err != nil {
-		return err
 	}
 
 	return nil
 }
 
 // Создание профиля персонала
-func (u *Users) CreateStaff(ctx context.Context, acc *staff.Staff) error {
+func (u *Users) CreateStaff(ctx context.Context, dto *CreateStaffDto) error {
 	const op = "users.CreateStaff"
 
 	url := fmt.Sprintf("%s/internal/v1/staffs", u.ServiceAddress)
 
-	body, err := json.Marshal(acc)
+	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
 		return formatter.FmtError(op, err)
-	}
-
-	err = u.doCreateRequest(ctx, url, body)
-	if err != nil {
-		return err
 	}
 
 	return nil
 }
 
-func (u *Users) doCreateRequest(ctx context.Context, url string, body []byte) error {
+// Создание профиля администратора
+func (u *Users) CreateAdministrator(ctx context.Context, dto *CreateAdministratorDto) error {
+	const op = "users.CreateAdministrator"
+
+	url := fmt.Sprintf("%s/internal/v1/administrators", u.ServiceAddress)
+
+	err := u.doCreateRequest(ctx, url, dto)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	return nil
+}
+
+func (u *Users) doCreateRequest(ctx context.Context, url string, dto interface{}) error {
 	const op = "users.doCreateRequest"
+
+	body, err := json.Marshal(dto)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
 
 	reader := bytes.NewReader(body)
 
