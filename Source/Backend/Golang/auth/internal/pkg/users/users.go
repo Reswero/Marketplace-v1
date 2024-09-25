@@ -18,16 +18,16 @@ var (
 
 // Взаимодействие с API сервиса Users
 type Users struct {
-	Client         *http.Client
-	ServiceAddress string
+	client         *http.Client
+	serviceAddress string
 }
 
 func New(serviceAddress string) *Users {
 	return &Users{
-		Client: &http.Client{
+		client: &http.Client{
 			Timeout: 10 * time.Second,
 		},
-		ServiceAddress: serviceAddress,
+		serviceAddress: serviceAddress,
 	}
 }
 
@@ -35,7 +35,7 @@ func New(serviceAddress string) *Users {
 func (u *Users) CreateCustomer(ctx context.Context, dto *CreateCustomerDto) error {
 	const op = "users.CreateCustomer"
 
-	url := fmt.Sprintf("%s/internal/v1/customers", u.ServiceAddress)
+	url := fmt.Sprintf("%s/internal/v1/customers", u.serviceAddress)
 
 	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
@@ -49,7 +49,7 @@ func (u *Users) CreateCustomer(ctx context.Context, dto *CreateCustomerDto) erro
 func (u *Users) CreateSeller(ctx context.Context, dto *CreateSellerDto) error {
 	const op = "users.CreateSeller"
 
-	url := fmt.Sprintf("%s/internal/v1/sellers", u.ServiceAddress)
+	url := fmt.Sprintf("%s/internal/v1/sellers", u.serviceAddress)
 
 	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
@@ -63,7 +63,7 @@ func (u *Users) CreateSeller(ctx context.Context, dto *CreateSellerDto) error {
 func (u *Users) CreateStaff(ctx context.Context, dto *CreateStaffDto) error {
 	const op = "users.CreateStaff"
 
-	url := fmt.Sprintf("%s/internal/v1/staffs", u.ServiceAddress)
+	url := fmt.Sprintf("%s/internal/v1/staffs", u.serviceAddress)
 
 	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
@@ -77,7 +77,7 @@ func (u *Users) CreateStaff(ctx context.Context, dto *CreateStaffDto) error {
 func (u *Users) CreateAdministrator(ctx context.Context, dto *CreateAdministratorDto) error {
 	const op = "users.CreateAdministrator"
 
-	url := fmt.Sprintf("%s/internal/v1/administrators", u.ServiceAddress)
+	url := fmt.Sprintf("%s/internal/v1/administrators", u.serviceAddress)
 
 	err := u.doCreateRequest(ctx, url, dto)
 	if err != nil {
@@ -102,7 +102,7 @@ func (u *Users) doCreateRequest(ctx context.Context, url string, dto interface{}
 		return formatter.FmtError(op, err)
 	}
 
-	resp, err := u.Client.Do(req)
+	resp, err := u.client.Do(req)
 	if err != nil {
 		return formatter.FmtError(op, err)
 	}
