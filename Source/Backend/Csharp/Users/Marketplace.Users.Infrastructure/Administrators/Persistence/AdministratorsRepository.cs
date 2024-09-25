@@ -9,6 +9,7 @@ namespace Marketplace.Users.Infrastructure.Administrators.Persistence;
 /// <summary>
 /// Репозиторий администраторов
 /// </summary>
+/// <param name="db">Контекст БД</param>
 internal class AdministratorsRepository(MarketplaceContext db) : IAdministratorsRepository
 {
     private readonly MarketplaceContext _db = db;

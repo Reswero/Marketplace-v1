@@ -10,6 +10,8 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.HasKey(c => c.AccountId);
 
+        builder.HasIndex(c => c.AccountId).IsUnique();
+
         builder.Property(c => c.AccountId).ValueGeneratedNever();
 
         builder.Property(c => c.FirstName).HasMaxLength(20);

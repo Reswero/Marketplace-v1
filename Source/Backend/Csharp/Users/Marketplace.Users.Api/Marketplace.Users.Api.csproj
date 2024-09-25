@@ -8,10 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Marketplace.Common\Marketplace.Common.csproj" />
     <ProjectReference Include="..\Marketplace.Users.Application\Marketplace.Users.Application.csproj" />
     <ProjectReference Include="..\Marketplace.Users.Infrastructure\Marketplace.Users.Infrastructure.csproj" />
   </ItemGroup>

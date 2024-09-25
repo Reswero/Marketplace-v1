@@ -9,6 +9,8 @@ internal class SellerConfiguration : IEntityTypeConfiguration<Seller>
     public void Configure(EntityTypeBuilder<Seller> builder)
     {
         builder.HasKey(s => s.AccountId);
+
+        builder.HasIndex(s => s.AccountId).IsUnique();
         builder.HasIndex(s => s.CompanyName).IsUnique();
 
         builder.Property(s => s.AccountId).ValueGeneratedNever();

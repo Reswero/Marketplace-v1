@@ -7,13 +7,33 @@ using Marketplace.Users.Infrastructure.Staffs.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Marketplace.Users.Infrastructure;
 
+/// <summary>
+/// Иъекция зависимостей слоя инфраструктуры
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Добавить слой инфраструктуры
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        services.AddLogging(builder =>
+        {
+            builder.AddSerilog(dispose: true);
+        });
+
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<MarketplaceContext>(opt =>
@@ -35,7 +55,6 @@ public static class DependencyInjection
         using var scope = provider.CreateScope();
         using var db = scope.ServiceProvider.GetRequiredService<MarketplaceContext>();
 
-        db.Database.EnsureDeleted();
-        db.Database.EnsureCreated();
+        db.Database.Migrate();
     }
 }

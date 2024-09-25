@@ -9,6 +9,7 @@ namespace Marketplace.Users.Infrastructure.Customers.Persistence;
 /// <summary>
 /// Репозиторий покупателей
 /// </summary>
+/// <param name="db">Контекст БД</param>
 internal class CustomersRepository(MarketplaceContext db) : ICustomersRepository
 {
     private readonly MarketplaceContext _db = db;

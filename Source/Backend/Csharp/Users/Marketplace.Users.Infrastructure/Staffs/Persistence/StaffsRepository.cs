@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Marketplace.Users.Infrastructure.Staffs.Persistence;
 
+/// <summary>
+/// Репозиторий персонала
+/// </summary>
+/// <param name="db">Контекст БД</param>
 internal class StaffsRepository(MarketplaceContext db) : IStaffsRepository
 {
     private readonly MarketplaceContext _db = db;

@@ -4,6 +4,11 @@ using MediatR;
 
 namespace Marketplace.Users.Application.Sellers.Commands.CreateSeller;
 
+/// <summary>
+/// Создание профиля продавца
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class CreateSellerCommandHandler(ISellersRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<CreateSellerCommand>
 {
