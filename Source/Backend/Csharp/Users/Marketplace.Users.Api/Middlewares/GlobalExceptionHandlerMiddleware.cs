@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Responses;
+﻿using FluentValidation;
+using Marketplace.Common.Responses;
 using Marketplace.Users.Application.Common.Exceptions;
 using System.Net.Mime;
 
@@ -20,6 +21,10 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         {
             await _next.Invoke(context);
         }
+        catch (ValidationException e)
+        {
+            await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
+        }
         catch (AccountNotExistsException e)
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status404NotFound);
@@ -27,6 +32,7 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         catch (Exception e)
         {
             _logger.LogError(e, "Ошибка во время выполнения запроса: {Error}", e.Message);
+            await HandleExceptionAsync(context, new Exception("Неизвестная ошибка"), StatusCodes.Status500InternalServerError);
         }
     }
 
