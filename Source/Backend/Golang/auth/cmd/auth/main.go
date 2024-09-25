@@ -7,6 +7,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/auth/internal/config"
 	"github.com/Reswero/Marketplace-v1/auth/internal/delivery/http"
 	sessionRedis "github.com/Reswero/Marketplace-v1/auth/internal/pkg/session/redis"
+	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/users"
 	accountRepository "github.com/Reswero/Marketplace-v1/auth/internal/repository/account"
 	accountUsecase "github.com/Reswero/Marketplace-v1/auth/internal/usecase/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase/session"
@@ -54,8 +55,9 @@ func main() {
 
 	accRepo := accountRepository.New(storage)
 	sessManager := sessionRedis.New(cache)
+	userService := users.New(cfg.Users.Address)
 
-	ucAccount := accountUsecase.New(accRepo)
+	ucAccount := accountUsecase.New(accRepo, userService)
 	ucSession := session.New(sessManager)
 
 	d := http.New(logger, cfg.Environment, ucAccount, ucSession)

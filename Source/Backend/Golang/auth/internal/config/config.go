@@ -11,6 +11,7 @@ type Config struct {
 	Db
 	Cache
 	HttpServer
+	Users
 }
 
 type Db struct {
@@ -22,6 +23,10 @@ type Cache struct {
 }
 
 type HttpServer struct {
+	Address string `yaml:"address"`
+}
+
+type Users struct {
 	Address string `yaml:"address"`
 }
 
