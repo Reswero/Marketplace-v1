@@ -29,7 +29,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> CreateSeller(CreateSellerCommand cmd)
     {
         await _mediator.Send(cmd);
-        return Created();
+        return StatusCode(StatusCodes.Status201Created);
     }
 
     /// <summary>

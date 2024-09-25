@@ -29,7 +29,7 @@ public class AdministratorsController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> CreateAdmin(CreateAdminCommand cmd)
     {
         await _mediator.Send(cmd);
-        return Created();
+        return StatusCode(StatusCodes.Status201Created);
     }
 
     /// <summary>
