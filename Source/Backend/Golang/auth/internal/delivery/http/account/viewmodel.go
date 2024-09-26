@@ -8,7 +8,7 @@ type PersonVm struct {
 type AccountCreateVm struct {
 	PhoneNumber string `json:"phoneNumber" validate:"required,e164"`
 	Email       string `json:"email" validate:"required,email"`
-	Password    string `json:"password" validate:"required,min=6,max=100"`
+	Password    string `json:"password" validate:"required,min=8,max=64"`
 }
 
 type CustomerAccountCreateVm struct {
@@ -43,11 +43,11 @@ type AccountCreatedVm struct {
 }
 
 type ChangePasswordVm struct {
-	OldPassword string `json:"oldPassword" validate:"required"`
-	NewPassword string `json:"newPassword" validate:"required"`
+	OldPassword string `json:"oldPassword" validate:"required,min=8,max=64"`
+	NewPassword string `json:"newPassword" validate:"required,min=8,max=64"`
 }
 
 type ChangeEmailVm struct {
 	NewEmail string `json:"newEmail" validate:"required,email"`
-	Password string `json:"password" validate:"required"`
+	Password string `json:"password" validate:"required,min=8,max=64"`
 }
