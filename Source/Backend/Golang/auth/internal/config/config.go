@@ -10,7 +10,7 @@ type Config struct {
 	Environment string `yaml:"env"`
 	Db
 	Cache
-	HttpServer
+	HttpServer `yaml:"http_server"`
 	Users
 }
 

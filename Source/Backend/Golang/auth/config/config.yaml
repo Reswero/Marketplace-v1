@@ -1,9 +1,9 @@
 env: "dev"
 db:
-  connection_string: "postgres://postgres:root@localhost:5432/go-auth"
+  connection_string: "postgres://postgres:root@localhost:5432/marketplace-auth"
 cache:
   address: "localhost:6379"
 http_server:
   address: "localhost:8085"
 users:
-  address: "localhost:8086"
+  address: "http://localhost:8086"
