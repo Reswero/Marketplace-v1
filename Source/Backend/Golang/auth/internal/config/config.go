@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -15,7 +16,11 @@ type Config struct {
 }
 
 type Db struct {
-	ConnString string `yaml:"connection_string"`
+	IpAddress string `yaml:"ip_address"`
+	Port      int    `yaml:"port"`
+	User      string `yaml:"user"`
+	Password  string `yaml:"password"`
+	DbName    string `yaml:"db_name"`
 }
 
 type Cache struct {
@@ -33,6 +38,7 @@ type Users struct {
 
 func MustLoad() *Config {
 	path := os.Getenv("CONFIG_PATH")
+	fmt.Println(path)
 	if path == "" {
 		panic("CONFIG_PATH is not set")
 	}
