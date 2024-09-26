@@ -51,7 +51,7 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 	}
 
 	cAcc := &users.CreateCustomerDto{
-		Id:        id,
+		AccountId: id,
 		FirstName: acc.FirstName,
 		LastName:  acc.LastName,
 	}
@@ -91,7 +91,7 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.SellerAccountDt
 	}
 
 	cAcc := &users.CreateSellerDto{
-		Id:          id,
+		AccountId:   id,
 		FirstName:   acc.FirstName,
 		LastName:    acc.LastName,
 		CompanyName: acc.CompanyName,
@@ -132,7 +132,7 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.StaffAccountDto)
 	}
 
 	cAcc := &users.CreateStaffDto{
-		Id:        id,
+		AccountId: id,
 		FirstName: acc.FirstName,
 		LastName:  acc.LastName,
 	}
@@ -172,7 +172,7 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.AdminAccountDto)
 	}
 
 	cAcc := &users.CreateAdministratorDto{
-		Id:        id,
+		AccountId: id,
 		FirstName: acc.FirstName,
 		LastName:  acc.LastName,
 	}

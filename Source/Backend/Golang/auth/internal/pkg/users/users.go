@@ -101,6 +101,7 @@ func (u *Users) doCreateRequest(ctx context.Context, url string, dto interface{}
 	if err != nil {
 		return formatter.FmtError(op, err)
 	}
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := u.client.Do(req)
 	if err != nil {
