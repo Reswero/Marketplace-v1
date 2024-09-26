@@ -71,9 +71,13 @@ func TestDbQueuePop(t *testing.T) {
 		t.Errorf("Error: %v", err)
 	}
 
-	err = queue.Pop()
+	poped, err := queue.Pop()
 	if err != nil {
 		t.Errorf("Error: %v", err)
+	}
+
+	if value.Value1 != poped.Value1 || value.Value2 != poped.Value2 {
+		t.Errorf("Error: Expected %v, got %v", value, poped)
 	}
 
 	_, err = queue.Peek()
