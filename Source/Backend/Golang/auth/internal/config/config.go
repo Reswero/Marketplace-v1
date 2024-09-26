@@ -28,6 +28,7 @@ type HttpServer struct {
 
 type Users struct {
 	Address string `yaml:"address"`
+	Timeout int    `yaml:"timeout_ms"`
 }
 
 func MustLoad() *Config {

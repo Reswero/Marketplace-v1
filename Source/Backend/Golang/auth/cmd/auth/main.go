@@ -64,7 +64,7 @@ func main() {
 	}
 	defer usersOutbox.Close()
 
-	usersService := users.New(cfg.Users.Address)
+	usersService := users.New(cfg.Users.Timeout, cfg.Users.Address)
 
 	usersOutboxDaemon := users.NewOutboxDaemon(logger, usersOutbox, accRepo)
 	go usersOutboxDaemon.Start()

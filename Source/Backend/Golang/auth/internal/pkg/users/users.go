@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	ErrCreateAdminFailed = errors.New("failed to create administrator")
+	ErrCreateFailed = errors.New("failed to create profile")
 )
 
 // Взаимодействие с API сервиса Users
@@ -22,10 +22,13 @@ type Users struct {
 	address string
 }
 
-func New(address string) *Users {
+func New(timeout int, address string) *Users {
+	fmt.Println(timeout)
+	fmt.Println(time.Duration(timeout) * time.Millisecond)
+
 	return &Users{
 		client: &http.Client{
-			Timeout: 10 * time.Second,
+			Timeout: time.Duration(timeout) * time.Millisecond,
 		},
 		address: address,
 	}
@@ -108,8 +111,9 @@ func (u *Users) doCreateRequest(ctx context.Context, url string, dto interface{}
 		return formatter.FmtError(op, err)
 	}
 
+	fmt.Println(resp.StatusCode)
 	if resp.StatusCode != http.StatusCreated {
-		return formatter.FmtError(op, ErrCreateAdminFailed)
+		return formatter.FmtError(op, ErrCreateFailed)
 	}
 
 	return nil
