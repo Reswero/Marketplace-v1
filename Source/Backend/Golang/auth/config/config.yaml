@@ -1,7 +1,14 @@
 env: "dev"
 db:
-  connection_string: "postgres://postgres:root@localhost:5432/go-auth"
+  ip_address: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "root"
+  db_name: "marketplace-auth"
 cache:
   address: "localhost:6379"
 http_server:
   address: "localhost:8085"
+users:
+  address: "http://localhost:8086"
+  timeout_ms: 500

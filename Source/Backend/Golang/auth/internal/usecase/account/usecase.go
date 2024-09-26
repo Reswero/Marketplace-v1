@@ -7,18 +7,24 @@ import (
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/password"
+	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/users"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase/adapters/repository"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
+	"github.com/Reswero/Marketplace-v1/pkg/outbox"
 )
 
 type UseCase struct {
-	repo repository.Account
+	repo         repository.Account
+	usersService *users.Users
+	usersOutbox  *outbox.DbQueue[users.OutboxDto]
 }
 
-func New(r repository.Account) *UseCase {
+func New(r repository.Account, u *users.Users, o *outbox.DbQueue[users.OutboxDto]) *UseCase {
 	return &UseCase{
-		repo: r,
+		repo:         r,
+		usersService: u,
+		usersOutbox:  o,
 	}
 }
 
@@ -44,8 +50,20 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 		return 0, formatter.FmtError(op, err)
 	}
 
-	// Call to Users Microservice
-	// CustomerAccount { AccountId: id }
+	cAcc := &users.CreateCustomerDto{
+		AccountId: id,
+		FirstName: acc.FirstName,
+		LastName:  acc.LastName,
+	}
+
+	err = u.usersService.CreateCustomer(ctx, cAcc)
+	if err != nil {
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
+		return 0, formatter.FmtError(op, err)
+	}
 
 	return id, nil
 }
@@ -72,8 +90,21 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.SellerAccountDt
 		return 0, formatter.FmtError(op, err)
 	}
 
-	// Call to Users Microservice
-	// SellerAccount { AccountId: id }
+	cAcc := &users.CreateSellerDto{
+		AccountId:   id,
+		FirstName:   acc.FirstName,
+		LastName:    acc.LastName,
+		CompanyName: acc.CompanyName,
+	}
+
+	err = u.usersService.CreateSeller(ctx, cAcc)
+	if err != nil {
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
+		return 0, formatter.FmtError(op, err)
+	}
 
 	return id, nil
 }
@@ -100,8 +131,20 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.StaffAccountDto)
 		return 0, formatter.FmtError(op, err)
 	}
 
-	// Call to Users Microservice
-	// StaffAccount { AccountId: id }
+	cAcc := &users.CreateStaffDto{
+		AccountId: id,
+		FirstName: acc.FirstName,
+		LastName:  acc.LastName,
+	}
+
+	err = u.usersService.CreateStaff(ctx, cAcc)
+	if err != nil {
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
+		return 0, formatter.FmtError(op, err)
+	}
 
 	return id, nil
 }
@@ -128,8 +171,20 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.AdminAccountDto)
 		return 0, formatter.FmtError(op, err)
 	}
 
-	// Call to Users Microservice
-	// AdministratorAccount { AccountId: id }
+	cAcc := &users.CreateAdministratorDto{
+		AccountId: id,
+		FirstName: acc.FirstName,
+		LastName:  acc.LastName,
+	}
+
+	err = u.usersService.CreateAdministrator(ctx, cAcc)
+	if err != nil {
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
+		return 0, formatter.FmtError(op, err)
+	}
 
 	return id, nil
 }
