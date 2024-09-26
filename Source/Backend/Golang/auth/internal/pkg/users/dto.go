@@ -1,5 +1,16 @@
 package users
 
+type OutboxAction int
+
+const (
+	DeleteAction OutboxAction = iota
+)
+
+type OutboxDto struct {
+	Action    OutboxAction `json:"action"`
+	AccountId int          `json:"accountId"`
+}
+
 type CreateAdministratorDto struct {
 	Id        int    `json:"id"`
 	FirstName string `json:"firstName"`
