@@ -2,6 +2,9 @@ package users
 
 import (
 	"context"
+	"database/sql"
+	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/repository/account"
@@ -13,29 +16,31 @@ const OutboxName = "users.db"
 
 type OutboxDaemon struct {
 	exit   chan interface{}
+	logger *slog.Logger
 	outbox *outbox.DbQueue[OutboxDto]
 	repo   *account.Repository
 }
 
-func NewOutboxDaemon(outbox *outbox.DbQueue[OutboxDto], repo *account.Repository) *OutboxDaemon {
+func NewOutboxDaemon(logger *slog.Logger, outbox *outbox.DbQueue[OutboxDto], repo *account.Repository) *OutboxDaemon {
 	exit := make(chan interface{})
 
 	return &OutboxDaemon{
+		exit:   exit,
+		logger: logger,
 		outbox: outbox,
 		repo:   repo,
-		exit:   exit,
 	}
 }
 
 func (o *OutboxDaemon) Start() error {
-	select {
-	case <-o.exit:
-		return nil
-	case <-time.After(5 * time.Second):
-		o.processOutbox()
+	for {
+		select {
+		case <-o.exit:
+			return nil
+		case <-time.After(5 * time.Second):
+			o.processOutbox()
+		}
 	}
-
-	return nil
 }
 
 func (o *OutboxDaemon) Stop() error {
@@ -52,10 +57,27 @@ func (o *OutboxDaemon) Stop() error {
 }
 
 func (o *OutboxDaemon) processOutbox() {
-	value, _ := o.outbox.Peek()
+	const op = "users.OutboxDaemon.processOutbox"
+
+	value, err := o.outbox.Peek()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return
+		}
+		o.logger.Error(op, slog.String("error", err.Error()))
+	}
 
 	switch value.Action {
 	case DeleteAction:
-		o.repo.DeleteAccount(context.Background(), value.AccountId)
+		err = o.repo.DeleteAccount(context.Background(), value.AccountId)
+	}
+
+	if err != nil {
+		o.logger.Error(op, slog.String("error", err.Error()))
+	}
+
+	_, err = o.outbox.Pop()
+	if err != nil {
+		o.logger.Error(op, slog.String("error", err.Error()))
 	}
 }
