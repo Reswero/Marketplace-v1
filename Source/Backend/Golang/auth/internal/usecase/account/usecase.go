@@ -11,17 +11,20 @@ import (
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase/adapters/repository"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
+	"github.com/Reswero/Marketplace-v1/pkg/outbox"
 )
 
 type UseCase struct {
 	repo         repository.Account
 	usersService *users.Users
+	usersOutbox  *outbox.DbQueue[users.OutboxDto]
 }
 
-func New(r repository.Account, u *users.Users) *UseCase {
+func New(r repository.Account, u *users.Users, o *outbox.DbQueue[users.OutboxDto]) *UseCase {
 	return &UseCase{
 		repo:         r,
 		usersService: u,
+		usersOutbox:  o,
 	}
 }
 
@@ -55,7 +58,10 @@ func (u *UseCase) CreateCustomer(ctx context.Context, acc *usecase.CustomerAccou
 
 	err = u.usersService.CreateCustomer(ctx, cAcc)
 	if err != nil {
-		// Write to Outbox
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
 		return 0, formatter.FmtError(op, err)
 	}
 
@@ -93,7 +99,10 @@ func (u *UseCase) CreateSeller(ctx context.Context, acc *usecase.SellerAccountDt
 
 	err = u.usersService.CreateSeller(ctx, cAcc)
 	if err != nil {
-		// Write to Outbox
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
 		return 0, formatter.FmtError(op, err)
 	}
 
@@ -130,7 +139,10 @@ func (u *UseCase) CreateStaff(ctx context.Context, acc *usecase.StaffAccountDto)
 
 	err = u.usersService.CreateStaff(ctx, cAcc)
 	if err != nil {
-		// Write to Outbox
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
 		return 0, formatter.FmtError(op, err)
 	}
 
@@ -167,7 +179,10 @@ func (u *UseCase) CreateAdmin(ctx context.Context, acc *usecase.AdminAccountDto)
 
 	err = u.usersService.CreateAdministrator(ctx, cAcc)
 	if err != nil {
-		// Write to Outbox
+		u.usersOutbox.Push(&users.OutboxDto{
+			Action:    users.DeleteAction,
+			AccountId: id,
+		})
 		return 0, formatter.FmtError(op, err)
 	}
 

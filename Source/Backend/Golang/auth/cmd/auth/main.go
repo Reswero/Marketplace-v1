@@ -11,6 +11,7 @@ import (
 	accountRepository "github.com/Reswero/Marketplace-v1/auth/internal/repository/account"
 	accountUsecase "github.com/Reswero/Marketplace-v1/auth/internal/usecase/account"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase/session"
+	"github.com/Reswero/Marketplace-v1/pkg/outbox"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
 	"github.com/Reswero/Marketplace-v1/pkg/redis"
 )
@@ -55,9 +56,21 @@ func main() {
 
 	accRepo := accountRepository.New(storage)
 	sessManager := sessionRedis.New(cache)
-	userService := users.New(cfg.Users.Address)
 
-	ucAccount := accountUsecase.New(accRepo, userService)
+	usersOutbox, err := outbox.NewDbQueue[users.OutboxDto](users.OutboxName)
+	if err != nil {
+		logger.Error("failed to create outbox", slog.String("error", err.Error()))
+		panic(err)
+	}
+	defer usersOutbox.Close()
+
+	usersService := users.New(cfg.Users.Address)
+
+	usersOutboxDaemon := users.NewOutboxDaemon(usersOutbox, accRepo)
+	go usersOutboxDaemon.Start()
+	defer usersOutboxDaemon.Stop()
+
+	ucAccount := accountUsecase.New(accRepo, usersService, usersOutbox)
 	ucSession := session.New(sessManager)
 
 	d := http.New(logger, cfg.Environment, ucAccount, ucSession)
