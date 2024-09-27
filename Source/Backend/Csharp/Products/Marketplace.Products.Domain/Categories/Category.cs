@@ -1,4 +1,6 @@
-﻿namespace Marketplace.Products.Domain.Categories;
+﻿using Marketplace.Products.Domain.Parameters;
+
+namespace Marketplace.Products.Domain.Categories;
 
 /// <summary>
 /// Категория
@@ -14,7 +16,15 @@ public class Category
     /// </summary>
     public string Name { get; set; } = null!;
     /// <summary>
+    /// Параметры
+    /// </summary>
+    public List<CategoryParameter>? Parameters { get; set; }
+    /// <summary>
     /// Промокоды
     /// </summary>
     public List<Promocode>? Promocodes { get; set; }
+    /// <summary>
+    /// Подкатегории
+    /// </summary>
+    public List<Subсategory>? Subсategories { get; set; }
 }

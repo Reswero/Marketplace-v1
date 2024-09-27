@@ -10,9 +10,9 @@ public class Promocode
     /// </summary>
     public int CategoryId { get; set; }
     /// <summary>
-    /// Название
+    /// Код
     /// </summary>
-    public string Name { get; set; } = null!;
+    public string Code { get; set; } = null!;
     /// <summary>
     /// Действителен до
     /// </summary>
