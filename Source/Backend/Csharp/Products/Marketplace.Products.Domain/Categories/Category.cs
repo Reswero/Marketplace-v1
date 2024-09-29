@@ -1,11 +1,12 @@
-﻿using Marketplace.Products.Domain.Parameters;
+﻿using Marketplace.Common.SoftDelete;
+using Marketplace.Products.Domain.Parameters;
 
 namespace Marketplace.Products.Domain.Categories;
 
 /// <summary>
 /// Категория
 /// </summary>
-public class Category
+public class Category : ISoftDelete
 {
     /// <summary>
     /// Идентификатор
@@ -27,4 +28,12 @@ public class Category
     /// Подкатегории
     /// </summary>
     public List<Subсategory>? Subсategories { get; set; }
+    /// <inheritdoc/>
+    public DateTimeOffset? DeletedAt { get; private set; }
+
+    /// <inheritdoc/>
+    public void SetDeleted()
+    {
+        DeletedAt = DateTimeOffset.Now;
+    }
 }
