@@ -12,7 +12,7 @@ public static class AuthorizationConsts
     /// <summary>
     /// Название заголовка с типом аккаунта
     /// </summary>
-    public const string TypeHeader = "X-Account-Header";
+    public const string TypeHeader = "X-Account-Type";
     /// <summary>
     /// Ключ авторизационных данных для <see cref="Microsoft.AspNetCore.Http.HttpContext.Items"/>
     /// </summary>
