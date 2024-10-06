@@ -30,7 +30,7 @@ public class AccountTypeAuthorizeAttribute(AccountType type) : Attribute, IAutho
             return;
         }
 
-        if (claims.Type != _requiredType && claims.Type != AccountType.Admin)
+        if (claims.Type < _requiredType)
         {
             context.Result = new ForbidResult();
             return;
