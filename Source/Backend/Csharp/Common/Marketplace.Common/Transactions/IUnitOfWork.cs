@@ -9,5 +9,5 @@ public interface IUnitOfWork
     /// Сохранить изменения
     /// </summary>
     /// <param name="cancellationToken"></param>
-    public Task CommitAsync(CancellationToken cancellationToken = default);
+    public Task<int> CommitAsync(CancellationToken cancellationToken = default);
 }

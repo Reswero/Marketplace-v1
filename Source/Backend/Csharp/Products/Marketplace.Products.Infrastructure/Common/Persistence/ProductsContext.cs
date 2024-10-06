@@ -17,9 +17,9 @@ internal class ProductsContext : DbContext, IUnitOfWork
     public DbSet<ProductParameter> ProductParameters { get; set; } = null!;
     public DbSet<Promocode> Promocodes { get; set; } = null!;
 
-    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
     {
-        await SaveChangesAsync(cancellationToken);
+        return await SaveChangesAsync(cancellationToken);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
