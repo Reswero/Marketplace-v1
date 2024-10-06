@@ -12,7 +12,7 @@ public interface ICategoriesRepository
     /// </summary>
     /// <param name="category">Категория</param>
     /// <param name="cancellationToken"></param>
-    public Task<int> AddAsync(Category category, CancellationToken cancellationToken = default);
+    public Task AddAsync(Category category, CancellationToken cancellationToken = default);
     /// <summary>
     /// Получить категорию
     /// </summary>
@@ -31,5 +31,5 @@ public interface ICategoriesRepository
     /// <param name="id">Идентификатор</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    public Task<bool> DeleteAsync(Category category, CancellationToken cancellationToken = default);
 }

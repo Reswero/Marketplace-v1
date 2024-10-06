@@ -1,4 +1,5 @@
-﻿using Marketplace.Products.Application.Common.Interfaces;
+﻿using Marketplace.Products.Application.Common.Exceptions;
+using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Domain.Categories;
 using Marketplace.Products.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,16 @@ namespace Marketplace.Products.Infrastructure.Categories.Persistence;
 internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
 {
     /// <inheritdoc/>
-    public async Task<int> AddAsync(Category category, CancellationToken cancellationToken = default)
+    public async Task AddAsync(Category category, CancellationToken cancellationToken = default)
     {
         await _db.Categories.AddAsync(category, cancellationToken);
-        return category.Id;
     }
 
     /// <inheritdoc/>
     public async Task<Category> GetAsync(int id, CancellationToken cancellationToken = default)
     {
         var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
-            ?? throw new Exception();
+            ?? throw new ObjectNotFoundException(typeof(Category), id);
 
         return category;
     }
@@ -35,13 +35,8 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     }
 
     /// <inheritdoc/>
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Category category, CancellationToken cancellationToken = default)
     {
-        var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
-
-        if (category is null)
-            return false;
-
         _db.Categories.Remove(category);
         return true;
     }
