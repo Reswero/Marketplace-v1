@@ -18,6 +18,8 @@ internal class GetCategoryQueryHandler(ICategoriesRepository repository)
         var category = await _repository.GetAsync(request.Id, cancellationToken);
 
         var parameters = category.Parameters.Select(p => new CategoryParameterVM(p.Id, p.Name, p.Type)).ToList();
-        return new(category.Id, category.Name, parameters);
+        var subcategories = category.Subсategories.Select(s => new SubcategoryVM(s.Id, s.Name)).ToList();
+
+        return new(category.Id, category.Name, parameters, subcategories);
     }
 }
