@@ -25,8 +25,9 @@ internal class UpdateCategoryCommandHandler(ICategoriesRepository repository, IU
         var unexistingParameters = request.Parameters.Where(p => p.Id == 0).ToList();
         var existingParameters = request.Parameters.Where(p => parametersIds.Contains(p.Id)).ToList();
 
-        var parametersToAdd = existingParameters.Select(p =>
-            new CategoryParameter(category.Id, p.Id, p.Name, p.Type)).ToArray();
+        var parametersToAdd = existingParameters.Union(unexistingParameters)
+            .Select(p => new CategoryParameter(category.Id, p.Id, p.Name, p.Type))
+            .ToArray();
 
         category.RemoveParameters([.. category.Parameters]);
         category.AddParameters(parametersToAdd);
