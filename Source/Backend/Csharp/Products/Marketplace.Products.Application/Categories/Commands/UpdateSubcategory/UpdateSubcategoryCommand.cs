@@ -5,9 +5,8 @@ namespace Marketplace.Products.Application.Categories.Commands.UpdateSubcategory
 /// <summary>
 /// Команда обновления подкатегории
 /// </summary>
-/// <param name="Id">Идентификатор</param>
 /// <param name="Name">Название</param>
-public record UpdateSubcategoryCommand(int Id, string Name);
+public record UpdateSubcategoryCommand(string Name);
 
 /// <summary>
 /// Команда обновления подкатегории
@@ -15,5 +14,5 @@ public record UpdateSubcategoryCommand(int Id, string Name);
 /// <param name="CategoryId">Идентификатор категории</param>
 /// <param name="Id">Идентификатор</param>
 /// <param name="Name">Название</param>
-public record UpdateSubcategoryWithCategoryIdCommand(int CategoryId, int Id, string Name)
+public record UpdateSubcategoryWithIdCommand(int CategoryId, int Id, string Name)
     :IRequest;

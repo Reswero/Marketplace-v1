@@ -11,11 +11,12 @@ namespace Marketplace.Products.Application.Categories.Commands.UpdateCategory;
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
 internal class UpdateCategoryCommandHandler(ICategoriesRepository repository, IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdateCategoryCommand>
+    : IRequestHandler<UpdateCategoryWithIdCommand>
 {
     private readonly ICategoriesRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+
+    public async Task Handle(UpdateCategoryWithIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.Id, cancellationToken);
         category.SetName(request.Name);

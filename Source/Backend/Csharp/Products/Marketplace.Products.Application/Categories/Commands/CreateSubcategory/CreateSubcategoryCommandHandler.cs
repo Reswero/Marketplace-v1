@@ -12,12 +12,12 @@ namespace Marketplace.Products.Application.Categories.Commands.CreateSubcategory
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
 internal class CreateSubcategoryCommandHandler(ICategoriesRepository repository, IUnitOfWork unitOfWork)
-    : IRequestHandler<CreateSubcategoryCommand, CreateObjectResultVM>
+    : IRequestHandler<CreateSubcategoryWithCategoryIdCommand, CreateObjectResultVM>
 {
     private readonly ICategoriesRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<CreateObjectResultVM> Handle(CreateSubcategoryCommand request, CancellationToken cancellationToken)
+    public async Task<CreateObjectResultVM> Handle(CreateSubcategoryWithCategoryIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.CategoryId, cancellationToken);
 

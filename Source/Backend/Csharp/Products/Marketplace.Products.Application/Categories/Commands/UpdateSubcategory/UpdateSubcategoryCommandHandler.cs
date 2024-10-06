@@ -12,12 +12,12 @@ namespace Marketplace.Products.Application.Categories.Commands.UpdateSubcategory
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
 internal class UpdateSubcategoryCommandHandler(ICategoriesRepository repository, IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdateSubcategoryWithCategoryIdCommand>
+    : IRequestHandler<UpdateSubcategoryWithIdCommand>
 {
     private readonly ICategoriesRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task Handle(UpdateSubcategoryWithCategoryIdCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateSubcategoryWithIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.CategoryId, cancellationToken);
 

@@ -2,7 +2,7 @@
 
 namespace Marketplace.Products.Application.Categories.Commands.UpdateSubcategory;
 
-public class UpdateSubcategoryCommandValidator : AbstractValidator<UpdateSubcategoryWithCategoryIdCommand>
+public class UpdateSubcategoryCommandValidator : AbstractValidator<UpdateSubcategoryWithIdCommand>
 {
     public UpdateSubcategoryCommandValidator()
     {
