@@ -19,20 +19,20 @@ public class AccountTypeAuthorizeAttribute(AccountType type) : Attribute, IAutho
 
         if (claimsExist is false)
         {
-            context.Result = new UnauthorizedResult();
+            context.Result = AuthorizationConsts.UnauthorizedResultResponse;
             return;
         }
 
         var claims = (AuthorizationClaims)claimsObj!;
         if (claims.Type == AccountType.None)
         {
-            context.Result = new UnauthorizedResult();
+            context.Result = AuthorizationConsts.UnauthorizedResultResponse;
             return;
         }
 
         if (claims.Type < _requiredType)
         {
-            context.Result = new ForbidResult();
+            context.Result = AuthorizationConsts.ForbidResultResponse;
             return;
         }
     }
