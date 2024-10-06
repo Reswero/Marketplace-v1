@@ -1,4 +1,5 @@
-﻿using Marketplace.Products.Application.Common.Interfaces;
+﻿using Marketplace.Common.Transactions;
+using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,12 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContextFactory<ProductsContext>(opt =>
+        services.AddDbContext<ProductsContext>(opt =>
         {
             opt.UseNpgsql(connectionString);
         });
 
+        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
         return services;

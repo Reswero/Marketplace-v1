@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Marketplace.Products.Infrastructure.Common.Persistence;
 
-internal class ProductsContext : DbContext, IUnitOfWork
+internal class ProductsContext(DbContextOptions<ProductsContext> options) : DbContext(options), IUnitOfWork
 {
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Discount> Discounts { get; set; } = null!;

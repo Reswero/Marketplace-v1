@@ -11,7 +11,8 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Name).HasMaxLength(100);
 
         builder.HasMany(c => c.Parameters)
-            .WithOne();
+            .WithOne(p => p.Category)
+            .HasForeignKey(p => p.CategoryId);
         builder.HasMany(c => c.Promocodes)
             .WithOne();
         builder.HasMany(c => c.Subсategories)

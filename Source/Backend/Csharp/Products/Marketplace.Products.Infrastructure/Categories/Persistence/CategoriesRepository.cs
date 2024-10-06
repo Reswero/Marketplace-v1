@@ -39,6 +39,7 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     public Task DeleteAsync(Category category, CancellationToken cancellationToken = default)
     {
         _db.Categories.Remove(category);
+        return Task.CompletedTask;
     }
 
     private readonly ProductsContext _db = db;
