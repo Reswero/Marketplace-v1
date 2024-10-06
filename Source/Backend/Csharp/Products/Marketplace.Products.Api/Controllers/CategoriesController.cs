@@ -30,8 +30,11 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(CreateObjectResultVM), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public Task<CreateObjectResultVM> Add(CreateCategoryCommand cmd)
-        => _mediator.Send(cmd);
+    public async Task<IActionResult> Add(CreateCategoryCommand cmd)
+    {
+        await _mediator.Send(cmd);
+        return StatusCode(StatusCodes.Status201Created);
+    }
 
     /// <summary>
     /// Получение категории
@@ -43,8 +46,11 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<CategoryVM> Get(int id)
-        => _mediator.Send(new GetCategoryQuery(id));
+    public async Task<IActionResult> Get(int id)
+    {
+        var category = await _mediator.Send(new GetCategoryQuery(id));
+        return Ok(category);
+    }
 
     /// <summary>
     /// Обновление категории
@@ -57,8 +63,11 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task Update(int id, UpdateCategoryCommand cmd)
-        => _mediator.Send(cmd);
+    public async Task<IActionResult> Update(int id, UpdateCategoryCommand cmd)
+    {
+        await _mediator.Send(cmd);
+        return Ok();
+    }
 
     /// <summary>
     /// Удаление категории
@@ -70,6 +79,9 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<DeleteObjectResultVM> Delete(int id)
-        => _mediator.Send(new DeleteCategoryCommand(id));
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _mediator.Send(new DeleteCategoryCommand(id));
+        return Ok(result);
+    }
 }
