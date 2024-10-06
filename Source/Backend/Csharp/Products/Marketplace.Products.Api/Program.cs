@@ -1,6 +1,8 @@
-
+using Marketplace.Common.Authorization.Extensions;
+using Marketplace.Products.Api.Extensions;
 using Marketplace.Products.Application;
 using Marketplace.Products.Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Marketplace.Products.Api;
 
@@ -12,7 +14,13 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(opt =>
+        {
+            opt.AddHeaderAuthorization();
+        });
+
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie();
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -26,7 +34,8 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.UseAuthorization();
+        app.UseHeaderAuthorization();
+        app.UseGlobalExceptionHandler();
 
         app.MapControllers();
 
