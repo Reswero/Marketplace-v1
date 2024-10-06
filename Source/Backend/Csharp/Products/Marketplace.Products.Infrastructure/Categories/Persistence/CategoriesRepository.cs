@@ -21,7 +21,8 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     /// <inheritdoc/>
     public async Task<Category> GetAsync(int id, CancellationToken cancellationToken = default)
     {
-        var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
+        var category = await _db.Categories.Include(c => c.Parameters)
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
             ?? throw new ObjectNotFoundException(typeof(Category), id);
 
         return category;
@@ -35,10 +36,9 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     }
 
     /// <inheritdoc/>
-    public async Task<bool> DeleteAsync(Category category, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(Category category, CancellationToken cancellationToken = default)
     {
         _db.Categories.Remove(category);
-        return true;
     }
 
     private readonly ProductsContext _db = db;

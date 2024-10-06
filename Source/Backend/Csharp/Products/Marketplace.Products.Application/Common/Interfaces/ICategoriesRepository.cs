@@ -31,5 +31,5 @@ public interface ICategoriesRepository
     /// <param name="id">Идентификатор</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<bool> DeleteAsync(Category category, CancellationToken cancellationToken = default);
+    public Task DeleteAsync(Category category, CancellationToken cancellationToken = default);
 }
