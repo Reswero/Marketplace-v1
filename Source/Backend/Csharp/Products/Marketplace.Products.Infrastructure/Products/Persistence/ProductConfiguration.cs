@@ -21,4 +21,4 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasMany(p => p.Discounts)
             .WithOne();
     }
-1}
+}
