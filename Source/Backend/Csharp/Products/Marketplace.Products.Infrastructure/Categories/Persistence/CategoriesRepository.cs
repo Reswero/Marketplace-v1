@@ -22,6 +22,7 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     public async Task<Category> GetAsync(int id, CancellationToken cancellationToken = default)
     {
         var category = await _db.Categories.Include(c => c.Parameters)
+            .Include(c => c.Subсategories)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
             ?? throw new ObjectNotFoundException(typeof(Category), id);
 

@@ -9,6 +9,7 @@ namespace Marketplace.Products.Domain.Categories;
 public class Category : ISoftDelete
 {
     private readonly List<CategoryParameter> _parameters = [];
+    private readonly List<Subсategory> _subсategories = [];
 
     private Category() { }
 
@@ -36,7 +37,7 @@ public class Category : ISoftDelete
     /// <summary>
     /// Подкатегории
     /// </summary>
-    public List<Subсategory> Subсategories { get; private set; } = [];
+    public IReadOnlyList<Subсategory> Subсategories => _subсategories;
     /// <inheritdoc/>
     public DateTimeOffset? DeletedAt { get; private set; }
 
@@ -74,6 +75,28 @@ public class Category : ISoftDelete
         foreach (var parameter in parameters)
         {
             _parameters.Remove(parameter);
+        }
+    }
+
+    /// <summary>
+    /// Добавить подкатегории
+    /// </summary>
+    /// <param name="subсategories">Подкатегории</param>
+    public void AddSubcategories(params Subсategory[] subсategories)
+    {
+        if (subсategories.Length > 0)
+            _subсategories.AddRange(subсategories);
+    }
+
+    /// <summary>
+    /// Удалить подкатегории
+    /// </summary>
+    /// <param name="subсategories">Подкатегории</param>
+    public void RemoveSubcategories(params Subсategory[] subсategories)
+    {
+        foreach (var subcategory in subсategories)
+        {
+            _subсategories.Remove(subcategory);
         }
     }
 }

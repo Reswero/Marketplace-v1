@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Marketplace.Products.Infrastructure.Categories.Persistence;
 
-internal class SubcategoryCategories : IEntityTypeConfiguration<Subсategory>
+internal class SubcategoryConfiguration : IEntityTypeConfiguration<Subсategory>
 {
     public void Configure(EntityTypeBuilder<Subсategory> builder)
     {
