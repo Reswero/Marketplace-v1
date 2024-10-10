@@ -17,7 +17,8 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany();
 
         builder.HasMany(p => p.Parameters)
-            .WithOne();
+            .WithOne(p => p.Product)
+            .HasForeignKey(p => p.ProductId);
         builder.HasMany(p => p.Discounts)
             .WithOne();
     }
