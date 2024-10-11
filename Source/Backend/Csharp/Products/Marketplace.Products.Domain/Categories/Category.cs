@@ -31,10 +31,6 @@ public class Category : ISoftDelete
     /// </summary>
     public IReadOnlyList<CategoryParameter> Parameters => _parameters;
     /// <summary>
-    /// Промокоды
-    /// </summary>
-    public List<Promocode> Promocodes { get; private set; } = [];
-    /// <summary>
     /// Подкатегории
     /// </summary>
     public IReadOnlyList<Subсategory> Subсategories => _subсategories;

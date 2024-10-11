@@ -15,7 +15,6 @@ internal class ProductsContext(DbContextOptions<ProductsContext> options) : DbCo
     public DbSet<Subсategory> Subcategories { get; set; } = null!;
     public DbSet<CategoryParameter> CategoryParameters { get; set; } = null!;
     public DbSet<ProductParameter> ProductParameters { get; set; } = null!;
-    public DbSet<Promocode> Promocodes { get; set; } = null!;
 
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
     {
