@@ -6,6 +6,6 @@ public class CreateSubcategoryCommandValidator : AbstractValidator<CreateSubcate
 {
     public CreateSubcategoryCommandValidator()
     {
-        RuleFor(s => s.Name).MinimumLength(2).MaximumLength(100);
+        RuleFor(s => s.Name).Length(2, 100);
     }
 }

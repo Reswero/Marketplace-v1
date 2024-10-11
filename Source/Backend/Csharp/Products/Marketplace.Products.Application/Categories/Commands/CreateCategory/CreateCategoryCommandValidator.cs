@@ -7,7 +7,7 @@ public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCo
 {
     public CreateCategoryCommandValidator()
     {
-        RuleFor(c => c.Name).MinimumLength(2).MaximumLength(100);
+        RuleFor(c => c.Name).Length(2, 100);
         RuleFor(c => c.Parameters).ForEach(p => p.SetValidator(new AddCategoryParameterVMValidator()));
     }
 }

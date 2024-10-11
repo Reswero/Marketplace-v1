@@ -6,7 +6,7 @@ public class UpdateCategoryParameterVMValidator : AbstractValidator<UpdateCatego
 {
     public UpdateCategoryParameterVMValidator()
     {
-        RuleFor(p => p.Name).MinimumLength(2).MaximumLength(100);
+        RuleFor(p => p.Name).Length(2, 100);
         RuleFor(p => p.Type).IsInEnum();
     }
 }
