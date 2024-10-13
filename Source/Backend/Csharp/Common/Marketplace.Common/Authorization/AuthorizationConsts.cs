@@ -41,4 +41,15 @@ public static class AuthorizationConsts
         StatusCode = StatusCodes.Status403Forbidden,
         Value = new ErrorResponse(StatusCodes.Status403Forbidden, "Доступ запрещен")
     };
+
+    /// <summary>
+    /// Ответ "Не авторизован"
+    /// </summary>
+    public static readonly ErrorResponse UnauthorizedResponse =
+        new(StatusCodes.Status401Unauthorized, "Не авторизован");
+    /// <summary>
+    /// Ответ "Доступ запрещен"
+    /// </summary>
+    public static readonly ErrorResponse ForbidResponse =
+        new(StatusCodes.Status403Forbidden, "Доступ запрещен");
 }
