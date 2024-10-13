@@ -40,7 +40,7 @@ public class Category : ISoftDelete
     /// <inheritdoc/>
     public void SetDeleted()
     {
-        DeletedAt = DateTimeOffset.Now;
+        DeletedAt = DateTimeOffset.UtcNow;
     }
 
     /// <summary>

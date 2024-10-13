@@ -74,7 +74,7 @@ public class Product : ISoftDelete
     /// <inheritdoc/>
     public void SetDeleted()
     {
-        DeletedAt = DateTimeOffset.Now;
+        DeletedAt = DateTimeOffset.UtcNow;
     }
 
     /// <summary>
@@ -106,7 +106,7 @@ public class Product : ISoftDelete
     /// <param name="parameters">Параметры</param>
     public void AddParameters(params ProductParameter[] parameters)
     {
-        if (_parameters.Count > 0)
+        if (parameters.Length > 0)
             _parameters.AddRange(parameters);
     }
 
