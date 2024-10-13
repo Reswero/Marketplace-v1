@@ -26,7 +26,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     private readonly IMediator _mediator = mediator;
 
     /// <summary>
-    /// Создать товар
+    /// Создание товара
     /// </summary>
     /// <param name="cmd"></param>
     [AccountTypeAuthorize(AccountType.Seller)]
@@ -44,7 +44,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
-    /// Получить товар
+    /// Получение товара
     /// </summary>
     /// <param name="id">Идентификатор товара</param>
     [HttpGet("{id:int}")]
@@ -57,7 +57,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
-    /// Обновить товар
+    /// Обновление товара
     /// </summary>
     /// <param name="id">Идентификатор товара</param>
     /// <param name="cmd"></param>
@@ -84,7 +84,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
-    /// Удалить товар
+    /// Удаление товара
     /// </summary>
     /// <param name="id">Идентификатор товара</param>
     /// <param name="accessChecker"></param>
