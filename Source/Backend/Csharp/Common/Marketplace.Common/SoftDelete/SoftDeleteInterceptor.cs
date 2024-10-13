@@ -28,7 +28,7 @@ public class SoftDeleteInterceptor : SaveChangesInterceptor
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
-            if (entry.State == EntityState.Deleted && entry is ISoftDelete item)
+            if (entry.State == EntityState.Deleted && entry.Entity is ISoftDelete item)
             {
                 entry.State = EntityState.Modified;
                 item.SetDeleted();
