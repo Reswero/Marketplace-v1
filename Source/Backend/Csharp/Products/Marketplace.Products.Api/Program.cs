@@ -3,6 +3,8 @@ using Marketplace.Products.Api.Extensions;
 using Marketplace.Products.Application;
 using Marketplace.Products.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Marketplace.Products.Api;
 
@@ -12,7 +14,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(opt =>
         {
