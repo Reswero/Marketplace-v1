@@ -1,4 +1,5 @@
-﻿using Marketplace.Products.Domain.Categories;
+﻿using Marketplace.Common.SoftDelete;
+using Marketplace.Products.Domain.Categories;
 using Marketplace.Products.Domain.Parameters;
 
 namespace Marketplace.Products.Domain.Products;
@@ -6,7 +7,7 @@ namespace Marketplace.Products.Domain.Products;
 /// <summary>
 /// Товар
 /// </summary>
-public class Product
+public class Product : ISoftDelete
 {
     private readonly List<ProductParameter> _parameters = [];
 
@@ -67,6 +68,14 @@ public class Product
     /// Скидки
     /// </summary>
     public List<Discount>? Discounts { get; set; }
+    /// <inheritdoc/>
+    public DateTimeOffset? DeletedAt { get; private set; }
+
+    /// <inheritdoc/>
+    public void SetDeleted()
+    {
+        DeletedAt = DateTimeOffset.Now;
+    }
 
     /// <summary>
     /// Изменить информацию
