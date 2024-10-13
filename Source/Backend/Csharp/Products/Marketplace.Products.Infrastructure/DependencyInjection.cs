@@ -29,6 +29,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+        services.AddScoped<IProductsRepository, ProductsRepository>();
 
         return services;
     }
