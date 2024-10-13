@@ -25,7 +25,7 @@ public class SubcategoriesController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="categoryId">Идентификатор категории</param>
     /// <param name="cmd"></param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost("{categoryId:int}/subcategories")]
     [ProducesResponseType(typeof(CreateObjectResultVM), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -43,7 +43,7 @@ public class SubcategoriesController(IMediator mediator) : ControllerBase
     /// <param name="categoryId">Идентификатор категории</param>
     /// <param name="id">Идентификатор подкатегории</param>
     /// <param name="cmd"></param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost("{categoryId:int}/subcategories/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]

@@ -26,7 +26,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     /// Создание категории
     /// </summary>
     /// <param name="cmd"></param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost]
     [ProducesResponseType(typeof(CreateObjectResultVM), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -41,7 +41,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     /// Получение категории
     /// </summary>
     /// <param name="id">Идентификатор</param>
-    [AccountTypeAuthorize(AccountType.Seller)]
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Admin)]
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CategoryVM), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -58,7 +58,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="id">Идентификатор</param>
     /// <param name="cmd"></param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
@@ -66,7 +66,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateCategoryCommand cmd)
     {
-        await _mediator.Send(cmd);
+        await _mediator.Send(new UpdateCategoryWithIdCommand(id, cmd.Name, cmd.Parameters));
         return Ok();
     }
 
