@@ -27,7 +27,8 @@ internal class GetProductQueryHandler(IProductsRepository repository)
             Subcategory = new(product.Subcategory!.Id, product.Subcategory!.Name),
             Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
             Parameters = product.Parameters.Select(p =>
-                new ProductParameterVM(p.CategoryParameter!.Name, p.Value)).ToList()
+                new ProductParameterVM(p.CategoryParameter!.Name, p.Value)).ToList(),
+            Status = product.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
         };
     }
 }
