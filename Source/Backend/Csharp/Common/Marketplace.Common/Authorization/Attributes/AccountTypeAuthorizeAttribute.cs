@@ -1,5 +1,4 @@
 ﻿using Marketplace.Common.Authorization.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Marketplace.Common.Authorization.Attributes;
@@ -9,9 +8,17 @@ namespace Marketplace.Common.Authorization.Attributes;
 /// </summary>
 /// <param name="type"></param>
 [AttributeUsage(AttributeTargets.Method)]
-public class AccountTypeAuthorizeAttribute(AccountType type) : Attribute, IAuthorizationFilter
+public class AccountTypeAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly AccountType _requiredType = type;
+    private readonly AccountType _requiredType;
+
+    public AccountTypeAuthorizeAttribute(params AccountType[] types)
+    {
+        foreach (var type in types)
+        {
+            _requiredType |= type;
+        }
+    }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
@@ -30,7 +37,7 @@ public class AccountTypeAuthorizeAttribute(AccountType type) : Attribute, IAutho
             return;
         }
 
-        if (claims.Type < _requiredType)
+        if (_requiredType.HasFlag(claims.Type) is false)
         {
             context.Result = AuthorizationConsts.ForbidResultResponse;
             return;
