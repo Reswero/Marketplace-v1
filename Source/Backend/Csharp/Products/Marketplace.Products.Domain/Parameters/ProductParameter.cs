@@ -7,6 +7,36 @@ namespace Marketplace.Products.Domain.Parameters;
 /// </summary>
 public class ProductParameter
 {
+    private ProductParameter() { }
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="categoryParameter">Параметр категории</param>
+    /// <param name="product">Товар</param>
+    /// <param name="value">Значение</param>
+    public ProductParameter(CategoryParameter categoryParameter, Product product, string value)
+    {
+        CategoryParameter = categoryParameter;
+        Product = product;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="id">Идентификатор</param>
+    /// <param name="categoryParameterId">Идентификатор параметра категории</param>
+    /// <param name="productId">Идентификатор товара</param>
+    /// <param name="value">Значение</param>
+    public ProductParameter(int id, int categoryParameterId, int productId, string value)
+    {
+        Id = id;
+        CategoryParameterId = categoryParameterId;
+        ProductId = productId;
+        Value = value;
+    }
+
     /// <summary>
     /// Идентификатор
     /// </summary>
