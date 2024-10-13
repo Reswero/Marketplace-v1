@@ -13,6 +13,7 @@ internal class GetProductQueryHandler(IProductsRepository repository)
     {
         var product = await _repository.GetAsync(request.Id, cancellationToken);
 
+        // TODO: Users Service
         //var seller = await _usersService.GetAsync(product.SellerId, cancellationToken);
         var discount = product.Discounts!.OrderBy(d => d.ValidUntil).FirstOrDefault();
 
@@ -27,7 +28,7 @@ internal class GetProductQueryHandler(IProductsRepository repository)
             Subcategory = new(product.Subcategory!.Id, product.Subcategory!.Name),
             Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
             Parameters = product.Parameters.Select(p =>
-                new ProductParameterVM(p.CategoryParameter!.Name, p.Value)).ToList(),
+                new ProductParameterVM(p.Id, p.CategoryParameterId, p.CategoryParameter!.Name, p.Value)).ToList(),
             Status = product.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
         };
     }
