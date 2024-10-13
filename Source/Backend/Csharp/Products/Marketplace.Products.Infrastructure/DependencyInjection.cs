@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.SoftDelete;
+using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddDbContext<ProductsContext>(opt =>
         {
             opt.UseNpgsql(connectionString);
+            opt.AddInterceptors(new SoftDeleteInterceptor());
         });
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
