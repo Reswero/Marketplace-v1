@@ -11,7 +11,7 @@ public class AddProductParameterVMValidator : AbstractValidator<AddProductParame
 
         if (parameter.Type == ParameterType.Number)
         {
-            RuleFor(p => p.Value).Matches("[0-9]*");
+            RuleFor(p => p.Value).Matches("^[0-9]*$");
         }
     }
 }
