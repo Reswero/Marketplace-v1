@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Responses;
+﻿using FluentValidation;
+using Marketplace.Common.Responses;
 using Marketplace.Products.Application.Common.Exceptions;
 using System.Net.Mime;
 
@@ -19,6 +20,10 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         try
         {
             await _next.Invoke(context);
+        }
+        catch (ValidationException e)
+        {
+            await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
         }
         catch (ObjectNotFoundException e)
         {
