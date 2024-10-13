@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Marketplace.Products.Api.Controllers;
 
 /// <summary>
-/// Управление подкатегориями
+/// Взаимодействие с подкатегориями
 /// </summary>
 /// <param name="mediator"></param>
 [ApiController]
