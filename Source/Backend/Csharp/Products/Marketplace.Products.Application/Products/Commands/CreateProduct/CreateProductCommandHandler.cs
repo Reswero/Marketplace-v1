@@ -4,6 +4,7 @@ using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.ViewModels;
+using Marketplace.Products.Application.Products.ViewModels;
 using Marketplace.Products.Application.Products.ViewModels.Validators;
 using Marketplace.Products.Domain.Categories;
 using Marketplace.Products.Domain.Parameters;
@@ -35,11 +36,23 @@ internal class CreateProductCommandHandler(IProductsRepository productsRepositor
         Product product = new(request.SellerId, category, subcategory,
             request.Name, request.Description, request.Price);
 
+        var parameters = await GetParametersAsync(category, product, request.Parameters, cancellationToken);
+        product.AddParameters(parameters);
+
+        await _productsRepository.AddAsync(product, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        return new(product.Id);
+    }
+
+    public static async Task<ProductParameter[]> GetParametersAsync(Category category, Product product,
+        List<AddProductParameterVM> requestParameters, CancellationToken cancellationToken)
+    {
         List<ValidationFailure> validationErrors = [];
-        var parameters = new ProductParameter[request.Parameters.Count];
-        for (int i = 0; i < request.Parameters.Count; i++)
+        var parameters = new ProductParameter[requestParameters.Count];
+        for (int i = 0; i < requestParameters.Count; i++)
         {
-            var vm = request.Parameters[i];
+            var vm = requestParameters[i];
 
             var categoryParameter = category.Parameters.FirstOrDefault(p => p.Id == vm.CategoryParameterId)
                 ?? throw new ObjectNotFoundException(typeof(CategoryParameter), vm.CategoryParameterId);
@@ -59,11 +72,6 @@ internal class CreateProductCommandHandler(IProductsRepository productsRepositor
             throw new ValidationException(validationErrors);
         }
 
-        product.AddParameters(parameters);
-
-        await _productsRepository.AddAsync(product, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        return new(product.Id);
+        return parameters;
     }
 }
