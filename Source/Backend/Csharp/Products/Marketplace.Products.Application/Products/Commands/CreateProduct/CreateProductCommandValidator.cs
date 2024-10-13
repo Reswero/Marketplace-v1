@@ -2,7 +2,7 @@
 
 namespace Marketplace.Products.Application.Products.Commands.CreateProduct;
 
-internal class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+internal class CreateProductCommandValidator : AbstractValidator<CreateProductWithSellerIdCommand>
 {
     public CreateProductCommandValidator()
     {

@@ -20,13 +20,13 @@ namespace Marketplace.Products.Application.Products.Commands.CreateProduct;
 /// <param name="unitOfWork"></param>
 internal class CreateProductCommandHandler(IProductsRepository productsRepository,
     ICategoriesRepository categoriesRepository, IUnitOfWork unitOfWork)
-    : IRequestHandler<CreateProductCommand, CreateObjectResultVM>
+    : IRequestHandler<CreateProductWithSellerIdCommand, CreateObjectResultVM>
 {
     private readonly IProductsRepository _productsRepository = productsRepository;
     private readonly ICategoriesRepository _categoriesRepository = categoriesRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<CreateObjectResultVM> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<CreateObjectResultVM> Handle(CreateProductWithSellerIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _categoriesRepository.GetAsync(request.CategoryId, cancellationToken);
         var subcategory = category.Subсategories.FirstOrDefault(s => s.Id == request.SubcategoryId)
