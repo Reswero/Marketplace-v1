@@ -12,7 +12,7 @@ namespace Marketplace.Products.Application.Categories.Commands.CreateCategory;
 /// </summary>
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
-internal class CreateCatregoryCommandHandler(ICategoriesRepository repository, IUnitOfWork unitOfWork)
+internal class CreateCategoryCommandHandler(ICategoriesRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<CreateCategoryCommand, CreateObjectResultVM>
 {
     private readonly ICategoriesRepository _repository = repository;

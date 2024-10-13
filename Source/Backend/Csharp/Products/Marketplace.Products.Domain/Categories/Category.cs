@@ -44,12 +44,12 @@ public class Category : ISoftDelete
     }
 
     /// <summary>
-    /// Установить название
+    /// Поменять название
     /// </summary>
-    /// <param name="newName">Новое название</param>
-    public void SetName(string newName)
+    /// <param name="name">Название</param>
+    public void ChangeName(string name)
     {
-        Name = newName;
+        Name = name;
     }
 
     /// <summary>

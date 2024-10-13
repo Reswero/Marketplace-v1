@@ -19,9 +19,9 @@ internal class UpdateCategoryCommandHandler(ICategoriesRepository repository, IU
     public async Task Handle(UpdateCategoryWithIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.Id, cancellationToken);
-        category.SetName(request.Name);
+        category.ChangeName(request.Name);
 
-        var parametersIds = category.Parameters.Select(p => p.Id).ToList();
+        var parametersIds = category.Parameters.Select(p => p.Id).ToHashSet();
 
         var unexistingParameters = request.Parameters.Where(p => p.Id == 0).ToList();
         var existingParameters = request.Parameters.Where(p => parametersIds.Contains(p.Id)).ToList();
