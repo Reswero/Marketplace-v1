@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Marketplace.Common.Mediator.Behaviors;
+using Marketplace.Products.Application.Products.ViewModels.Validators;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -20,7 +21,14 @@ public static class DependencyInjection
         ValidatorOptions.Global.LanguageManager.Culture = new("ru-RU");
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        Type[] excludedValidators =
+        [
+            typeof(AddProductParameterVMValidator),
+            typeof(UpdateProductParameterVMValidator)
+        ];
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(),
+            filter: f => !excludedValidators.Contains(f.ValidatorType), includeInternalTypes: true);
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
