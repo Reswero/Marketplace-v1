@@ -10,6 +10,7 @@ namespace Marketplace.Products.Domain.Products;
 public class Product : ISoftDelete
 {
     private readonly List<ProductParameter> _parameters = [];
+    private readonly List<Discount> _discounts = [];
 
     private Product() { }
 
@@ -67,7 +68,7 @@ public class Product : ISoftDelete
     /// <summary>
     /// Скидки
     /// </summary>
-    public List<Discount>? Discounts { get; set; }
+    public List<Discount> Discounts => _discounts;
     /// <inheritdoc/>
     public DateTimeOffset? DeletedAt { get; private set; }
 
@@ -120,5 +121,23 @@ public class Product : ISoftDelete
         {
             _parameters.Remove(parameter);
         }
+    }
+
+    /// <summary>
+    /// Добавить скидку
+    /// </summary>
+    /// <param name="discount">Скидка</param>
+    public void AddDiscount(Discount discount)
+    {
+        _discounts.Add(discount);
+    }
+
+    /// <summary>
+    /// Удалить скидку
+    /// </summary>
+    /// <param name="discount">Скидка</param>
+    public void RemoveDiscount(Discount discount)
+    {
+        _discounts.Remove(discount);
     }
 }
