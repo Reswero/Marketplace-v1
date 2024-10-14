@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.SoftDelete.Extensions;
+using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.ViewModels;
 using MediatR;
@@ -19,6 +20,7 @@ internal class DeleteCategoryCommandHandler(ICategoriesRepository repository, IU
     public async Task<DeleteObjectResultVM> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.Id, cancellationToken);
+        category.ThrowIfDeleted();
 
         await _repository.DeleteAsync(category, cancellationToken);
         var result = await _unitOfWork.CommitAsync(cancellationToken);

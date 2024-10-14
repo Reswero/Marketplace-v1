@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.SoftDelete.Extensions;
+using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Domain.Categories;
@@ -20,9 +21,11 @@ internal class UpdateSubcategoryCommandHandler(ICategoriesRepository repository,
     public async Task Handle(UpdateSubcategoryWithIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.CategoryId, cancellationToken);
+        category.ThrowIfDeleted();
 
         var subcategory = category.Subсategories.FirstOrDefault(s => s.Id == request.Id)
             ?? throw new ObjectNotFoundException(typeof(Subсategory), request.Id);
+        subcategory.ThrowIfDeleted();
 
         subcategory.SetName(request.Name);
 

@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.SoftDelete.Extensions;
+using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.ViewModels;
@@ -16,6 +17,7 @@ internal class DeleteDiscountCommandHandler(IProductsRepository repository, IUni
     public async Task<DeleteObjectResultVM> Handle(DeleteDiscountCommand request, CancellationToken cancellationToken)
     {
         var product = await _repository.GetAsync(request.ProductId, cancellationToken);
+        product.ThrowIfDeleted();
 
         var discount = product.Discounts.FirstOrDefault(d => d.ValidUntil == request.ValidUntil) ??
             throw new ObjectNotFoundException(typeof(Discount));

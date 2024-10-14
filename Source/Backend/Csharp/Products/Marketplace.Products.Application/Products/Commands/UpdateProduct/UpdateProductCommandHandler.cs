@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using Marketplace.Common.SoftDelete.Extensions;
 using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
@@ -23,11 +24,16 @@ internal class UpdateProductCommandHandler(IProductsRepository productsRepositor
     public async Task Handle(UpdateProductWithIdCommand request, CancellationToken cancellationToken)
     {
         var product = await _productsRepository.GetAsync(request.Id, cancellationToken);
+        product.ThrowIfDeleted();
+
         product.ChangeInfo(request.Name, request.Description, request.Price);
 
         var category = await _categoriesRepository.GetAsync(product.CategoryId, cancellationToken);
+        category.ThrowIfDeleted();
+
         var subcategory = category.Subсategories.FirstOrDefault(s => s.Id == request.SubcategoryId)
             ?? throw new ObjectNotFoundException(typeof(Subсategory), request.SubcategoryId);
+        subcategory.ThrowIfDeleted();
 
         product.ChangeSubcategory(subcategory);
 

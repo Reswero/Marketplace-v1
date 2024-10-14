@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.SoftDelete.Extensions;
+using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Domain.Products;
 using MediatR;
@@ -14,6 +15,7 @@ internal class CreateDiscountCommandHandler(IProductsRepository repository, IUni
     public async Task Handle(CreateDiscountWithProductIdCommand request, CancellationToken cancellationToken)
     {
         var product = await _repository.GetAsync(request.ProductId, cancellationToken);
+        product.ThrowIfDeleted();
 
         Discount discount = new(product.Id, request.Size, request.ValidUntil);
         product.AddDiscount(discount);
