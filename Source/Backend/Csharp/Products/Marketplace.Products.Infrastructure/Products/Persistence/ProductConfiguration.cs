@@ -12,9 +12,11 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Description).HasMaxLength(1000);
 
         builder.HasOne(p => p.Category)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
         builder.HasOne(p => p.Subcategory)
-            .WithMany();
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasMany(p => p.Parameters)
             .WithOne(p => p.Product)
