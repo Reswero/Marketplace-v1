@@ -1,4 +1,5 @@
 ﻿using Marketplace.Common.Transactions;
+using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.ViewModels;
 using Marketplace.Products.Domain.Categories;
@@ -20,6 +21,10 @@ internal class CreateSubcategoryCommandHandler(ICategoriesRepository repository,
     public async Task<CreateObjectResultVM> Handle(CreateSubcategoryWithCategoryIdCommand request, CancellationToken cancellationToken)
     {
         var category = await _repository.GetAsync(request.CategoryId, cancellationToken);
+        if (category.Subсategories.Any(s => string.Equals(s.Name, request.Name, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            throw new ObjectAlreadyExistsException(typeof(Subсategory), request.Name);
+        }
 
         Subсategory subсategory = new(category.Id, request.Name);
         category.AddSubcategories(subсategory);

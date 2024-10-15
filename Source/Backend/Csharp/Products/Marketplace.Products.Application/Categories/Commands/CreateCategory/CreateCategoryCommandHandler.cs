@@ -1,4 +1,5 @@
 ﻿using Marketplace.Common.Transactions;
+using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.ViewModels;
 using Marketplace.Products.Domain.Categories;
@@ -19,6 +20,12 @@ internal class CreateCategoryCommandHandler(ICategoriesRepository repository, IU
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     public async Task<CreateObjectResultVM> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
+        var categories = await _repository.GetAllAsync(cancellationToken);
+        if (categories.Any(c => string.Equals(c.Name, request.Name, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            throw new ObjectAlreadyExistsException(typeof(Category), request.Name);
+        }
+
         Category category = new(request.Name);
 
         var parameters = new CategoryParameter[request.Parameters.Count];
