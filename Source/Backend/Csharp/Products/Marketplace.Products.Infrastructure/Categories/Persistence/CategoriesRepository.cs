@@ -28,6 +28,13 @@ internal class CategoriesRepository(ProductsContext db) : ICategoriesRepository
     }
 
     /// <inheritdoc/>
+    public async Task<List<Category>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _db.Categories.Include(c => c.Subсategories)
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public Task UpdateAsync(Category category, CancellationToken cancellationToken = default)
     {
         _db.Categories.Update(category);

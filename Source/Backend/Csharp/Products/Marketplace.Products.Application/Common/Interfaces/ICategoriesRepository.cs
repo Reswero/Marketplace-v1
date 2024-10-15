@@ -20,6 +20,11 @@ public interface ICategoriesRepository
     /// <param name="cancellationToken"></param>
     public Task<Category> GetAsync(int id, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Получить все категории
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    public Task<List<Category>> GetAllAsync(CancellationToken cancellationToken = default);
+    /// <summary>
     /// Обновить категорию
     /// </summary>
     /// <param name="category">Категория</param>
