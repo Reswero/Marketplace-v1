@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Marketplace.Common.Responses;
+using Marketplace.Common.SoftDelete.Exceptions;
 using Marketplace.Products.Application.Common.Exceptions;
 using System.Net.Mime;
 
@@ -21,7 +22,9 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         {
             await _next.Invoke(context);
         }
-        catch (ValidationException e)
+        catch (Exception e) when (e is ValidationException ||
+                                  e is ObjectDeletedException ||
+                                  e is ObjectAlreadyExistsException)
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
         }
