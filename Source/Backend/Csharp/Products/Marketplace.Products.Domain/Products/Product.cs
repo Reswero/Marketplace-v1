@@ -23,6 +23,8 @@ public class Product : ISoftDelete
         Name = name;
         Description = description;
         Price = price;
+
+        CreatedAt = DateTimeOffset.UtcNow;
     }
 
     /// <summary>
@@ -69,6 +71,14 @@ public class Product : ISoftDelete
     /// Скидки
     /// </summary>
     public List<Discount> Discounts => _discounts;
+    /// <summary>
+    /// Дата создания
+    /// </summary>
+    public DateTimeOffset CreatedAt { get; private set; }
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTimeOffset? UpdatedAt { get; private set; }
     /// <inheritdoc/>
     public DateTimeOffset? DeletedAt { get; private set; }
 
@@ -89,6 +99,8 @@ public class Product : ISoftDelete
         Name = name;
         Description = description;
         Price = price;
+
+        SetUpdated();
     }
 
     /// <summary>
@@ -99,6 +111,8 @@ public class Product : ISoftDelete
     {
         Subcategory = subсategory;
         SubcategoryId = subсategory.Id;
+
+        SetUpdated();
     }
 
     /// <summary>
@@ -109,6 +123,8 @@ public class Product : ISoftDelete
     {
         if (parameters.Length > 0)
             _parameters.AddRange(parameters);
+
+        SetUpdated();
     }
 
     /// <summary>
@@ -121,6 +137,8 @@ public class Product : ISoftDelete
         {
             _parameters.Remove(parameter);
         }
+
+        SetUpdated();
     }
 
     /// <summary>
@@ -130,6 +148,7 @@ public class Product : ISoftDelete
     public void AddDiscount(Discount discount)
     {
         _discounts.Add(discount);
+        SetUpdated();
     }
 
     /// <summary>
@@ -139,5 +158,14 @@ public class Product : ISoftDelete
     public void RemoveDiscount(Discount discount)
     {
         _discounts.Remove(discount);
+        SetUpdated();
+    }
+
+    /// <summary>
+    /// Пометить товар как обновленный
+    /// </summary>
+    private void SetUpdated()
+    {
+        UpdatedAt = DateTimeOffset.UtcNow;
     }
 }
