@@ -9,6 +9,7 @@ using Marketplace.Products.Application.Products.Commands.CreateProduct;
 using Marketplace.Products.Application.Products.Commands.DeleteProduct;
 using Marketplace.Products.Application.Products.Commands.UpdateProduct;
 using Marketplace.Products.Application.Products.Queries.GetProduct;
+using Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 using Marketplace.Products.Application.Products.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [AccountTypeAuthorize(AccountType.Seller)]
     [HttpPost]
     [ProducesResponseType(typeof(CreateObjectResultVM), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create(CreateProductCommand cmd)
@@ -57,6 +59,19 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
+    /// Поиск товаров
+    /// </summary>
+    /// <param name="query"></param>
+    [HttpPost("search")]
+    [ProducesResponseType(typeof(SearchProductsResultVM), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Search(SearchProductsQuery query)
+    {
+        var products = await _mediator.Send(query);
+        return Ok(products);
+    }
+
+    /// <summary>
     /// Обновление товара
     /// </summary>
     /// <param name="id">Идентификатор товара</param>
@@ -65,6 +80,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
     [HttpPost("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]

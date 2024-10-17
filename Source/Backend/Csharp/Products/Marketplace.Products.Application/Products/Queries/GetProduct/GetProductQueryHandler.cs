@@ -15,7 +15,7 @@ internal class GetProductQueryHandler(IProductsRepository repository)
 
         // TODO: Users Service
         //var seller = await _usersService.GetAsync(product.SellerId, cancellationToken);
-        var discount = product.Discounts!.OrderBy(d => d.ValidUntil).FirstOrDefault();
+        var discount = product.Discounts!.MinBy(d => d.ValidUntil);
 
         return new()
         {

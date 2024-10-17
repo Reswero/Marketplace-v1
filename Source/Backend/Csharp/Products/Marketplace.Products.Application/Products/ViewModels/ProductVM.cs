@@ -5,7 +5,7 @@ namespace Marketplace.Products.Application.Products.ViewModels;
 /// <summary>
 /// Модель товара
 /// </summary>
-public class ProductVM
+public record ProductVM
 {
     /// <summary>
     /// Идентификатор
