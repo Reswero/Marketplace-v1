@@ -6,7 +6,7 @@
 public interface ISoftDelete
 {
     /// <summary>
-    /// Время удаления
+    /// Дата удаления
     /// </summary>
     public DateTimeOffset? DeletedAt { get; }
     /// <summary>
