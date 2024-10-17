@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IProductsRepository, ProductsRepository>();
 
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();
+        services.AddScoped<IProductsSearcher, ProductsSearcher>();
 
         return services;
     }
