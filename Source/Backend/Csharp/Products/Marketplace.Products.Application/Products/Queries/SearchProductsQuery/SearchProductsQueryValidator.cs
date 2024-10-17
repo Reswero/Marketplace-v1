@@ -6,6 +6,8 @@ internal class SearchProductsQueryValidator : AbstractValidator<SearchProductsQu
 {
     public SearchProductsQueryValidator()
     {
+        RuleFor(q => q.SortType).IsInEnum();
+
         When(q => q.Pagination is not null, () =>
         {
             RuleFor(q => q.Pagination!.Offset).GreaterThanOrEqualTo(0);
