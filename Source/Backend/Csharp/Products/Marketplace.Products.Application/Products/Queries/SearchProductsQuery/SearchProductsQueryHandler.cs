@@ -6,6 +6,10 @@ using MediatR;
 
 namespace Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 
+/// <summary>
+/// Поиск товаров
+/// </summary>
+/// <param name="searcher"></param>
 internal class SearchProductsQueryHandler(IProductsSearcher searcher)
     : IRequestHandler<SearchProductsQuery, SearchProductsResultVM>
 {

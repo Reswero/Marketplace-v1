@@ -13,6 +13,12 @@ using MediatR;
 
 namespace Marketplace.Products.Application.Products.Commands.UpdateProduct;
 
+/// <summary>
+/// Обновление товара
+/// </summary>
+/// <param name="productsRepository"></param>
+/// <param name="categoriesRepository"></param>
+/// <param name="unitOfWork"></param>
 internal class UpdateProductCommandHandler(IProductsRepository productsRepository,
     ICategoriesRepository categoriesRepository, IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateProductWithIdCommand>

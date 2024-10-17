@@ -1,5 +1,4 @@
-﻿using Marketplace.Products.Application.Common.ViewModels;
-using MediatR;
+﻿using MediatR;
 
 namespace Marketplace.Products.Application.Products.Commands.CreateDiscount;
 

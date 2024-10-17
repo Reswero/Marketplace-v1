@@ -1,8 +1,6 @@
 ﻿using Marketplace.Common.SoftDelete.Extensions;
 using Marketplace.Common.Transactions;
-using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
-using Marketplace.Products.Domain.Categories;
 using Marketplace.Products.Domain.Parameters;
 using MediatR;
 

@@ -8,6 +8,11 @@ using MediatR;
 
 namespace Marketplace.Products.Application.Products.Commands.DeleteDiscount;
 
+/// <summary>
+/// Удаление скидки
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class DeleteDiscountCommandHandler(IProductsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteDiscountCommand, DeleteObjectResultVM>
 {

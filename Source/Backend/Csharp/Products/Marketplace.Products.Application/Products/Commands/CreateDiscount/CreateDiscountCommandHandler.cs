@@ -6,6 +6,11 @@ using MediatR;
 
 namespace Marketplace.Products.Application.Products.Commands.CreateDiscount;
 
+/// <summary>
+/// Создание скидки
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="unitOfWork"></param>
 internal class CreateDiscountCommandHandler(IProductsRepository repository, IUnitOfWork unitOfWork)
     : IRequestHandler<CreateDiscountWithProductIdCommand>
 {

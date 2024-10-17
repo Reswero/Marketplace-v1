@@ -4,6 +4,10 @@ using MediatR;
 
 namespace Marketplace.Products.Application.Products.Queries.GetProduct;
 
+/// <summary>
+/// Получение товара
+/// </summary>
+/// <param name="repository"></param>
 internal class GetProductQueryHandler(IProductsRepository repository)
     : IRequestHandler<GetProductQuery, ProductVM>
 {
