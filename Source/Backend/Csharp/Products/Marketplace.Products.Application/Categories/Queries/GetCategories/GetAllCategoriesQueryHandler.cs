@@ -17,12 +17,14 @@ internal class GetAllCategoriesQueryHandler(ICategoriesRepository repository)
     {
         var categories = await _repository.GetAllAsync(cancellationToken);
 
-        return categories.Select(c =>
-        {
-            var subcategories = c.Subсategories.Select(s => new SubcategoryVM(s.Id, s.Name))
-            .ToList();
+        return categories.OrderBy(c => c.Name)
+            .Select(c =>
+            {
+                var subcategories = c.Subсategories.OrderBy(s => s.Name)
+                    .Select(s => new SubcategoryVM(s.Id, s.Name))
+                    .ToList();
 
-            return new CategoryWithSubcategoriesVM(c.Id, c.Name, subcategories);
-        }).ToList();
+                return new CategoryWithSubcategoriesVM(c.Id, c.Name, subcategories);
+            }).ToList();
     }
 }
