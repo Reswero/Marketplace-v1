@@ -4,6 +4,7 @@ using Marketplace.Common.Responses;
 using Marketplace.Products.Application.Categories.Commands.CreateCategory;
 using Marketplace.Products.Application.Categories.Commands.DeleteCategory;
 using Marketplace.Products.Application.Categories.Commands.UpdateCategory;
+using Marketplace.Products.Application.Categories.Queries.GetCategories;
 using Marketplace.Products.Application.Categories.Queries.GetCategory;
 using Marketplace.Products.Application.Categories.ViewModels;
 using Marketplace.Products.Application.Common.ViewModels;
@@ -29,6 +30,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost]
     [ProducesResponseType(typeof(CreateObjectResultVM), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create(CreateCategoryCommand cmd)
@@ -54,6 +56,17 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
+    /// Получение всех категорий
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(List<CategoryWithSubcategoriesVM>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll()
+    {
+        var categories = await _mediator.Send(new GetAllCategoriesQuery());
+        return Ok(categories);
+    }
+
+    /// <summary>
     /// Обновление категории
     /// </summary>
     /// <param name="id">Идентификатор</param>
@@ -61,6 +74,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPost("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
