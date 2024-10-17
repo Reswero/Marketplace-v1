@@ -41,7 +41,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     /// Получение категории
     /// </summary>
     /// <param name="id">Идентификатор</param>
-    [AccountTypeAuthorize(AccountType.Seller, AccountType.Admin)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CategoryVM), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
