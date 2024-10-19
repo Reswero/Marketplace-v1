@@ -5,6 +5,8 @@ using Marketplace.Common.Responses;
 using Marketplace.Users.Application.Sellers.Commands.CreateSeller;
 using Marketplace.Users.Application.Sellers.Commands.UpdateSeller;
 using Marketplace.Users.Application.Sellers.Queries.GetSeller;
+using Marketplace.Users.Application.Sellers.Queries.GetSellerShortInfo;
+using Marketplace.Users.Application.Sellers.ViewModels;
 using Marketplace.Users.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +51,19 @@ public class SellersController(IMediator mediator) : ControllerBase
 
         var seller = await _mediator.Send(new GetSellerQuery(accountId));
         return Ok(seller);
+    }
+
+    /// <summary>
+    /// Получение краткой информации о продавце
+    /// </summary>
+    /// <param name="accountId">Идентификатор аккаунта</param>
+    [HttpGet("{accountId:int}/info")]
+    [ProducesResponseType(typeof(SellerShortInfoVM), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSellerShortInfo(int accountId)
+    {
+        var info = await _mediator.Send(new GetSellerShortInfoQuery(accountId));
+        return Ok(info);
     }
 
     /// <summary>
