@@ -8,6 +8,7 @@ using Marketplace.Products.Infrastructure.Users.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Marketplace.Products.Infrastructure;
 
@@ -23,6 +24,15 @@ public static class DependencyInjection
     /// <param name="configuration">Конфигурация</param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        services.AddLogging(builder =>
+        {
+            builder.AddSerilog(dispose: true);
+        });
+
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<ProductsContext>(opt =>
@@ -42,8 +52,11 @@ public static class DependencyInjection
 
         services.AddHttpClient<IUsersService, UsersService>(cfg =>
         {
-            var address = configuration["Services.Users"];
-            cfg.BaseAddress = new Uri(address!);
+            var address = configuration["Services:Users:Address"]!;
+            var timeout = int.Parse(configuration["Services:Users:Timeout"]!);
+
+            cfg.BaseAddress = new Uri(address);
+            cfg.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
         return services;

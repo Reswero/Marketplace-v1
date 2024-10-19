@@ -25,17 +25,8 @@ internal class SearchProductsQueryHandler(IProductsSearcher searcher)
         SearchParameters parameters = new(request.Query, request.CategoryId, request.SubcategoryId,
             priceFilter, pagination, request.SortType);
 
-        int count = default;
-        List<Product> products = [];
-        try
-        {
-            count = await _searcher.QuantifyAsync(parameters, cancellationToken);
-            products = await _searcher.SearchAsync(parameters, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-
-        }
+        int count = await _searcher.QuantifyAsync(parameters, cancellationToken);
+        List<Product> products = await _searcher.SearchAsync(parameters, cancellationToken);
 
         var productsVMs = products.Select(p =>
         {
