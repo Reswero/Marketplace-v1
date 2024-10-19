@@ -3,6 +3,7 @@
 /// <summary>
 /// Тип аккаунта
 /// </summary>
+[Flags]
 public enum AccountType
 {
     /// <summary>
@@ -20,9 +21,9 @@ public enum AccountType
     /// <summary>
     /// Персонал
     /// </summary>
-    Staff = 3,
+    Staff = 4,
     /// <summary>
     /// Администратор
     /// </summary>
-    Admin = 4
+    Admin = 8
 }
