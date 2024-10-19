@@ -4,6 +4,7 @@ using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
 using Marketplace.Products.Infrastructure.Products.Services;
+using Marketplace.Products.Infrastructure.Users.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,14 @@ public static class DependencyInjection
 
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();
         services.AddScoped<IProductsSearcher, ProductsSearcher>();
+
+        services.AddScoped<IUsersService, UsersService>();
+
+        services.AddHttpClient<IUsersService, UsersService>(cfg =>
+        {
+            var address = configuration["Services.Users"];
+            cfg.BaseAddress = new Uri(address!);
+        });
 
         return services;
     }
