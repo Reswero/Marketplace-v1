@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Categories.ViewModels;
+using Marketplace.Products.Application.Users.ViewModels;
 
 namespace Marketplace.Products.Application.Products.ViewModels;
 
@@ -14,7 +15,7 @@ public record ProductVM
     /// <summary>
     /// Продавец
     /// </summary>
-    public SellerVM Seller { get; set; } = null!;
+    public SellerVM? Seller { get; set; }
     /// <summary>
     /// Категория
     /// </summary>
