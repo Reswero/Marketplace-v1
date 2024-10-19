@@ -14,7 +14,7 @@ internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.Property(c => c.AccountId).ValueGeneratedNever();
 
-        builder.Property(c => c.FirstName).HasMaxLength(20);
-        builder.Property(c => c.LastName).HasMaxLength(40);
+        builder.Property(c => c.FirstName).HasMaxLength(40);
+        builder.Property(c => c.LastName).HasMaxLength(80);
     }
 }

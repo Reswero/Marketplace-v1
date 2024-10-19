@@ -14,7 +14,7 @@ internal class AdministratorConfiguration : IEntityTypeConfiguration<Administrat
 
         builder.Property(a => a.AccountId).ValueGeneratedNever();
 
-        builder.Property(a => a.FirstName).HasMaxLength(20);
-        builder.Property(a => a.LastName).HasMaxLength(40);
+        builder.Property(a => a.FirstName).HasMaxLength(40);
+        builder.Property(a => a.LastName).HasMaxLength(80);
     }
 }

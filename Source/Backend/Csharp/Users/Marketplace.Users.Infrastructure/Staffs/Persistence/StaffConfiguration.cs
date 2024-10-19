@@ -14,7 +14,7 @@ internal class StaffConfiguration : IEntityTypeConfiguration<Staff>
 
         builder.Property(s => s.AccountId).ValueGeneratedNever();
 
-        builder.Property(s => s.FirstName).HasMaxLength(20);
-        builder.Property(s => s.LastName).HasMaxLength(40);
+        builder.Property(s => s.FirstName).HasMaxLength(40);
+        builder.Property(s => s.LastName).HasMaxLength(80);
     }
 }
