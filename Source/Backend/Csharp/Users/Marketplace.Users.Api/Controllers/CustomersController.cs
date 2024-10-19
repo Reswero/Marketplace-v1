@@ -36,7 +36,7 @@ public class CustomersController(IMediator mediator) : ControllerBase
     /// Получение профиля покупателя
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Customer)]
+    [AccountTypeAuthorize(AccountType.Customer, AccountType.Staff, AccountType.Admin)]
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -55,7 +55,7 @@ public class CustomersController(IMediator mediator) : ControllerBase
     /// Обновление профиля покупателя
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Customer)]
+    [AccountTypeAuthorize(AccountType.Customer, AccountType.Staff, AccountType.Admin)]
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

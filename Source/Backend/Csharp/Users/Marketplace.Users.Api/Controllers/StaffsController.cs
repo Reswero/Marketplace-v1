@@ -36,7 +36,7 @@ public class StaffsController(IMediator mediator) : ControllerBase
     /// Получение профиля персонала
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(Staff), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -55,7 +55,7 @@ public class StaffsController(IMediator mediator) : ControllerBase
     /// Обновление профиля персонала
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Staff)]
+    [AccountTypeAuthorize(AccountType.Staff, AccountType.Admin)]
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

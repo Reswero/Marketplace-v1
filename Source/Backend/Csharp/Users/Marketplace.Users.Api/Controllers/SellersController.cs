@@ -38,7 +38,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     /// Получение профиля продавца
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Seller)]
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(Seller), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -70,7 +70,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     /// Обновление профиля продавца
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Seller)]
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
