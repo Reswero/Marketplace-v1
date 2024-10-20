@@ -5,6 +5,8 @@ using Marketplace.Common.Responses;
 using Marketplace.Users.Application.Sellers.Commands.CreateSeller;
 using Marketplace.Users.Application.Sellers.Commands.UpdateSeller;
 using Marketplace.Users.Application.Sellers.Queries.GetSeller;
+using Marketplace.Users.Application.Sellers.Queries.GetSellerShortInfo;
+using Marketplace.Users.Application.Sellers.ViewModels;
 using Marketplace.Users.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +38,7 @@ public class SellersController(IMediator mediator) : ControllerBase
     /// Получение профиля продавца
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Seller)]
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
     [HttpGet("{accountId:int}")]
     [ProducesResponseType(typeof(Seller), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -52,10 +54,23 @@ public class SellersController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
+    /// Получение краткой информации о продавце
+    /// </summary>
+    /// <param name="accountId">Идентификатор аккаунта</param>
+    [HttpGet("{accountId:int}/info")]
+    [ProducesResponseType(typeof(SellerShortInfoVM), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSellerShortInfo(int accountId)
+    {
+        var info = await _mediator.Send(new GetSellerShortInfoQuery(accountId));
+        return Ok(info);
+    }
+
+    /// <summary>
     /// Обновление профиля продавца
     /// </summary>
     /// <param name="accountId">Идентификатор аккаунта</param>
-    [AccountTypeAuthorize(AccountType.Seller)]
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
     [HttpPut("{accountId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
