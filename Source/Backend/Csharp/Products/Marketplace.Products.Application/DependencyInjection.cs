@@ -18,8 +18,6 @@ public static class DependencyInjection
     /// <param name="services"></param>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        ValidatorOptions.Global.LanguageManager.Culture = new("ru-RU");
-
         Type[] excludedValidators =
         [
             typeof(AddProductParameterVMValidator),
