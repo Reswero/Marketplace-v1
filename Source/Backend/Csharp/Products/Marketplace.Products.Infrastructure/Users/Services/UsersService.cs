@@ -13,6 +13,10 @@ internal class UsersService(HttpClient httpClient)
     : IUsersService
 {
     private readonly HttpClient _httpClient = httpClient;
+    private readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
 
     /// <inheritdoc/>
     public async Task<Seller> GetSellerInfoAsync(int id, CancellationToken cancellationToken = default)
@@ -26,7 +30,7 @@ internal class UsersService(HttpClient httpClient)
         response.EnsureSuccessStatusCode();
 
         var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        var seller = JsonSerializer.Deserialize<Seller>(stream)!;
+        var seller = JsonSerializer.Deserialize<Seller>(stream, _options)!;
 
         return seller;
     }
