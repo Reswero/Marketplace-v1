@@ -11,9 +11,19 @@ public class Product : ISoftDelete
 {
     private readonly List<ProductParameter> _parameters = [];
     private readonly List<Discount> _discounts = [];
+    private readonly List<Image> _images = []; 
 
     private Product() { }
 
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="sellerId">Идентификатор продавца</param>
+    /// <param name="category">Категория</param>
+    /// <param name="subсategory">Подкатегория</param>
+    /// <param name="name">Название</param>
+    /// <param name="description">Описание</param>
+    /// <param name="price">Цена</param>
     public Product(int sellerId, Category category, Subсategory subсategory,
         string name, string description, int price)
     {
@@ -71,6 +81,10 @@ public class Product : ISoftDelete
     /// Скидки
     /// </summary>
     public List<Discount> Discounts => _discounts;
+    /// <summary>
+    /// Изображения
+    /// </summary>
+    public List<Image> Images => _images;
     /// <summary>
     /// Дата создания
     /// </summary>
@@ -159,6 +173,30 @@ public class Product : ISoftDelete
     {
         _discounts.Remove(discount);
         SetUpdated();
+    }
+
+    /// <summary>
+    /// Добавить изображения
+    /// </summary>
+    /// <param name="images">Изображения</param>
+    public void AddImages(params Image[] images)
+    {
+        if (images.Length > 0)
+            _images.AddRange(images);
+
+        SetUpdated();
+    }
+
+    /// <summary>
+    /// Удалить изображения
+    /// </summary>
+    /// <param name="images">Изображения</param>
+    public void RemoveImages(params Image[] images)
+    {
+        foreach (var image in images)
+        {
+            _images.Remove(image);
+        }
     }
 
     /// <summary>

@@ -23,5 +23,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.ProductId);
         builder.HasMany(p => p.Discounts)
             .WithOne();
+        builder.HasMany(p => p.Images)
+            .WithOne();
     }
 }
