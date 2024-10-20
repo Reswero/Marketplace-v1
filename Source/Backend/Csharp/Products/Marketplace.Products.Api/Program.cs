@@ -3,6 +3,7 @@ using Marketplace.Products.Api.Extensions;
 using Marketplace.Products.Application;
 using Marketplace.Products.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,7 @@ public class Program
         builder.Services.AddSwaggerGen(opt =>
         {
             opt.AddHeaderAuthorization();
+            opt.IncludeXmlComments(Assembly.GetExecutingAssembly(), true);
         });
 
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
