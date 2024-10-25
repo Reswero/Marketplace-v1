@@ -47,6 +47,7 @@ public static class DependencyInjection
 
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();
         services.AddScoped<IProductsSearcher, ProductsSearcher>();
+        services.AddScoped<IProductsObjectStorage, ProductsObjectStorage>();
 
         services.AddScoped<IUsersService, UsersService>();
 
