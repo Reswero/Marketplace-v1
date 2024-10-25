@@ -22,6 +22,10 @@ public record ProductShortInfoVM
     /// </summary>
     public DiscountVM? Discount { get; set; }
     /// <summary>
+    /// Изображение
+    /// </summary>
+    public string? Image { get; set; }
+    /// <summary>
     /// Статус
     /// </summary>
     public ProductStatus Status { get; set; }

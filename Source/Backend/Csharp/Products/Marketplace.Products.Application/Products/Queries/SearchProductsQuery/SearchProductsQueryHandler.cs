@@ -31,6 +31,7 @@ internal class SearchProductsQueryHandler(IProductsSearcher searcher)
         var productsVMs = products.Select(p =>
         {
             var discount = p.Discounts.MinBy(d => d.ValidUntil);
+            var image = p.Images.FirstOrDefault();
 
             return new ProductShortInfoVM()
             {
@@ -38,6 +39,7 @@ internal class SearchProductsQueryHandler(IProductsSearcher searcher)
                 Name = p.Name,
                 Price = p.Price,
                 Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
+                Image = image is not null ? $"{image.BucketName}/{image.Name}" : null,
                 Status = p.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
             };
         }).ToList();

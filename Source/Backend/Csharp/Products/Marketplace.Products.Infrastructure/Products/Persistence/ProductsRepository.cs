@@ -27,6 +27,7 @@ internal class ProductsRepository(ProductsContext db) : IProductsRepository
             .Include(p => p.Discounts)
             .Include(p => p.Parameters)
                 .ThenInclude(p => p.CategoryParameter)
+            .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
             ?? throw new ObjectNotFoundException(typeof(Product), id);
     }
