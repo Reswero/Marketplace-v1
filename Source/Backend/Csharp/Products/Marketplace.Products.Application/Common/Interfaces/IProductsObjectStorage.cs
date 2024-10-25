@@ -1,5 +1,4 @@
 ﻿using Marketplace.Products.Application.Common.DTOs;
-using Marketplace.Products.Application.Common.Models;
 
 namespace Marketplace.Products.Application.Common.Interfaces;
 
@@ -13,7 +12,8 @@ public interface IProductsObjectStorage
     /// </summary>
     /// <param name="images">Изображения</param>
     /// <param name="cancellationToken"></param>
-    public Task<ImagesUploadResult> UploadImagesAsync(List<FileDto> images, CancellationToken cancellationToken = default);
+    /// <returns>Названия загруженных изображений</returns>
+    public Task<List<string>> UploadImagesAsync(List<FileDto> images, CancellationToken cancellationToken = default);
     /// <summary>
     /// Удалить изображения
     /// </summary>

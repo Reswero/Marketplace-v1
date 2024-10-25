@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Common.DTOs;
+using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Common.Models;
 using Microsoft.Extensions.Logging;
@@ -19,9 +20,8 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
     private readonly IMinioClient _client = client;
 
     /// <inheritdoc/>
-    public async Task<ImagesUploadResult> UploadImagesAsync(List<FileDto> images, CancellationToken cancellationToken = default)
+    public async Task<List<string>> UploadImagesAsync(List<FileDto> images, CancellationToken cancellationToken = default)
     {
-        bool hasError = false;
         List<string> imageNames = new(images.Count);
 
         foreach (var image in images)
@@ -40,14 +40,14 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
 
             if (string.IsNullOrWhiteSpace(response.Etag))
             {
-                hasError = false;
-                break;
+                // Add images to outbox to delete
+                throw new UploadImagesException();
             }
 
             imageNames.Add(fileName);
         }
 
-        return new(hasError, imageNames);
+        return imageNames;
     }
 
     /// <inheritdoc/>

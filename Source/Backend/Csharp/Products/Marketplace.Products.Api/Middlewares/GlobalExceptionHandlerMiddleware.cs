@@ -32,9 +32,14 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status404NotFound);
         }
+        catch (UploadImagesException e)
+        {
+            _logger.LogError(e, "Ошибка при загрузке изображений. {Error}", e.Message);
+            await HandleExceptionAsync(context, e, StatusCodes.Status500InternalServerError);
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, "Ошибка во время выполнения запроса: {Error}", e.Message);
+            _logger.LogError(e, "Ошибка во время выполнения запроса. {Error}", e.Message);
             await HandleExceptionAsync(context, new Exception("Неизвестная ошибка"), StatusCodes.Status500InternalServerError);
         }
     }
