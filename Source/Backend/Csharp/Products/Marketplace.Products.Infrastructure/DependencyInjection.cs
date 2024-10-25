@@ -46,6 +46,7 @@ public static class DependencyInjection
         {
             client.WithEndpoint(configuration["ObjectStorage:Address"])
                 .WithCredentials(configuration["ObjectStorage:Login"], configuration["ObjectStorage:Password"])
+                .WithSSL(false)
                 .Build();
         });
 
