@@ -8,6 +8,7 @@ using Marketplace.Products.Infrastructure.Users.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
 using Serilog;
 
 namespace Marketplace.Products.Infrastructure;
@@ -33,12 +34,19 @@ public static class DependencyInjection
             builder.AddSerilog(dispose: true);
         });
 
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
         services.AddDbContext<ProductsContext>(opt =>
         {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
             opt.UseNpgsql(connectionString);
             opt.AddInterceptors(new SoftDeleteInterceptor());
+        });
+
+        services.AddMinio(client =>
+        {
+            client.WithEndpoint(configuration["ObjectStorage:Address"])
+                .WithCredentials(configuration["ObjectStorage:Login"], configuration["ObjectStorage:Password"])
+                .Build();
         });
 
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
