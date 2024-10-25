@@ -1,7 +1,7 @@
-﻿using Marketplace.Products.Application.Common.DTOs;
+﻿using Marketplace.Products.Application.Common;
+using Marketplace.Products.Application.Common.DTOs;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
-using Marketplace.Products.Application.Common.Models;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
@@ -14,8 +14,6 @@ namespace Marketplace.Products.Infrastructure.Products.Services;
 internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMinioClient client)
     : IProductsObjectStorage
 {
-    private const string _bucketName = "products-bucket";
-
     private readonly ILogger<ProductsObjectStorage> _logger = logger;
     private readonly IMinioClient _client = client;
 
@@ -30,7 +28,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
             string fileName = $"{guid}.jpg";
 
             PutObjectArgs args = new PutObjectArgs()
-                .WithBucket(_bucketName)
+                .WithBucket(MarketplaceConsts.ProductsImagesBucket)
                 .WithObject(fileName)
                 .WithObjectSize(image.Stream.Length)
                 .WithStreamData(image.Stream)
@@ -40,7 +38,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
 
             if (string.IsNullOrWhiteSpace(response.Etag))
             {
-                // Add images to outbox to delete
+                // TODO: Add images to outbox to delete
                 throw new UploadImagesException();
             }
 
@@ -54,7 +52,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
     public async Task DeleteImagesAsync(List<string> imageNames, CancellationToken cancellationToken = default)
     {
         RemoveObjectsArgs removeArgs = new RemoveObjectsArgs()
-            .WithBucket(_bucketName)
+            .WithBucket(MarketplaceConsts.ProductsImagesBucket)
             .WithObjects(imageNames);
 
         try
