@@ -45,6 +45,10 @@ public record ProductVM
     /// </summary>
     public List<ProductParameterVM> Parameters { get; set; } = null!;
     /// <summary>
+    /// Изображения
+    /// </summary>
+    public List<string> Images { get; set; } = null!;
+    /// <summary>
     /// Статус
     /// </summary>
     public ProductStatus Status { get; set; }

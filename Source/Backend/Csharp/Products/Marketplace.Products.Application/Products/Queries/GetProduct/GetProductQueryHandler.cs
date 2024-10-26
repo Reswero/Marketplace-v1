@@ -46,6 +46,7 @@ internal class GetProductQueryHandler(ILogger<GetProductQueryHandler> logger, IP
             Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
             Parameters = product.Parameters.Select(p =>
                 new ProductParameterVM(p.Id, p.CategoryParameterId, p.CategoryParameter!.Name, p.Value)).ToList(),
+            Images = product.Images.Select(i => $"{i.BucketName}/{i.Name}").ToList(),
             Status = product.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
         };
     }

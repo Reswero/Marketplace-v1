@@ -10,6 +10,7 @@ namespace Marketplace.Products.Infrastructure.Common.Persistence;
 internal class ProductsContext(DbContextOptions<ProductsContext> options) : DbContext(options), IUnitOfWork
 {
     public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Image> Images { get; set; } = null!;
     public DbSet<Discount> Discounts { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Subсategory> Subcategories { get; set; } = null!;

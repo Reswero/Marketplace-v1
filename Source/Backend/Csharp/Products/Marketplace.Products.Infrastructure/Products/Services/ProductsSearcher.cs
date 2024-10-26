@@ -18,6 +18,7 @@ internal class ProductsSearcher(ProductsContext db) : IProductsSearcher
     public Task<List<Product>> SearchAsync(SearchParameters parameters, CancellationToken cancellationToken = default)
     {
         var query = _db.Products.Include(p => p.Discounts)
+            .Include(p => p.Images)
             .Where(p => p.DeletedAt == null)
             .AsQueryable();
 
