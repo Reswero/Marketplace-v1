@@ -22,15 +22,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Common", "Commo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{9F64F9A0-3DFC-4379-B649-E78D93DDA781}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Products.Api", "Products\Marketplace.Products.Api\Marketplace.Products.Api.csproj", "{70D71AD9-96E0-49AF-8F0E-3732C29B4D18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Products.Api", "Products\Marketplace.Products.Api\Marketplace.Products.Api.csproj", "{70D71AD9-96E0-49AF-8F0E-3732C29B4D18}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{83E63A85-7674-406C-8634-60F087B0DD88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Products.Application", "Products\Marketplace.Products.Application\Marketplace.Products.Application.csproj", "{9182BFA1-C6E9-487B-8A93-E8E3519BC6A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Products.Application", "Products\Marketplace.Products.Application\Marketplace.Products.Application.csproj", "{9182BFA1-C6E9-487B-8A93-E8E3519BC6A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Products.Domain", "Products\Marketplace.Products.Domain\Marketplace.Products.Domain.csproj", "{9E60D1AA-47B7-43EE-BA52-727559232367}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Products.Domain", "Products\Marketplace.Products.Domain\Marketplace.Products.Domain.csproj", "{9E60D1AA-47B7-43EE-BA52-727559232367}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Products.Infrastructure", "Products\Marketplace.Products.Infrastructure\Marketplace.Products.Infrastructure.csproj", "{CB9E8FE2-7FE7-475B-A61B-45C3A4439245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Products.Infrastructure", "Products\Marketplace.Products.Infrastructure\Marketplace.Products.Infrastructure.csproj", "{CB9E8FE2-7FE7-475B-A61B-45C3A4439245}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85D59FBD-B38E-45F7-9041-1AA286BE3845}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Common.UnitTests", "Tests\Marketplace.Common.UnitTests\Marketplace.Common.UnitTests.csproj", "{3135C565-75B4-4931-9B79-6B879CC2F7E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +78,10 @@ Global
 		{CB9E8FE2-7FE7-475B-A61B-45C3A4439245}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB9E8FE2-7FE7-475B-A61B-45C3A4439245}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB9E8FE2-7FE7-475B-A61B-45C3A4439245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +96,7 @@ Global
 		{9182BFA1-C6E9-487B-8A93-E8E3519BC6A3} = {83E63A85-7674-406C-8634-60F087B0DD88}
 		{9E60D1AA-47B7-43EE-BA52-727559232367} = {83E63A85-7674-406C-8634-60F087B0DD88}
 		{CB9E8FE2-7FE7-475B-A61B-45C3A4439245} = {83E63A85-7674-406C-8634-60F087B0DD88}
+		{3135C565-75B4-4931-9B79-6B879CC2F7E4} = {85D59FBD-B38E-45F7-9041-1AA286BE3845}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9949857-944B-44B7-A4D3-A074C27BD291}
