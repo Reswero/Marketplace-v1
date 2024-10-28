@@ -107,16 +107,17 @@ public class OutboxQueue<T> : IOutboxQueue<T>
         using var connection = CreateConnection();
         var rows = await connection.QueryAsync(_sqlSelectAll, new { count });
 
+        List<int> ids = new(count);
         List<T> items = new(count);
+
         foreach (var row in rows)
         {
             T item = JsonSerializer.Deserialize<T>(row.value)!;
             items.Add(item);
+            ids.Add(row.id);
         }
 
-        var ids = rows.Select(r => r.id).ToList();
         await connection.ExecuteAsync(_sqlDelete, new { ids });
-
         return items;
     }
 
