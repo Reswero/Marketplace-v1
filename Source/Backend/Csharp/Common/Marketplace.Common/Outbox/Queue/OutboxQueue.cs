@@ -128,7 +128,7 @@ public class OutboxQueue<T> : IOutboxQueue<T>
         {
             T item = JsonSerializer.Deserialize<T>(row.value)!;
             items.Add(item);
-            ids.Add(row.id);
+            ids.Add((int) row.id);
         }
 
         await connection.ExecuteAsync(_sqlDelete, new { ids });
