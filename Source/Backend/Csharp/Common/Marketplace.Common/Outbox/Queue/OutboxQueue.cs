@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Marketplace.Common.Outbox.Exceptions;
 using Microsoft.Data.Sqlite;
 using System.Text.Json;
 
@@ -85,7 +86,10 @@ public class OutboxQueue<T> : IOutboxQueue<T>
     public async Task<List<T>> PeekAsync(int count, CancellationToken cancellationToken = default)
     {
         using var connection = CreateConnection();
-        var values = await connection.QueryAsync<string>(_sqlSelectValue, new { count });
+        var values = (await connection.QueryAsync<string>(_sqlSelectValue, new { count })).ToList();
+
+        if (values.Count == 0)
+            throw new OutboxEmptyException();
 
         List<T> items = new(count);
         foreach (var value in values)
@@ -105,7 +109,10 @@ public class OutboxQueue<T> : IOutboxQueue<T>
     public async Task<List<T>> PopAsync(int count, CancellationToken cancellationToken = default)
     {
         using var connection = CreateConnection();
-        var rows = await connection.QueryAsync(_sqlSelectAll, new { count });
+        var rows = (await connection.QueryAsync(_sqlSelectAll, new { count })).ToList();
+
+        if (rows.Count == 0)
+            throw new OutboxEmptyException();
 
         List<int> ids = new(count);
         List<T> items = new(count);
