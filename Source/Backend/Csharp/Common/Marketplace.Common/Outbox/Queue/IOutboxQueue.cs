@@ -1,4 +1,6 @@
-﻿namespace Marketplace.Common.Outbox.Queue;
+﻿using Marketplace.Common.Outbox.Exceptions;
+
+namespace Marketplace.Common.Outbox.Queue;
 
 /// <summary>
 /// Паттерн Outbox на основе очереди
@@ -22,23 +24,32 @@ public interface IOutboxQueue<T>
     /// Получить первый элемент из очереди
     /// </summary>
     /// <param name="cancellationToken"></param>
+    /// <exception cref="OutboxEmptyException" />
     public Task<T> PeekAsync(CancellationToken cancellationToken = default);
     /// <summary>
     /// Получить несколько первых элементов из очереди
     /// </summary>
     /// <param name="count">Количество</param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <exception cref="OutboxEmptyException" />
     public Task<List<T>> PeekAsync(int count, CancellationToken cancellationToken = default);
     /// <summary>
     /// Получить и удалить первый элемент из очереди
     /// </summary>
     /// <param name="cancellationToken"></param>
+    /// <exception cref="OutboxEmptyException" />
     public Task<T> PopAsync(CancellationToken cancellationToken = default);
     /// <summary>
     /// Получить и удалить несколько первыз элментов из очереди
     /// </summary>
     /// <param name="count">Количество</param>
     /// <param name="cancellationToken"></param>
+    /// <exception cref="OutboxEmptyException" />
     public Task<List<T>> PopAsync(int count, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Получить количество элементов в очереди
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task<int> CountAsync(CancellationToken cancellationToken = default);
 }

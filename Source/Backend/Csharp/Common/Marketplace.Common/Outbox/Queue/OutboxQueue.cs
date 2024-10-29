@@ -36,6 +36,9 @@ public class OutboxQueue<T> : IOutboxQueue<T>
         DELETE FROM {_tableName}
         WHERE id in @ids;
         """;
+    private const string _sqlCount = $"""
+        SELECT COUNT(*) FROM {_tableName}
+        """;
 
     private readonly string _connectionString;
 
@@ -74,7 +77,7 @@ public class OutboxQueue<T> : IOutboxQueue<T>
 
         await connection.OpenAsync(cancellationToken);
         var tx = await connection.BeginTransactionAsync(cancellationToken);
-        await connection.ExecuteAsync(_sqlInsert, values.Select(v => new { value = v }));
+        await connection.ExecuteAsync(_sqlInsert, values.Select(v => new { value = v }), tx);
         await tx.CommitAsync(cancellationToken);
     }
 
@@ -87,6 +90,8 @@ public class OutboxQueue<T> : IOutboxQueue<T>
     {
         using var connection = CreateConnection();
         var values = (await connection.QueryAsync<string>(_sqlSelectValue, new { count })).ToList();
+        
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (values.Count == 0)
             throw new OutboxEmptyException();
@@ -111,6 +116,8 @@ public class OutboxQueue<T> : IOutboxQueue<T>
         using var connection = CreateConnection();
         var rows = (await connection.QueryAsync(_sqlSelectAll, new { count })).ToList();
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (rows.Count == 0)
             throw new OutboxEmptyException();
 
@@ -126,6 +133,15 @@ public class OutboxQueue<T> : IOutboxQueue<T>
 
         await connection.ExecuteAsync(_sqlDelete, new { ids });
         return items;
+    }
+
+    /// <inheritdoc/>
+    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+        using var connection = CreateConnection();
+
+        var count = await connection.ExecuteScalarAsync<int>(_sqlCount);
+        return count;
     }
 
     private SqliteConnection CreateConnection()
