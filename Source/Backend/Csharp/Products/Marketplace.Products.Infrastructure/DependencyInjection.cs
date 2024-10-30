@@ -1,4 +1,5 @@
-﻿using Marketplace.Common.SoftDelete;
+﻿using Marketplace.Common.Outbox.Queue;
+using Marketplace.Common.SoftDelete;
 using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
@@ -18,6 +19,8 @@ namespace Marketplace.Products.Infrastructure;
 /// </summary>
 public static class DependencyInjection
 {
+    private const string _productsOutbox = "products_outbox.db";
+
     /// <summary>
     /// Добавить слой инфраструктуры
     /// </summary>
@@ -25,6 +28,8 @@ public static class DependencyInjection
     /// <param name="configuration">Конфигурация</param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
@@ -54,9 +59,21 @@ public static class DependencyInjection
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
         services.AddScoped<IProductsRepository, ProductsRepository>();
 
+        services.AddKeyedScoped<IOutboxQueue<string>>(_productsOutbox, (_, _) =>
+        {
+            return new OutboxQueue<string>(_productsOutbox, true);
+        });
+
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();
         services.AddScoped<IProductsSearcher, ProductsSearcher>();
-        services.AddScoped<IProductsObjectStorage, ProductsObjectStorage>();
+        services.AddScoped<IProductsObjectStorage>(provider =>
+        {
+            var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ProductsObjectStorage>>();
+            var minioClient = provider.GetRequiredService<IMinioClient>();
+            var outbox = provider.GetRequiredKeyedService<IOutboxQueue<string>>(_productsOutbox);
+
+            return new ProductsObjectStorage(logger, minioClient, outbox);
+        });
 
         services.AddScoped<IUsersService, UsersService>();
 
