@@ -21,11 +21,12 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
     IOutboxQueue<ImageToDelete> outbox, string imagesBucket)
     : IProductsObjectStorage
 {
-    private readonly string _imagesBucket = imagesBucket;
-
     private readonly ILogger<ProductsObjectStorage> _logger = logger;
     private readonly IMinioClient _storage = storage;
     private readonly IOutboxQueue<ImageToDelete> _outbox = outbox;
+
+    /// <inheritdoc/>
+    public string ImagesBucket => imagesBucket;
 
     /// <inheritdoc/>
     public async Task<List<string>> UploadImagesAsync(List<FileDto> images, CancellationToken cancellationToken = default)
@@ -38,7 +39,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
             string fileName = $"{guid}.jpg";
 
             PutObjectArgs args = new PutObjectArgs()
-                .WithBucket(_imagesBucket)
+                .WithBucket(ImagesBucket)
                 .WithObject(fileName)
                 .WithObjectSize(image.Stream.Length)
                 .WithStreamData(image.Stream)
@@ -48,7 +49,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
 
             if (string.IsNullOrWhiteSpace(response.Etag))
             {
-                var toDelete = images.Select(i => new ImageToDelete(_imagesBucket, i.Name)).ToArray();
+                var toDelete = images.Select(i => new ImageToDelete(ImagesBucket, i.Name)).ToArray();
                 await _outbox.PushAsync(toDelete, CancellationToken.None);
 
                 throw new UploadImagesException();

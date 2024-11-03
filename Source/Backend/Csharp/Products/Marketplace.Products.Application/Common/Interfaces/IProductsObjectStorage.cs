@@ -9,6 +9,11 @@ namespace Marketplace.Products.Application.Common.Interfaces;
 public interface IProductsObjectStorage
 {
     /// <summary>
+    /// Бакет изображений
+    /// </summary>
+    public string ImagesBucket { get; }
+
+    /// <summary>
     /// Загрузить изображения товара
     /// </summary>
     /// <param name="images">Изображения</param>
