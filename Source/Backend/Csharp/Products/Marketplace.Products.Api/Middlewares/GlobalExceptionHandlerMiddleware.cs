@@ -2,6 +2,7 @@
 using Marketplace.Common.Responses;
 using Marketplace.Common.SoftDelete.Exceptions;
 using Marketplace.Products.Application.Common.Exceptions;
+using Marketplace.Products.Domain.Exceptions;
 using System.Net.Mime;
 
 namespace Marketplace.Products.Api.Middlewares;
@@ -24,7 +25,8 @@ public class GlobalExceptionHandlerMiddleware(ILogger<GlobalExceptionHandlerMidd
         }
         catch (Exception e) when (e is ValidationException ||
                                   e is ObjectDeletedException ||
-                                  e is ObjectAlreadyExistsException)
+                                  e is ObjectAlreadyExistsException ||
+                                  e is ImagesLimitExceededException)
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
         }
