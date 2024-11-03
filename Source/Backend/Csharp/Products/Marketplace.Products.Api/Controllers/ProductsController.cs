@@ -9,6 +9,7 @@ using Marketplace.Products.Application.Products.Commands.CreateProduct;
 using Marketplace.Products.Application.Products.Commands.DeleteProduct;
 using Marketplace.Products.Application.Products.Commands.UpdateProduct;
 using Marketplace.Products.Application.Products.Queries.GetProduct;
+using Marketplace.Products.Application.Products.Queries.GetProductFullInfo;
 using Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 using Marketplace.Products.Application.Products.ViewModels;
 using MediatR;
@@ -55,6 +56,29 @@ public class ProductsController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var product = await _mediator.Send(new GetProductQuery(id));
+        return Ok(product);
+    }
+
+    /// <summary>
+    /// Получение полной информации о товаре
+    /// </summary>
+    /// <param name="id">Идентификатор товара</param>
+    /// <param name="accessChecker"></param>
+    [AccountTypeAuthorize(AccountType.Seller, AccountType.Staff, AccountType.Admin)]
+    [HttpGet("{id:int}/full-info")]
+    [ProducesResponseType(typeof(ProductFullInfoVM), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetFullInfo(int id, [FromServices] IProductsAccessChecker accessChecker)
+    {
+        var checkResult = await CheckAccessToProductAsync(accessChecker, id);
+        if (checkResult is not null)
+        {
+            return checkResult;
+        }
+
+        var product = await _mediator.Send(new GetProductFullInfoQuery(id));
         return Ok(product);
     }
 
