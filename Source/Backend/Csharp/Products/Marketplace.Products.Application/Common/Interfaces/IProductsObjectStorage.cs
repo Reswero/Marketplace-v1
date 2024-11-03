@@ -20,5 +20,5 @@ public interface IProductsObjectStorage
     /// </summary>
     /// <param name="images">Изображения</param>
     /// <param name="cancellationToken"></param>
-    public Task DeleteImagesAsync(List<Image> images, CancellationToken cancellationToken = default);
+    public Task DeleteImagesAsync(IReadOnlyCollection<Image> images, CancellationToken cancellationToken = default);
 }

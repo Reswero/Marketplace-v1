@@ -61,7 +61,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
     }
 
     /// <inheritdoc/>
-    public async Task DeleteImagesAsync(List<Image> images, CancellationToken cancellationToken = default)
+    public async Task DeleteImagesAsync(IReadOnlyCollection<Image> images, CancellationToken cancellationToken = default)
     {
         var imagesByBuckets = images.GroupBy(i => i.BucketName).ToList();
 
