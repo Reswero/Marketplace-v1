@@ -12,7 +12,7 @@ internal class UploadImagesCommandValidator : AbstractValidator<UploadImagesComm
         {
             file.ChildRules(validator =>
             {
-                validator.RuleFor(f => f.Stream.Length).LessThanOrEqualTo(MarketplaceConsts.MaxImageSize);
+                validator.RuleFor(f => f.Stream.Length).LessThanOrEqualTo(ApplicationConsts.MaxImageSize);
             });
         });
     }

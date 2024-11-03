@@ -1,9 +1,9 @@
 ﻿namespace Marketplace.Products.Application.Common;
 
 /// <summary>
-/// Константы сервиса
+/// Константы слоя приложения
 /// </summary>
-public static class MarketplaceConsts
+public static class ApplicationConsts
 {
     /// <summary>
     /// Максимальный размер изображения в байтах

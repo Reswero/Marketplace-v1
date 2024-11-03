@@ -1,5 +1,6 @@
 ﻿using Marketplace.Common.SoftDelete;
 using Marketplace.Products.Domain.Categories;
+using Marketplace.Products.Domain.Exceptions;
 using Marketplace.Products.Domain.Parameters;
 
 namespace Marketplace.Products.Domain.Products;
@@ -9,6 +10,8 @@ namespace Marketplace.Products.Domain.Products;
 /// </summary>
 public class Product : ISoftDelete
 {
+    public const int MaxImages = 30;
+
     private readonly List<ProductParameter> _parameters = [];
     private readonly List<Discount> _discounts = [];
     private readonly List<Image> _images = []; 
@@ -181,6 +184,9 @@ public class Product : ISoftDelete
     /// <param name="images">Изображения</param>
     public void AddImages(params Image[] images)
     {
+        if (_images.Count + images.Length > MaxImages)
+            throw new ImagesLimitExceededException();
+
         if (images.Length > 0)
             _images.AddRange(images);
 
