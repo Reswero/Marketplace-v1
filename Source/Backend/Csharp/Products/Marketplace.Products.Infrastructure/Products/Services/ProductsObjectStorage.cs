@@ -13,14 +13,18 @@ namespace Marketplace.Products.Infrastructure.Products.Services;
 /// <summary>
 /// Объектное хранилище
 /// </summary>
-internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMinioClient client,
+/// <param name="logger">Логгер</param>
+/// <param name="storage">Клиент объектного хранилища</param>
+/// <param name="outbox">Outbox с изображениями товаров</param>
+/// <param name="imagesBucket">Бакет с изображениями товаров</param>
+internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMinioClient storage,
     IOutboxQueue<ImageToDelete> outbox, string imagesBucket)
     : IProductsObjectStorage
 {
     private readonly string _imagesBucket = imagesBucket;
 
     private readonly ILogger<ProductsObjectStorage> _logger = logger;
-    private readonly IMinioClient _client = client;
+    private readonly IMinioClient _storage = storage;
     private readonly IOutboxQueue<ImageToDelete> _outbox = outbox;
 
     /// <inheritdoc/>
@@ -40,7 +44,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
                 .WithStreamData(image.Stream)
                 .WithContentType(image.ContentType);
 
-            var response = await _client.PutObjectAsync(args, cancellationToken);
+            var response = await _storage.PutObjectAsync(args, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(response.Etag))
             {
@@ -70,7 +74,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
                     .WithBucket(bucketImages.Key)
                     .WithObjects(imagesNames);
 
-                await _client.RemoveObjectsAsync(removeArgs, cancellationToken);
+                await _storage.RemoveObjectsAsync(removeArgs, cancellationToken);
                 imagesByBuckets.Remove(bucketImages);
             }
         }
