@@ -4,6 +4,7 @@ using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
+using Marketplace.Products.Infrastructure.Products.Models;
 using Marketplace.Products.Infrastructure.Products.Services;
 using Marketplace.Products.Infrastructure.Users.Services;
 using Microsoft.EntityFrameworkCore;
@@ -59,9 +60,9 @@ public static class DependencyInjection
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
         services.AddScoped<IProductsRepository, ProductsRepository>();
 
-        services.AddKeyedScoped<IOutboxQueue<string>>(_productsOutbox, (_, _) =>
+        services.AddKeyedScoped<IOutboxQueue<ImageToDelete>>(_productsOutbox, (_, _) =>
         {
-            return new OutboxQueue<string>(_productsOutbox, true);
+            return new OutboxQueue<ImageToDelete>(_productsOutbox, true);
         });
 
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();

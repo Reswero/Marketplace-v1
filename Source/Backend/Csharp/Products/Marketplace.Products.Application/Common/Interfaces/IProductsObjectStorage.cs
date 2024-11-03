@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Common.DTOs;
+using Marketplace.Products.Domain.Products;
 
 namespace Marketplace.Products.Application.Common.Interfaces;
 
@@ -17,7 +18,7 @@ public interface IProductsObjectStorage
     /// <summary>
     /// Удалить изображения
     /// </summary>
-    /// <param name="imageNames">Названия изображений</param>
+    /// <param name="images">Изображения</param>
     /// <param name="cancellationToken"></param>
-    public Task DeleteImagesAsync(List<string> imageNames, CancellationToken cancellationToken = default);
+    public Task DeleteImagesAsync(List<Image> images, CancellationToken cancellationToken = default);
 }
