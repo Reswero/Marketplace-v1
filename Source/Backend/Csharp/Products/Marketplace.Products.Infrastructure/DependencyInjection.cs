@@ -49,9 +49,9 @@ public static class DependencyInjection
 
         services.AddMinio(client =>
         {
-            client.WithEndpoint(configuration["ObjectStorage:Address"])
-                .WithCredentials(configuration["ObjectStorage:Login"], configuration["ObjectStorage:Password"])
-                .WithSSL(Convert.ToBoolean(configuration["ObjectStorage:UseSSL"]))
+            client.WithEndpoint(configuration["ObjectStorage:Connection:Address"])
+                .WithCredentials(configuration["ObjectStorage:Connection:Login"], configuration["ObjectStorage:Connection:Password"])
+                .WithSSL(Convert.ToBoolean(configuration["ObjectStorage:Connection:UseSSL"]))
                 .Build();
         });
 
@@ -71,8 +71,9 @@ public static class DependencyInjection
             var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ProductsObjectStorage>>();
             var minioClient = provider.GetRequiredService<IMinioClient>();
             var outbox = provider.GetRequiredKeyedService<IOutboxQueue<string>>(_productsOutbox);
+            var imagesBucket = configuration["ObjectStorage:Buckets:ProductsImages"]!;
 
-            return new ProductsObjectStorage(logger, minioClient, outbox);
+            return new ProductsObjectStorage(logger, minioClient, outbox, imagesBucket);
         });
 
         services.AddScoped<IUsersService, UsersService>();

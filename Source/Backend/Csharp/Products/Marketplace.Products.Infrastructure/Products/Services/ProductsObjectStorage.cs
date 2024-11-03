@@ -1,5 +1,4 @@
 ﻿using Marketplace.Common.Outbox.Queue;
-using Marketplace.Products.Application.Common;
 using Marketplace.Products.Application.Common.DTOs;
 using Marketplace.Products.Application.Common.Exceptions;
 using Marketplace.Products.Application.Common.Interfaces;
@@ -13,9 +12,11 @@ namespace Marketplace.Products.Infrastructure.Products.Services;
 /// Объектное хранилище
 /// </summary>
 internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMinioClient client,
-    IOutboxQueue<string> outbox)
+    IOutboxQueue<string> outbox, string imagesBucket)
     : IProductsObjectStorage
 {
+    private readonly string _imagesBucket = imagesBucket;
+
     private readonly ILogger<ProductsObjectStorage> _logger = logger;
     private readonly IMinioClient _client = client;
     private readonly IOutboxQueue<string> _outbox = outbox;
@@ -31,7 +32,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
             string fileName = $"{guid}.jpg";
 
             PutObjectArgs args = new PutObjectArgs()
-                .WithBucket(MarketplaceConsts.ProductsImagesBucket)
+                .WithBucket(_imagesBucket)
                 .WithObject(fileName)
                 .WithObjectSize(image.Stream.Length)
                 .WithStreamData(image.Stream)
@@ -55,7 +56,7 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
     public async Task DeleteImagesAsync(List<string> imageNames, CancellationToken cancellationToken = default)
     {
         RemoveObjectsArgs removeArgs = new RemoveObjectsArgs()
-            .WithBucket(MarketplaceConsts.ProductsImagesBucket)
+            .WithBucket(_imagesBucket)
             .WithObjects(imageNames);
 
         try
