@@ -48,7 +48,9 @@ internal class ProductsObjectStorage(ILogger<ProductsObjectStorage> logger, IMin
 
             if (string.IsNullOrWhiteSpace(response.Etag))
             {
-                // TODO: Add images to outbox to delete
+                var toDelete = images.Select(i => new ImageToDelete(_imagesBucket, i.Name)).ToArray();
+                await _outbox.PushAsync(toDelete, CancellationToken.None);
+
                 throw new UploadImagesException();
             }
 
