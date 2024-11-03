@@ -4,6 +4,7 @@ using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
+using Marketplace.Products.Infrastructure.Products.Models;
 using Marketplace.Products.Infrastructure.Products.Services;
 using Marketplace.Products.Infrastructure.Users.Services;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ public static class DependencyInjection
     {
         Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
+        // Логгирование
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
@@ -39,6 +41,7 @@ public static class DependencyInjection
             builder.AddSerilog(dispose: true);
         });
 
+        // База данных
         services.AddDbContext<ProductsContext>(opt =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -47,34 +50,40 @@ public static class DependencyInjection
             opt.AddInterceptors(new SoftDeleteInterceptor());
         });
 
+        // Объектное хранилище
         services.AddMinio(client =>
         {
-            client.WithEndpoint(configuration["ObjectStorage:Address"])
-                .WithCredentials(configuration["ObjectStorage:Login"], configuration["ObjectStorage:Password"])
-                .WithSSL(Convert.ToBoolean(configuration["ObjectStorage:UseSSL"]))
+            client.WithEndpoint(configuration["ObjectStorage:Connection:Address"])
+                .WithCredentials(configuration["ObjectStorage:Connection:Login"], configuration["ObjectStorage:Connection:Password"])
+                .WithSSL(Convert.ToBoolean(configuration["ObjectStorage:Connection:UseSSL"]))
                 .Build();
         });
 
+        // Репозитории
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
         services.AddScoped<IProductsRepository, ProductsRepository>();
 
-        services.AddKeyedScoped<IOutboxQueue<string>>(_productsOutbox, (_, _) =>
+        // Outbox'ы
+        services.AddKeyedScoped<IOutboxQueue<ImageToDelete>>(_productsOutbox, (_, _) =>
         {
-            return new OutboxQueue<string>(_productsOutbox, true);
+            return new OutboxQueue<ImageToDelete>(_productsOutbox, true);
         });
 
+        // Сервисы товаров
         services.AddScoped<IProductsAccessChecker, ProductsAccessChecker>();
         services.AddScoped<IProductsSearcher, ProductsSearcher>();
         services.AddScoped<IProductsObjectStorage>(provider =>
         {
             var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ProductsObjectStorage>>();
             var minioClient = provider.GetRequiredService<IMinioClient>();
-            var outbox = provider.GetRequiredKeyedService<IOutboxQueue<string>>(_productsOutbox);
+            var outbox = provider.GetRequiredKeyedService<IOutboxQueue<ImageToDelete>>(_productsOutbox);
+            var imagesBucket = configuration["ObjectStorage:Buckets:ProductsImages"]!;
 
-            return new ProductsObjectStorage(logger, minioClient, outbox);
+            return new ProductsObjectStorage(logger, minioClient, outbox, imagesBucket);
         });
 
+        // Внешние сервисы
         services.AddScoped<IUsersService, UsersService>();
 
         services.AddHttpClient<IUsersService, UsersService>(cfg =>
@@ -86,9 +95,23 @@ public static class DependencyInjection
             cfg.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
+        // Бэкграунд сервисы
+        services.AddHostedService(provider =>
+        {
+            var logger = provider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<ProductsOutboxBackgroundWorker>>();
+            var minioClient = provider.GetRequiredService<IMinioClient>();
+            var outbox = provider.GetRequiredKeyedService<IOutboxQueue<ImageToDelete>>(_productsOutbox);
+
+            return new ProductsOutboxBackgroundWorker(logger, minioClient, outbox);
+        });
+
         return services;
     }
 
+    /// <summary>
+    /// Инициализировать базу данных
+    /// </summary>
+    /// <param name="provider"></param>
     public static void InitializeDatabase(this IServiceProvider provider)
     {
         using var scope = provider.CreateScope();
