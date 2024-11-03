@@ -24,7 +24,7 @@ internal class UploadImagesCommandHandler(IProductsRepository repository, IProdu
 
         for (int i = 0; i < imagesNames.Count; i++, maxOrder++)
         {
-            Image image = new(product.Id, maxOrder + 1, ApplicationConsts.ProductsImagesBucket, imagesNames[i]);
+            Image image = new(product.Id, maxOrder + 1, _objectStorage.ImagesBucket, imagesNames[i]);
             images[i] = image;
         }
 

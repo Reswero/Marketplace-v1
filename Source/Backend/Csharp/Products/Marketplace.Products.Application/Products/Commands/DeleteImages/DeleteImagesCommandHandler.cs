@@ -26,6 +26,6 @@ internal class DeleteImagesCommandHandler(IProductsRepository repository, IProdu
 
         await _repository.UpdateAsync(product, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
-        await _objectStorage.DeleteImagesAsync(imagesToDelete.Select(i => i.Name).ToList(), cancellationToken);
+        await _objectStorage.DeleteImagesAsync(imagesToDelete, cancellationToken);
     }
 }
