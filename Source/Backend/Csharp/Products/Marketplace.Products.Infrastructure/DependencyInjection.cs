@@ -65,7 +65,7 @@ public static class DependencyInjection
         services.AddScoped<IProductsRepository, ProductsRepository>();
 
         // Outbox'ы
-        services.AddKeyedScoped<IOutboxQueue<ImageToDelete>>(_productsOutbox, (_, _) =>
+        services.AddKeyedSingleton<IOutboxQueue<ImageToDelete>>(_productsOutbox, (_, _) =>
         {
             return new OutboxQueue<ImageToDelete>(_productsOutbox, true);
         });
