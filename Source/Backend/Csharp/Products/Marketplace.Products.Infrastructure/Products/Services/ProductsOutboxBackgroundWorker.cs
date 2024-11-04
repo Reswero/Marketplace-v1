@@ -27,7 +27,7 @@ internal class ProductsOutboxBackgroundWorker(ILogger<ProductsOutboxBackgroundWo
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (stoppingToken.IsCancellationRequested)
+        while (stoppingToken.IsCancellationRequested is false)
         {
             try
             {
@@ -44,6 +44,9 @@ internal class ProductsOutboxBackgroundWorker(ILogger<ProductsOutboxBackgroundWo
 
     private async Task DeleteImages(CancellationToken cancellationToken)
     {
+        if (await _outbox.CountAsync(cancellationToken) == 0)
+            return;
+
         var images = await _outbox.PeekAsync(_packetSize, cancellationToken);
         
         foreach (var image in images)
