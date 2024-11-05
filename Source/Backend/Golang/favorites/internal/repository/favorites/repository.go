@@ -18,8 +18,8 @@ type Repository struct {
 	*postgres.Storage
 }
 
-func New(storage *postgres.Storage) *Repository {
-	return &Repository{Storage: storage}
+func New(s *postgres.Storage) *Repository {
+	return &Repository{Storage: s}
 }
 
 // Добавить товар в избранное покупателя
