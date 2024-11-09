@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/Reswero/Marketplace-v1/favorites/internal/usecase"
+	"github.com/Reswero/Marketplace-v1/pkg/validation"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
@@ -23,6 +24,7 @@ func New(logger *slog.Logger, env string, ucFavorites usecase.Favorites) *Delive
 	}
 
 	d.router = echo.New()
+	d.router.Validator = validation.NewValidator()
 
 	if env == "dev" {
 		d.router.GET("/swagger/*", echoSwagger.WrapHandler)

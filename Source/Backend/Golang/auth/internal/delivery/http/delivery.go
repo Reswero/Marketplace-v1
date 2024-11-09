@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/docs"
 	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
-	"github.com/go-playground/validator/v10"
+	"github.com/Reswero/Marketplace-v1/pkg/validation"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
@@ -27,7 +27,7 @@ func New(logger *slog.Logger, env string,
 	}
 
 	d.router = echo.New()
-	d.router.Validator = &CustomValidator{validator: validator.New()}
+	d.router.Validator = validation.NewValidator()
 
 	if env == "dev" {
 		d.router.GET("/swagger/*", echoSwagger.WrapHandler)
