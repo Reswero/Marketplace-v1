@@ -30,6 +30,8 @@ func New(logger *slog.Logger, env string, ucFavorites usecase.Favorites) *Delive
 		d.router.GET("/swagger/*", echoSwagger.WrapHandler)
 	}
 
+	d.AddFavoritesRoutes()
+
 	return d
 }
 
