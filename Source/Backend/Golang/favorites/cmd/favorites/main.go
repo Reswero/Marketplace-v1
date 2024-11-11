@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"log/slog"
 	"os"
 
@@ -10,7 +11,12 @@ import (
 	favoritesUsecase "github.com/Reswero/Marketplace-v1/favorites/internal/usecase/favorites"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
 	"github.com/Reswero/Marketplace-v1/pkg/redis"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 )
+
+//go:embed migrations
+var embedMigrations embed.FS
 
 func main() {
 	cfg := config.MustLoad()
@@ -32,6 +38,12 @@ func main() {
 	}
 	defer storage.Close()
 
+	err = migrateDb(storage)
+	if err != nil {
+		logger.Error("failed to migrate db", slog.String("error", err.Error()))
+		panic(err)
+	}
+
 	cache, err := redis.New(cfg.Cache.Address)
 	if err != nil {
 		logger.Error("failed to create redis connection", slog.String("error", err.Error()))
@@ -47,4 +59,18 @@ func main() {
 		logger.Error("failed while running http server", slog.String("error", err.Error()))
 		panic(err)
 	}
+}
+
+func migrateDb(storage *postgres.Storage) error {
+	goose.SetBaseFS(embedMigrations)
+
+	err := goose.SetDialect("postgres")
+	if err != nil {
+		return err
+	}
+
+	db := stdlib.OpenDBFromPool(storage.Pool)
+	defer db.Close()
+
+	return goose.Up(db, "migrations")
 }
