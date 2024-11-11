@@ -9,7 +9,7 @@ import (
 // Взаимодействие с избранными товарами покупателей
 type Favorites interface {
 	// Добавить товар в избранное покупателя
-	AddProuct(ctx context.Context, fav *FavoriteProductDto) error
+	AddProduct(ctx context.Context, fav *FavoriteProductDto) error
 	// Получить список избранных товаров покупателя
 	GetProductList(ctx context.Context, customerId int, pagination *PaginationDto) ([]*product.FavoriteProduct, error)
 	// Удалить товар из избранного покупателя

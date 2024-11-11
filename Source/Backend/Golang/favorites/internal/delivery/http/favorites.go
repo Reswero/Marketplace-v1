@@ -32,7 +32,7 @@ func (d *Delivery) AddToFavorites(c echo.Context) error {
 
 	dto := favorites.MapFavoriteProductVmToDto(claims.AccountId, vm)
 
-	err = d.ucFavorites.AddProuct(ctx, dto)
+	err = d.ucFavorites.AddProduct(ctx, dto)
 	if err != nil {
 		d.logError(op, ErrAddingProductToFavorites, err)
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrAddingProductToFavorites))
