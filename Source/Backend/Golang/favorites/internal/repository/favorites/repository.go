@@ -46,7 +46,7 @@ func (r *Repository) AddProduct(ctx context.Context, fav *product.FavoriteProduc
 func (r *Repository) GetProductList(ctx context.Context, customerId, offset, limit int) ([]*product.FavoriteProduct, error) {
 	const op = "repository.favorites.GetProductList"
 
-	sql, args, err := r.Builder.Select("*").
+	sql, args, err := r.Builder.Select("customer_id", "product_id").
 		From(favoritesTable).
 		Where(squirrel.Eq{"customer_id": customerId}).
 		Offset(uint64(offset)).
