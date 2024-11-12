@@ -12,12 +12,26 @@ import (
 )
 
 func (d *Delivery) AddFavoritesRoutes() {
-	g := d.router.Group("favorites")
+	g := d.router.Group("/v1/favorites")
 
 	g.POST("", d.AddToFavorites, authorization.Middleware)
 	g.GET("", d.GetProductList, authorization.Middleware)
+	g.DELETE("", d.DeleteProduct, authorization.Middleware)
 }
 
+// @id add-favorites
+// @summary Добавление товара в избранное
+// @description Добавление товара в избранное покупателя
+// @router /favorites [post]
+// @security AccountId
+// @security AccountType
+// @tags favorites
+// @accept json
+// @produce json
+// @param favoriteProduct body favorites.FavoriteProductVm true "Избранный товар"
+// @success 200
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) AddToFavorites(c echo.Context) error {
 	const op = "delivery.favorites.AddToFavorites"
 	ctx := c.Request().Context()
@@ -41,6 +55,20 @@ func (d *Delivery) AddToFavorites(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// @id get-favorites
+// @summary Получение списка избранных товаров
+// @description Получение списка избранных товаров покупателя
+// @router /favorites [get]
+// @security AccountId
+// @security AccountType
+// @tags favorites
+// @accept json
+// @produce json
+// @param offset query int true "Смещение"
+// @param limit query int true "Ограничение"
+// @success 200 {object} favorites.FavoriteList
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) GetProductList(c echo.Context) error {
 	const op = "delivery.favorites.GetProductList"
 	ctx := c.Request().Context()
@@ -81,6 +109,19 @@ func (d *Delivery) GetProductList(c echo.Context) error {
 	return c.JSON(http.StatusOK, vm)
 }
 
+// @id delete-favorites
+// @summary Удаление товара из избранного
+// @description Удаление товара из списка избранного покупателя
+// @router /favorites [delete]
+// @security AccountId
+// @security AccountType
+// @tags favorites
+// @accept json
+// @produce json
+// @param favoriteProduct body favorites.FavoriteProductVm true "Избранный товар"
+// @success 200
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) DeleteProduct(c echo.Context) error {
 	const op = "delivery.favorites.DeleteProduct"
 	ctx := c.Request().Context()

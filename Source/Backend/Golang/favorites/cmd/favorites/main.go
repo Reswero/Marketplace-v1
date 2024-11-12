@@ -10,7 +10,6 @@ import (
 	favoritesRepository "github.com/Reswero/Marketplace-v1/favorites/internal/repository/favorites"
 	favoritesUsecase "github.com/Reswero/Marketplace-v1/favorites/internal/usecase/favorites"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
-	"github.com/Reswero/Marketplace-v1/pkg/redis"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
 )
@@ -18,6 +17,20 @@ import (
 //go:embed migrations
 var embedMigrations embed.FS
 
+// @title Favorites Service
+// @version 1.0
+// @description Сервис списков избранных товаров
+
+// @host localhost:8088
+// @basePath /v1
+
+// @securityDefinitions.apiKey AccountId
+// @in header
+// @name X-Account-Id
+
+// @securityDefinitions.apiKey AccountType
+// @in header
+// @name X-Account-Type
 func main() {
 	cfg := config.MustLoad()
 
@@ -44,12 +57,12 @@ func main() {
 		panic(err)
 	}
 
-	cache, err := redis.New(cfg.Cache.Address)
-	if err != nil {
-		logger.Error("failed to create redis connection", slog.String("error", err.Error()))
-		panic(err)
-	}
-	defer cache.Close()
+	// cache, err := redis.New(cfg.Cache.Address)
+	// if err != nil {
+	// 	logger.Error("failed to create redis connection", slog.String("error", err.Error()))
+	// 	panic(err)
+	// }
+	// defer cache.Close()
 
 	favRepo := favoritesRepository.New(storage)
 	ucFavorites := favoritesUsecase.New(favRepo)

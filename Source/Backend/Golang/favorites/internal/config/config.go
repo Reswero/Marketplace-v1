@@ -40,7 +40,7 @@ func MustLoad() *Config {
 	}
 
 	cfg := &Config{}
-	if err := cleanenv.ReadConfig(path, &cfg); err != nil {
+	if err := cleanenv.ReadConfig(path, cfg); err != nil {
 		panic(err)
 	}
 
