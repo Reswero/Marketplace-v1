@@ -1,0 +1,11 @@
+env: "dev"
+db:
+  ip_address: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "root"
+  db_name: "marketplace-favorites"
+cache:
+  address: "localhost:6379"
+http_server:
+  address: "localhost:8088"

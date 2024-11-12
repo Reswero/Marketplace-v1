@@ -3,3 +3,4 @@
 ################################################################################
 
 /Source/Backend/Golang/auth/cmd/auth/users.db
+Source/Backend/Golang/.vscode/launch.json

@@ -1,0 +1,138 @@
+basePath: /v1
+definitions:
+  favorites.FavoriteList:
+    properties:
+      productIds:
+        items:
+          type: integer
+        type: array
+    type: object
+  favorites.FavoriteProductVm:
+    properties:
+      productId:
+        type: integer
+    type: object
+  responses.StatusResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:8088
+info:
+  contact: {}
+  description: Сервис списков избранных товаров
+  title: Favorites Service
+  version: "1.0"
+paths:
+  /favorites:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление товара из списка избранного покупателя
+      operationId: delete-favorites
+      parameters:
+      - description: Избранный товар
+        in: body
+        name: favoriteProduct
+        required: true
+        schema:
+          $ref: '#/definitions/favorites.FavoriteProductVm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Удаление товара из избранного
+      tags:
+      - favorites
+    get:
+      consumes:
+      - application/json
+      description: Получение списка избранных товаров покупателя
+      operationId: get-favorites
+      parameters:
+      - description: Смещение
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: Ограничение
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/favorites.FavoriteList'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Получение списка избранных товаров
+      tags:
+      - favorites
+    post:
+      consumes:
+      - application/json
+      description: Добавление товара в избранное покупателя
+      operationId: add-favorites
+      parameters:
+      - description: Избранный товар
+        in: body
+        name: favoriteProduct
+        required: true
+        schema:
+          $ref: '#/definitions/favorites.FavoriteProductVm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Добавление товара в избранное
+      tags:
+      - favorites
+securityDefinitions:
+  AccountId:
+    in: header
+    name: X-Account-Id
+    type: apiKey
+  AccountType:
+    in: header
+    name: X-Account-Type
+    type: apiKey
+swagger: "2.0"

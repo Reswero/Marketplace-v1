@@ -108,11 +108,7 @@ func migrateDb(storage *postgres.Storage) error {
 	}
 
 	db := stdlib.OpenDBFromPool(storage.Pool)
+	defer db.Close()
 
-	err = goose.Up(db, "migrations")
-	if err != nil {
-		return err
-	}
-
-	return db.Close()
+	return goose.Up(db, "migrations")
 }
