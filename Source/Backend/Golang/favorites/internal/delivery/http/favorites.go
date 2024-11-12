@@ -81,10 +81,20 @@ func (d *Delivery) GetProductList(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, responses.ErrInvalidQueryParam))
 	}
 
+	if offset < 0 {
+		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, ErrOffsetMustBeNotNegative))
+	}
+
 	limitParam := c.QueryParam("limit")
 	limit, err := strconv.Atoi(limitParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, responses.ErrInvalidQueryParam))
+	}
+
+	if limit < 0 {
+		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, ErrLimitMustBeNotNegative))
+	} else if limit > 200 {
+		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, ErrLimitExceededMaxValue))
 	}
 
 	pagination := &usecase.PaginationDto{
