@@ -2,6 +2,8 @@ package favorites
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/Reswero/Marketplace-v1/favorites/internal/domain/product"
@@ -94,4 +96,39 @@ func (r *Repository) DeleteProduct(ctx context.Context, fav *product.FavoritePro
 	}
 
 	return nil
+}
+
+// Проверить находятся ли товары в избранном у покупателя
+func (r *Repository) CheckProductsInFavorite(ctx context.Context, customerId int, productIds []int) ([]int, error) {
+	const op = "repository.favorites.CheckProductsInFavorite"
+
+	ids := strings.Join(strings.Fields(fmt.Sprint(productIds)), ",")
+
+	sql, args, err := r.Builder.Select("product_id").
+		Where(squirrel.Eq{"customer_id": customerId}).
+		Where(squirrel.Expr("product_id IN ($)", ids)).
+		ToSql()
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+	rows.Close()
+
+	inFavorite := make([]int, 0)
+	if rows.Next() {
+		var productId int
+
+		err = rows.Scan(&productId)
+		if err != nil {
+			return nil, formatter.FmtError(op, err)
+		}
+
+		inFavorite = append(inFavorite, productId)
+	}
+
+	return inFavorite, nil
 }
