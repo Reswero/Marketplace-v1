@@ -17,6 +17,8 @@ func (d *Delivery) AddFavoritesRoutes() {
 	g.POST("", d.AddToFavorites, authorization.Middleware)
 	g.GET("", d.GetProductList, authorization.Middleware)
 	g.DELETE("", d.DeleteProduct, authorization.Middleware)
+
+	d.router.POST("/v1/internal/customers/:id/in-favorites", d.CheckProductsInFavorites)
 }
 
 // @id add-favorites
@@ -30,6 +32,7 @@ func (d *Delivery) AddFavoritesRoutes() {
 // @produce json
 // @param favoriteProduct body favorites.FavoriteProductVm true "Избранный товар"
 // @success 200
+// @failure 400 {object} responses.StatusResponse
 // @failure 401 {object} responses.StatusResponse
 // @failure 500 {object} responses.StatusResponse
 func (d *Delivery) AddToFavorites(c echo.Context) error {
@@ -66,7 +69,8 @@ func (d *Delivery) AddToFavorites(c echo.Context) error {
 // @produce json
 // @param offset query int true "Смещение"
 // @param limit query int true "Ограничение"
-// @success 200 {object} favorites.FavoriteList
+// @success 200 {object} favorites.FavoriteListVm
+// @failure 400 {object} responses.StatusResponse
 // @failure 401 {object} responses.StatusResponse
 // @failure 500 {object} responses.StatusResponse
 func (d *Delivery) GetProductList(c echo.Context) error {
@@ -108,7 +112,7 @@ func (d *Delivery) GetProductList(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrGettingProductList))
 	}
 
-	vm := &favorites.FavoriteList{
+	vm := &favorites.FavoriteListVm{
 		ProductIds: make([]int, 0, len(products)),
 	}
 
@@ -130,6 +134,7 @@ func (d *Delivery) GetProductList(c echo.Context) error {
 // @produce json
 // @param favoriteProduct body favorites.FavoriteProductVm true "Избранный товар"
 // @success 200
+// @failure 400 {object} responses.StatusResponse
 // @failure 401 {object} responses.StatusResponse
 // @failure 500 {object} responses.StatusResponse
 func (d *Delivery) DeleteProduct(c echo.Context) error {
@@ -153,4 +158,46 @@ func (d *Delivery) DeleteProduct(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusOK)
+}
+
+// @id check-favorites
+// @summary Проверка находятся ли товары в избранном
+// @description Проверка находятся ли товары в избранном у покупателя
+// @router /internal/customers/{id}/in-favorites [post]
+// @security AccountId
+// @security AccountType
+// @tags favorites
+// @accept json
+// @produce json
+// @param id path int true "Идентификатор покупателя"
+// @param list body favorites.CheckFavoritesProductsVm true "Список идентификаторов товаров для проверки"
+// @success 200 {object} favorites.FavoriteListVm
+// @failure 400 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
+func (d *Delivery) CheckProductsInFavorites(c echo.Context) error {
+	const op = "delivery.favorites.CheckProductsInFavorites"
+	ctx := c.Request().Context()
+
+	customerIdParam := c.Param("id")
+	customerId, err := strconv.Atoi(customerIdParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, responses.ErrInvalidParam))
+	}
+
+	var listVm *favorites.CheckFavoritesProductsVm
+	err = c.Bind(&listVm)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, responses.ErrInvalidRequestBody))
+	}
+
+	ids, err := d.ucFavorites.CheckProductsInFavorites(ctx, customerId, listVm.ProductIdsToCheck)
+	if err != nil {
+		d.logError(op, ErrCheckingProductsInFavorites, err)
+		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrCheckingProductsInFavorites))
+	}
+
+	responseVm := &favorites.FavoriteListVm{
+		ProductIds: ids,
+	}
+	return c.JSON(http.StatusOK, responseVm)
 }

@@ -4,6 +4,10 @@ type FavoriteProductVm struct {
 	ProductId int `json:"productId"`
 }
 
-type FavoriteList struct {
+type FavoriteListVm struct {
 	ProductIds []int `json:"productIds"`
+}
+
+type CheckFavoritesProductsVm struct {
+	ProductIdsToCheck []int `json:"productIdsToCheck"`
 }

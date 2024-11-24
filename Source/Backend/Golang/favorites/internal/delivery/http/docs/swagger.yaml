@@ -1,6 +1,13 @@
 basePath: /v1
 definitions:
-  favorites.FavoriteList:
+  favorites.CheckFavoritesProductsVm:
+    properties:
+      productIdsToCheck:
+        items:
+          type: integer
+        type: array
+    type: object
+  favorites.FavoriteListVm:
     properties:
       productIds:
         items:
@@ -44,6 +51,10 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
         "401":
           description: Unauthorized
           schema:
@@ -80,7 +91,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/favorites.FavoriteList'
+            $ref: '#/definitions/favorites.FavoriteListVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
         "401":
           description: Unauthorized
           schema:
@@ -112,6 +127,10 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
         "401":
           description: Unauthorized
           schema:
@@ -124,6 +143,45 @@ paths:
       - AccountId: []
       - AccountType: []
       summary: Добавление товара в избранное
+      tags:
+      - favorites
+  /internal/customers/{id}/in-favorites:
+    post:
+      consumes:
+      - application/json
+      description: Проверка находятся ли товары в избранном у покупателя
+      operationId: check-favorites
+      parameters:
+      - description: Идентификатор покупателя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Список идентификаторов товаров для проверки
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/favorites.CheckFavoritesProductsVm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/favorites.FavoriteListVm'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Проверка находятся ли товары в избранном
       tags:
       - favorites
 securityDefinitions:
