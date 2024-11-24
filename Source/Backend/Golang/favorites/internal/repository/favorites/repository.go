@@ -58,7 +58,7 @@ func (r *Repository) GetProductList(ctx context.Context, customerId, offset, lim
 		return nil, formatter.FmtError(op, err)
 	}
 
-	rows, err := r.Pool.Query(ctx, sql, args)
+	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, formatter.FmtError(op, err)
 	}
@@ -105,8 +105,9 @@ func (r *Repository) CheckProductsInFavorite(ctx context.Context, customerId int
 	ids := strings.Join(strings.Fields(fmt.Sprint(productIds)), ",")
 
 	sql, args, err := r.Builder.Select("product_id").
+		From(favoritesTable).
 		Where(squirrel.Eq{"customer_id": customerId}).
-		Where(squirrel.Expr("product_id IN ($)", ids)).
+		Where(squirrel.Expr("product_id IN ($2)", ids)).
 		ToSql()
 	if err != nil {
 		return nil, formatter.FmtError(op, err)
@@ -116,7 +117,7 @@ func (r *Repository) CheckProductsInFavorite(ctx context.Context, customerId int
 	if err != nil {
 		return nil, formatter.FmtError(op, err)
 	}
-	rows.Close()
+	defer rows.Close()
 
 	inFavorite := make([]int, 0)
 	if rows.Next() {
