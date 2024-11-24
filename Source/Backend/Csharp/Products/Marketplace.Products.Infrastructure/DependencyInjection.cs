@@ -9,6 +9,7 @@ using Marketplace.Products.Infrastructure.Integrations.Favorites;
 using Marketplace.Products.Infrastructure.Products.Models;
 using Marketplace.Products.Infrastructure.Products.Services;
 using Marketplace.Products.Infrastructure.Users.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +63,7 @@ public static class DependencyInjection
         });
 
         // Общие сервисы
+        services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<IUserIdentityProvider, HttpUserIdentityProvider>();
         
         // Репозитории

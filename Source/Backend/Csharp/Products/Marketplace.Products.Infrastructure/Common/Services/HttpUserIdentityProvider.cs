@@ -9,10 +9,10 @@ namespace Marketplace.Products.Infrastructure.Common.Services;
 /// </summary>
 internal class HttpUserIdentityProvider : IUserIdentityProvider
 {
-    public HttpUserIdentityProvider(HttpContext httpContext)
+    public HttpUserIdentityProvider(IHttpContextAccessor accessor)
     {
-        var claims = httpContext.GetClaims();
-        Id = claims.Id != 0 ? claims.Id : null;
+        var claims = accessor.HttpContext?.GetClaims();
+        Id = claims?.Id != 0 ? claims?.Id : null;
     }
 
     /// <inheritdoc/>
