@@ -99,7 +99,7 @@ func (r *Repository) DeleteProduct(ctx context.Context, fav *product.FavoritePro
 }
 
 // Проверить находятся ли товары в избранном у покупателя
-func (r *Repository) CheckProductsInFavorite(ctx context.Context, customerId int, productIds []int) ([]int, error) {
+func (r *Repository) CheckProductsInFavorites(ctx context.Context, customerId int, productIds []int) ([]int, error) {
 	const op = "repository.favorites.CheckProductsInFavorite"
 
 	ids := strings.Join(strings.Fields(fmt.Sprint(productIds)), ",")

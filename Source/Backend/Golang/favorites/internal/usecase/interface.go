@@ -15,5 +15,5 @@ type Favorites interface {
 	// Удалить товар из избранного покупателя
 	DeleteProduct(ctx context.Context, fav *FavoriteProductDto) error
 	// Проверить находятся ли товары в избранном у покупателя
-	CheckProductsInFavorite(ctx context.Context, customerId int, productIds []int) ([]int, error)
+	CheckProductsInFavorites(ctx context.Context, customerId int, productIds []int) ([]int, error)
 }

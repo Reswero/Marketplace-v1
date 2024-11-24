@@ -190,7 +190,7 @@ func (d *Delivery) CheckProductsInFavorites(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.NewStatus(http.StatusBadRequest, responses.ErrInvalidRequestBody))
 	}
 
-	ids, err := d.ucFavorites.CheckProductsInFavorite(ctx, customerId, listVm.ProductIdsToCheck)
+	ids, err := d.ucFavorites.CheckProductsInFavorites(ctx, customerId, listVm.ProductIdsToCheck)
 	if err != nil {
 		d.logError(op, ErrCheckingProductsInFavorites, err)
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrCheckingProductsInFavorites))

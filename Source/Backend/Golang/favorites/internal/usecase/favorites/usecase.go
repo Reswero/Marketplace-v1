@@ -70,10 +70,10 @@ func (u *UseCase) DeleteProduct(ctx context.Context, fav *usecase.FavoriteProduc
 }
 
 // Проверить находятся ли товары в избранном у покупателя
-func (u *UseCase) CheckProductsInFavorite(ctx context.Context, customerId int, productIds []int) ([]int, error) {
+func (u *UseCase) CheckProductsInFavorites(ctx context.Context, customerId int, productIds []int) ([]int, error) {
 	const op = "usecase.favorites.CheckProductsInFavorite"
 
-	ids, err := u.repo.CheckProductsInFavorite(ctx, customerId, productIds)
+	ids, err := u.repo.CheckProductsInFavorites(ctx, customerId, productIds)
 	if err != nil {
 		return nil, formatter.FmtError(op, err)
 	}
