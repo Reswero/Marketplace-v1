@@ -57,7 +57,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/favorites.FavoriteList"
+                            "$ref": "#/definitions/favorites.FavoriteListVm"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
                         }
                     },
                     "401": {
@@ -110,6 +116,12 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -160,8 +172,76 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/internal/customers/{id}/in-favorites": {
+            "post": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Проверка находятся ли товары в избранном у покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "Проверка находятся ли товары в избранном",
+                "operationId": "check-favorites",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Идентификатор покупателя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Список идентификаторов товаров для проверки",
+                        "name": "list",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/favorites.CheckFavoritesProductsVm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/favorites.FavoriteListVm"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.StatusResponse"
                         }
@@ -177,7 +257,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "favorites.FavoriteList": {
+        "favorites.CheckFavoritesProductsVm": {
+            "type": "object",
+            "properties": {
+                "productIdsToCheck": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "favorites.FavoriteListVm": {
             "type": "object",
             "properties": {
                 "productIds": {

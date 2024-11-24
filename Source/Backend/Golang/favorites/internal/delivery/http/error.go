@@ -7,4 +7,5 @@ const (
 	ErrOffsetMustBeNotNegative      = "Смещение должно быть не отрицательным числом"
 	ErrLimitMustBeNotNegative       = "Ограничение должно быть не отрицательным числом"
 	ErrLimitExceededMaxValue        = "Ограничение превысило максимальное значение"
+	ErrCheckingProductsInFavorites  = "Ошибка при проверки нахождения товаров в списке избранного"
 )
