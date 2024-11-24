@@ -10,5 +10,6 @@ public interface IFavoritesService
     /// </summary>
     /// <param name="customerId">Идентификатор покупателя</param>
     /// <param name="idsToCheck">Идентификаторы товаров для проверки</param>
-    public Task<HashSet<int>> CheckProductsInFavorites(int customerId, List<int> idsToCheck);
+    public Task<HashSet<int>> CheckProductsInFavoritesAsync(int customerId, List<int> idsToCheck,
+        CancellationToken cancellationToken = default);
 }

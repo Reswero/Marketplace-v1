@@ -18,13 +18,15 @@ internal class FavoritesService(HttpClient httpClient)
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public async Task<HashSet<int>> CheckProductsInFavorites(int customerId, List<int> idsToCheck)
+    public async Task<HashSet<int>> CheckProductsInFavoritesAsync(int customerId, List<int> idsToCheck,
+        CancellationToken cancellationToken = default)
     {
         CheckFavoritesProductsDto dto = new(idsToCheck);
-        var response = await _httpClient.PostAsJsonAsync($"v1/internal/customers/{customerId}/in-favorites", dto, _options);
+        var response = await _httpClient.PostAsJsonAsync($"v1/internal/customers/{customerId}/in-favorites", dto,
+            _options, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var stream = await response.Content.ReadAsStreamAsync();
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         var list = JsonSerializer.Deserialize<FavoritesListDto>(stream, _options)!;
 
         return list.ProductIds;
