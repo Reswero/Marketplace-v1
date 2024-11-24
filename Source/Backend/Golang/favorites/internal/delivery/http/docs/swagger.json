@@ -1,0 +1,308 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Сервис списков избранных товаров",
+        "title": "Favorites Service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8088",
+    "basePath": "/v1",
+    "paths": {
+        "/favorites": {
+            "get": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Получение списка избранных товаров покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "Получение списка избранных товаров",
+                "operationId": "get-favorites",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Смещение",
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Ограничение",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/favorites.FavoriteListVm"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Добавление товара в избранное покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "Добавление товара в избранное",
+                "operationId": "add-favorites",
+                "parameters": [
+                    {
+                        "description": "Избранный товар",
+                        "name": "favoriteProduct",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/favorites.FavoriteProductVm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Удаление товара из списка избранного покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "Удаление товара из избранного",
+                "operationId": "delete-favorites",
+                "parameters": [
+                    {
+                        "description": "Избранный товар",
+                        "name": "favoriteProduct",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/favorites.FavoriteProductVm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/internal/customers/{id}/in-favorites": {
+            "post": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Проверка находятся ли товары в избранном у покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "Проверка находятся ли товары в избранном",
+                "operationId": "check-favorites",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Идентификатор покупателя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Список идентификаторов товаров для проверки",
+                        "name": "list",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/favorites.CheckFavoritesProductsVm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/favorites.FavoriteListVm"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "favorites.CheckFavoritesProductsVm": {
+            "type": "object",
+            "properties": {
+                "productIdsToCheck": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "favorites.FavoriteListVm": {
+            "type": "object",
+            "properties": {
+                "productIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "favorites.FavoriteProductVm": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "AccountId": {
+            "type": "apiKey",
+            "name": "X-Account-Id",
+            "in": "header"
+        },
+        "AccountType": {
+            "type": "apiKey",
+            "name": "X-Account-Type",
+            "in": "header"
+        }
+    }
+}

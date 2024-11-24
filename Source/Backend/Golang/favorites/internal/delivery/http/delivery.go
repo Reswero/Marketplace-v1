@@ -4,26 +4,24 @@ import (
 	"fmt"
 	"log/slog"
 
-	_ "github.com/Reswero/Marketplace-v1/auth/internal/delivery/http/docs"
-	"github.com/Reswero/Marketplace-v1/auth/internal/usecase"
+	_ "github.com/Reswero/Marketplace-v1/favorites/internal/delivery/http/docs"
+	"github.com/Reswero/Marketplace-v1/favorites/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/pkg/validation"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
+// АПИ
 type Delivery struct {
-	logger    *slog.Logger
-	ucAccount usecase.Account
-	ucSession usecase.Session
-	router    *echo.Echo
+	router      *echo.Echo
+	logger      *slog.Logger
+	ucFavorites usecase.Favorites
 }
 
-func New(logger *slog.Logger, env string,
-	ucAccount usecase.Account, ucSession usecase.Session) *Delivery {
+func New(logger *slog.Logger, env string, ucFavorites usecase.Favorites) *Delivery {
 	d := &Delivery{
-		logger:    logger,
-		ucAccount: ucAccount,
-		ucSession: ucSession,
+		logger:      logger,
+		ucFavorites: ucFavorites,
 	}
 
 	d.router = echo.New()
@@ -33,16 +31,22 @@ func New(logger *slog.Logger, env string,
 		d.router.GET("/swagger/*", echoSwagger.WrapHandler)
 	}
 
-	d.AddAccountRoutes()
-	d.AddSessionRoutes()
+	d.AddFavoritesRoutes()
 
 	return d
 }
 
+// Запустить http сервер
 func (d *Delivery) Start(address string) error {
 	return d.router.Start(address)
 }
 
+// Остановить http сервер
+func (d *Delivery) Close() error {
+	return d.router.Close()
+}
+
+// Залоггировать ошибку
 func (d *Delivery) logError(op, message string, err error) {
 	err = fmt.Errorf("%s: %w", op, err)
 	d.logger.Error(message, slog.String("error", err.Error()))
