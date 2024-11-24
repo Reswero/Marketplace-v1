@@ -3,17 +3,21 @@ using Marketplace.Products.Application.Products.Models;
 using Marketplace.Products.Application.Products.ViewModels;
 using Marketplace.Products.Domain.Products;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 
 /// <summary>
 /// Поиск товаров
 /// </summary>
-/// <param name="searcher"></param>
-internal class SearchProductsQueryHandler(IProductsSearcher searcher)
+internal class SearchProductsQueryHandler(ILogger<SearchProductsQueryHandler> logger,
+    IUserIdentityProvider userIdentity, IProductsSearcher searcher, IFavoritesService favoritesService)
     : IRequestHandler<SearchProductsQuery, SearchProductsResultVM>
 {
+    private readonly ILogger<SearchProductsQueryHandler> _logger = logger;
+    private readonly IUserIdentityProvider _userIdentity = userIdentity;
     private readonly IProductsSearcher _searcher = searcher;
+    private readonly IFavoritesService _favoritesService = favoritesService;
 
     public async Task<SearchProductsResultVM> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
     {
@@ -28,6 +32,8 @@ internal class SearchProductsQueryHandler(IProductsSearcher searcher)
         int count = await _searcher.QuantifyAsync(parameters, cancellationToken);
         List<Product> products = await _searcher.SearchAsync(parameters, cancellationToken);
 
+        var productsInFavorites = await CheckProductsInFavorites(_userIdentity.Id, products.Select(p => p.Id).ToList(), cancellationToken);
+
         var productsVMs = products.Select(p =>
         {
             var discount = p.Discounts.MinBy(d => d.ValidUntil);
@@ -40,10 +46,29 @@ internal class SearchProductsQueryHandler(IProductsSearcher searcher)
                 Price = p.Price,
                 Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
                 Image = image is not null ? $"{image.BucketName}/{image.Name}" : null,
-                Status = p.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
+                Status = p.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted,
+                InFavorites = productsInFavorites.Contains(p.Id) is true
             };
         }).ToList();
 
         return new(count, productsVMs);
+    }
+
+    private async Task<HashSet<int>> CheckProductsInFavorites(int? customerId, List<int> productIds,
+        CancellationToken cancellationToken)
+    {
+        if (customerId is null)
+            return [];
+
+        try
+        {
+            return await _favoritesService.CheckProductsInFavoritesAsync(customerId.Value, productIds, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Ошибка во время проверки нахождения товаров в избранном. {Error}", e.Message);
+        }
+
+        return [];
     }
 }
