@@ -4,6 +4,7 @@ using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
+using Marketplace.Products.Infrastructure.Common.Services;
 using Marketplace.Products.Infrastructure.Integrations.Favorites;
 using Marketplace.Products.Infrastructure.Products.Models;
 using Marketplace.Products.Infrastructure.Products.Services;
@@ -60,6 +61,9 @@ public static class DependencyInjection
                 .Build();
         });
 
+        // Общие сервисы
+        services.AddScoped<IUserIdentityProvider, HttpUserIdentityProvider>();
+        
         // Репозитории
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<ProductsContext>());
         services.AddScoped<ICategoriesRepository, CategoriesRepository>();
