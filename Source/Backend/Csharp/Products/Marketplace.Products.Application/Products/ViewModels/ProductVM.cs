@@ -52,4 +52,8 @@ public record ProductVM
     /// Статус
     /// </summary>
     public ProductStatus Status { get; set; }
+    /// <summary>
+    /// Находится ли в избранном
+    /// </summary>
+    public bool InFavorites { get; set; }
 }
