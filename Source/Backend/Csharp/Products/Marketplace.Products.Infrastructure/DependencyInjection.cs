@@ -4,6 +4,7 @@ using Marketplace.Common.Transactions;
 using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Infrastructure.Categories.Persistence;
 using Marketplace.Products.Infrastructure.Common.Persistence;
+using Marketplace.Products.Infrastructure.Integrations.Favorites;
 using Marketplace.Products.Infrastructure.Products.Models;
 using Marketplace.Products.Infrastructure.Products.Services;
 using Marketplace.Products.Infrastructure.Users.Services;
@@ -85,14 +86,24 @@ public static class DependencyInjection
 
         // Внешние сервисы
         services.AddScoped<IUsersService, UsersService>();
+        services.AddScoped<IFavoritesService, FavoritesService>();
 
-        services.AddHttpClient<IUsersService, UsersService>(cfg =>
+        services.AddHttpClient<IUsersService, UsersService>(client =>
         {
             var address = configuration["Services:Users:Address"]!;
             var timeout = int.Parse(configuration["Services:Users:Timeout"]!);
 
-            cfg.BaseAddress = new Uri(address);
-            cfg.Timeout = TimeSpan.FromMilliseconds(timeout);
+            client.BaseAddress = new Uri(address);
+            client.Timeout = TimeSpan.FromMilliseconds(timeout);
+        });
+
+        services.AddHttpClient<IFavoritesService, FavoritesService>(client =>
+        {
+            var address = configuration["Services:Favorites:Address"]!;
+            var timeout = int.Parse(configuration["Services:Favorites:Timeout"]!);
+
+            client.BaseAddress = new Uri(address);
+            client.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
         // Бэкграунд сервисы
