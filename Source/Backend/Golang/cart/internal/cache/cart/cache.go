@@ -32,6 +32,14 @@ func (c *Cache) AddProduct(ctx context.Context, customerId, productId int) error
 	const op = "cache.cart.AddProduct"
 
 	key := getCartKey(customerId)
+	i, _, err := c.getProductWithIndex(ctx, key, productId)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	if i >= 0 {
+		return nil
+	}
 
 	product := NewProduct(customerId, productId)
 	val, err := json.Marshal(product)
@@ -86,9 +94,13 @@ func (c *Cache) DeleteProduct(ctx context.Context, customerId, productId int) er
 	const op = "cache.cart.DeleteProduct"
 
 	key := getCartKey(customerId)
-	_, p, err := c.getProductWithIndex(ctx, key, productId)
+	i, p, err := c.getProductWithIndex(ctx, key, productId)
 	if err != nil {
 		return formatter.FmtError(op, err)
+	}
+
+	if i < 0 {
+		return nil
 	}
 
 	val, err := json.Marshal(p)
@@ -159,8 +171,8 @@ func (c *Cache) getProductWithIndex(ctx context.Context, key string, productId i
 		return -1, nil, formatter.FmtError(op, err)
 	}
 
-	var findedIndex int
-	var findedProduct *Product
+	var findedIndex int = -1
+	var findedProduct *Product = nil
 	for i, val := range values {
 		product := &Product{}
 		err := json.Unmarshal([]byte(val), product)
