@@ -8,17 +8,8 @@ import (
 
 type Config struct {
 	Environment string `yaml:"env"`
-	Db
 	Cache
 	HttpServer `yaml:"http_server"`
-}
-
-type Db struct {
-	IpAddress string `yaml:"ip_address"`
-	Port      int    `yaml:"port"`
-	User      string `yaml:"user"`
-	Password  string `yaml:"password"`
-	DbName    string `yaml:"db_name"`
 }
 
 type Cache struct {
@@ -36,12 +27,12 @@ func MustLoad() *Config {
 	}
 
 	if _, err := os.Stat(path); err != nil {
-		panic("config file does not exists")
+		panic(err)
 	}
 
 	cfg := &Config{}
 	if err := cleanenv.ReadConfig(path, cfg); err != nil {
-		panic(err)
+		panic("config file does not exists")
 	}
 
 	return cfg

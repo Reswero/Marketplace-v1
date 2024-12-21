@@ -1,10 +1,4 @@
 env: "dev"
-db:
-  ip_address: "localhost"
-  port: 5432
-  user: "postgres"
-  password: "root"
-  db_name: "marketplace-cart"
 cache:
   address: "localhost:6379"
 http_server:
