@@ -21,6 +21,8 @@ func New(cache cache.Cart) *Usecase {
 func (u *Usecase) AddProduct(ctx context.Context, customerId, productId int) error {
 	const op = "usecase.cart.AddProduct"
 
+	// TODO: Call to Product service / check that product exists
+
 	err := u.cache.AddProduct(ctx, customerId, productId)
 	if err != nil {
 		return formatter.FmtError(op, err)
