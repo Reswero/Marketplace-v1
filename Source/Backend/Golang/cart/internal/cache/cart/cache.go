@@ -72,13 +72,17 @@ func (c *Cache) GetProducts(ctx context.Context, customerId int) ([]*domain.Prod
 
 	products := make([]*domain.Product, len(values))
 	for _, val := range values {
-		product := &domain.Product{}
+		product := &Product{}
 		err = json.Unmarshal([]byte(val), product)
 		if err != nil {
 			return nil, formatter.FmtError(op, err)
 		}
 
-		products = append(products, product)
+		products = append(products, &domain.Product{
+			CustomerId: customerId,
+			ProductId:  product.Id,
+			Count:      product.Count,
+		})
 	}
 
 	err = c.updateCartExpirationTime(ctx, key)
