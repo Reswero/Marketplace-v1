@@ -18,4 +18,6 @@ type Cart interface {
 	ChangeProductCount(ctx context.Context, customerId, productId, countToAdd int) error
 	// Очистить корзину покупателя
 	Clear(ctx context.Context, customerId int) error
+	// Оформить товары из корзины
+	Checkout(ctx context.Context, customerId int) error
 }

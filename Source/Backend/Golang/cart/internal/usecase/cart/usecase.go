@@ -72,3 +72,22 @@ func (u *Usecase) Clear(ctx context.Context, customerId int) error {
 
 	return nil
 }
+
+func (u *Usecase) Checkout(ctx context.Context, customerId int) error {
+	const op = "usecase.cart.Checkout"
+
+	product, err := u.cache.GetProducts(ctx, customerId)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	_ = product
+	// TODO: Call to Orders service
+
+	err = u.cache.Clear(ctx, customerId)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	return nil
+}
