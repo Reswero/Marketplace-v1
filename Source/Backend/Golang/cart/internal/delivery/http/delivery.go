@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	_ "github.com/Reswero/Marketplace-v1/cart/internal/delivery/http/docs"
 	"github.com/Reswero/Marketplace-v1/cart/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/pkg/validation"
 	"github.com/labstack/echo/v4"

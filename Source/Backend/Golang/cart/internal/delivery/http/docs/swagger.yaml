@@ -1,0 +1,233 @@
+basePath: /v1
+definitions:
+  responses.StatusResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  viewmodel.AddCount:
+    properties:
+      count:
+        type: integer
+    type: object
+  viewmodel.AddProduct:
+    properties:
+      id:
+        type: integer
+    type: object
+  viewmodel.Product:
+    properties:
+      count:
+        type: integer
+      id:
+        type: integer
+    type: object
+host: localhost:8089
+info:
+  contact: {}
+  description: Сервис корзины
+  title: Cart Service
+  version: "1.0"
+paths:
+  /cart:
+    delete:
+      consumes:
+      - application/json
+      description: Очистка корзины покупателя
+      operationId: clear-cart
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Очистка корзины
+      tags:
+      - cart
+    get:
+      consumes:
+      - application/json
+      description: Получение товаров из корзины покупателя
+      operationId: get-cart
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/viewmodel.Product'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Получение товаров из корзины
+      tags:
+      - cart
+  /cart/checkout:
+    post:
+      consumes:
+      - application/json
+      description: Оформление товаров из корзины покупателя
+      operationId: cart-checkout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Оформление товаров из корзины
+      tags:
+      - cart
+  /cart/products:
+    post:
+      consumes:
+      - application/json
+      description: Добавление товара в корзину покупателя
+      operationId: cart-add-product
+      parameters:
+      - description: Товар
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/viewmodel.AddProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Добавление товара в корзину
+      tags:
+      - cart
+  /cart/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление товара из корзины покупателя
+      operationId: cart-delete-product
+      parameters:
+      - description: Идентификатор товара
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Удаление товара из корзины
+      tags:
+      - cart
+  /cart/products/{id}/count:
+    put:
+      consumes:
+      - application/json
+      description: Обновить количество товара в корзине покупателя
+      operationId: cart-change-product-count
+      parameters:
+      - description: Идентификатор товара
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Количество
+        in: body
+        name: count
+        required: true
+        schema:
+          $ref: '#/definitions/viewmodel.AddCount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Обновить количество товара в корзине
+      tags:
+      - cart
+securityDefinitions:
+  AccountId:
+    in: header
+    name: X-Account-Id
+    type: apiKey
+  AccountType:
+    in: header
+    name: X-Account-Type
+    type: apiKey
+swagger: "2.0"

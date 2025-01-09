@@ -13,17 +13,29 @@ import (
 
 func (d *Delivery) AddCartRoutes() {
 	c := d.router.Group("/v1/cart")
-	p := c.Group("products")
+	p := c.Group("/products")
 
 	c.GET("", d.Get, authorization.Middleware)
 	c.DELETE("", d.Clear, authorization.Middleware)
-	c.GET("checkout", d.Checkout, authorization.Middleware)
+	c.POST("/checkout", d.Checkout, authorization.Middleware)
 
 	p.POST("", d.AddProduct, authorization.Middleware)
-	p.DELETE(":id", d.DeleteProduct, authorization.Middleware)
-	p.PUT(":id/count", d.ChangeProductCount, authorization.Middleware)
+	p.DELETE("/:id", d.DeleteProduct, authorization.Middleware)
+	p.PUT("/:id/count", d.ChangeProductCount, authorization.Middleware)
 }
 
+// @id get-cart
+// @summary Получение товаров из корзины
+// @description Получение товаров из корзины покупателя
+// @router /cart [get]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @success 200 {object} []viewmodel.Product
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) Get(c echo.Context) error {
 	const op = "delivery.cart.Get"
 	ctx := c.Request().Context()
@@ -44,6 +56,18 @@ func (d *Delivery) Get(c echo.Context) error {
 	return c.JSON(http.StatusOK, vms)
 }
 
+// @id clear-cart
+// @summary Очистка корзины
+// @description Очистка корзины покупателя
+// @router /cart [delete]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @success 200
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) Clear(c echo.Context) error {
 	const op = "delivery.cart.Clear"
 	ctx := c.Request().Context()
@@ -53,12 +77,24 @@ func (d *Delivery) Clear(c echo.Context) error {
 	err := d.ucCart.Clear(ctx, claims.AccountId)
 	if err != nil {
 		d.logError(op, ErrCartNotCleared, err)
-		c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrCartNotCleared))
+		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrCartNotCleared))
 	}
 
 	return c.NoContent(http.StatusOK)
 }
 
+// @id cart-checkout
+// @summary Оформление товаров из корзины
+// @description Оформление товаров из корзины покупателя
+// @router /cart/checkout [post]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @success 200
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) Checkout(c echo.Context) error {
 	const op = "delivery.cart.Checkout"
 	ctx := c.Request().Context()
@@ -68,11 +104,26 @@ func (d *Delivery) Checkout(c echo.Context) error {
 	err := d.ucCart.Checkout(ctx, claims.AccountId)
 	if err != nil {
 		d.logError(op, ErrCartNotCheckouted, err)
+		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrCartNotCheckouted))
 	}
 
 	return c.NoContent(http.StatusOK)
 }
 
+// @id cart-add-product
+// @summary Добавление товара в корзину
+// @description Добавление товара в корзину покупателя
+// @router /cart/products [post]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @param product body viewmodel.AddProduct true "Товар"
+// @success 200
+// @failure 400 {object} responses.StatusResponse
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) AddProduct(c echo.Context) error {
 	const op = "delivery.cart.AddProduct"
 	ctx := c.Request().Context()
@@ -91,9 +142,23 @@ func (d *Delivery) AddProduct(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrProductNotAdded))
 	}
 
-	return nil
+	return c.NoContent(http.StatusOK)
 }
 
+// @id cart-delete-product
+// @summary Удаление товара из корзины
+// @description Удаление товара из корзины покупателя
+// @router /cart/products/{id} [delete]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @param id path int true "Идентификатор товара"
+// @success 200
+// @failure 400 {object} responses.StatusResponse
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) DeleteProduct(c echo.Context) error {
 	const op = "delivery.cart.DeleteProduct"
 	ctx := c.Request().Context()
@@ -115,6 +180,21 @@ func (d *Delivery) DeleteProduct(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// @id cart-change-product-count
+// @summary Обновить количество товара в корзине
+// @description Обновить количество товара в корзине покупателя
+// @router /cart/products/{id}/count [put]
+// @security AccountId
+// @security AccountType
+// @tags cart
+// @accept json
+// @produce json
+// @param id path int true "Идентификатор товара"
+// @param count body viewmodel.AddCount true "Количество"
+// @success 200
+// @failure 400 {object} responses.StatusResponse
+// @failure 401 {object} responses.StatusResponse
+// @failure 500 {object} responses.StatusResponse
 func (d *Delivery) ChangeProductCount(c echo.Context) error {
 	const op = "delivery.cart.ChangeProductCount"
 	ctx := c.Request().Context()
@@ -139,5 +219,5 @@ func (d *Delivery) ChangeProductCount(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrProductCountNotChanged))
 	}
 
-	return nil
+	return c.NoContent(http.StatusOK)
 }
