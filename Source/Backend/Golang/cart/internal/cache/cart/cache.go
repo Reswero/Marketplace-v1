@@ -70,7 +70,7 @@ func (c *Cache) GetProducts(ctx context.Context, customerId int) ([]*domain.Prod
 		return nil, formatter.FmtError(op, err)
 	}
 
-	products := make([]*domain.Product, len(values))
+	products := make([]*domain.Product, 0, len(values))
 	for _, val := range values {
 		product := &Product{}
 		err = json.Unmarshal([]byte(val), product)
@@ -128,6 +128,10 @@ func (c *Cache) ChangeProductCount(ctx context.Context, customerId, productId, c
 	i, p, err := c.getProductWithIndex(ctx, key, productId)
 	if err != nil {
 		return formatter.FmtError(op, err)
+	}
+
+	if i < 0 {
+		return nil
 	}
 
 	p.AddCount(countToAdd)
