@@ -1,0 +1,5 @@
+env: "dev"
+cache:
+  address: "localhost:6379"
+http_server:
+  address: "localhost:8089"
