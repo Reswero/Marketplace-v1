@@ -8,8 +8,10 @@ using Marketplace.Products.Application.Common.ViewModels;
 using Marketplace.Products.Application.Products.Commands.CreateProduct;
 using Marketplace.Products.Application.Products.Commands.DeleteProduct;
 using Marketplace.Products.Application.Products.Commands.UpdateProduct;
+using Marketplace.Products.Application.Products.Queries.CheckProductsExistence;
 using Marketplace.Products.Application.Products.Queries.GetProduct;
 using Marketplace.Products.Application.Products.Queries.GetProductFullInfo;
+using Marketplace.Products.Application.Products.Queries.GetProductsByIds;
 using Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 using Marketplace.Products.Application.Products.ViewModels;
 using MediatR;
@@ -83,6 +85,18 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
+    /// Получение короткой информации о товарах по идентификаторам
+    /// </summary>
+    /// <param name="query"></param>
+    [HttpGet("by-ids")]
+    [ProducesResponseType(typeof(List<ProductShortInfoVM>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByIds([FromQuery] GetProductsByIdsQuery query)
+    {
+        var products = await _mediator.Send(query);
+        return Ok(products);
+    }
+
+    /// <summary>
     /// Поиск товаров
     /// </summary>
     /// <param name="query"></param>
@@ -144,6 +158,19 @@ public class ProductsController(IMediator mediator) : ControllerBase
 
         var result = await _mediator.Send(new DeleteProductCommand(id));
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Проверка существования товаров
+    /// </summary>
+    /// <param name="query"></param>
+    [HttpGet("/internal/v1/products/existence")]
+    [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CheckExistence([FromQuery] CheckProductsExistenceQuery query)
+    {
+        var ids = await _mediator.Send(query);
+        return Ok(ids);
     }
 
     private async Task<ObjectResult?> CheckAccessToProductAsync(IProductsAccessChecker accessChecker, int productId)
