@@ -10,6 +10,7 @@ using Marketplace.Products.Application.Products.Commands.DeleteProduct;
 using Marketplace.Products.Application.Products.Commands.UpdateProduct;
 using Marketplace.Products.Application.Products.Queries.GetProduct;
 using Marketplace.Products.Application.Products.Queries.GetProductFullInfo;
+using Marketplace.Products.Application.Products.Queries.GetProductsByIds;
 using Marketplace.Products.Application.Products.Queries.SearchProductsQuery;
 using Marketplace.Products.Application.Products.ViewModels;
 using MediatR;
@@ -80,6 +81,18 @@ public class ProductsController(IMediator mediator) : ControllerBase
 
         var product = await _mediator.Send(new GetProductFullInfoQuery(id));
         return Ok(product);
+    }
+
+    /// <summary>
+    /// Получение короткой информации о товарах по идентификаторам
+    /// </summary>
+    /// <param name="query"></param>
+    [HttpGet("by-ids")]
+    [ProducesResponseType(typeof(List<ProductShortInfoVM>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByIds([FromQuery] GetProductsByIdsQuery query)
+    {
+        var products = await _mediator.Send(query);
+        return Ok(products);
     }
 
     /// <summary>

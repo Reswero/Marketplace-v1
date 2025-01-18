@@ -33,6 +33,19 @@ internal class ProductsRepository(ProductsContext db) : IProductsRepository
     }
 
     /// <inheritdoc/>
+    public async Task<List<Product>> GetAsync(int[] ids, CancellationToken cancellationToken = default)
+    {
+        return await _db.Products.Include(p => p.Category)
+            .Include(p => p.Subcategory)
+            .Include(p => p.Discounts)
+            .Include(p => p.Parameters)
+                .ThenInclude(p => p.CategoryParameter)
+            .Include(p => p.Images)
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public Task UpdateAsync(Product product, CancellationToken cancellationToken = default)
     {
         _db.Products.Update(product);

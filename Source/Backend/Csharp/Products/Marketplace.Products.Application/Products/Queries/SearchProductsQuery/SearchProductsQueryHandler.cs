@@ -32,7 +32,8 @@ internal class SearchProductsQueryHandler(ILogger<SearchProductsQueryHandler> lo
         int count = await _searcher.QuantifyAsync(parameters, cancellationToken);
         List<Product> products = await _searcher.SearchAsync(parameters, cancellationToken);
 
-        var productsInFavorites = await CheckProductsInFavorites(_userIdentity.Id, products.Select(p => p.Id).ToList(), cancellationToken);
+        var productsInFavorites = await CheckProductsInFavoritesAsync(_userIdentity.Id, products.Select(p => p.Id).ToList(),
+            cancellationToken);
 
         var productsVMs = products.Select(p =>
         {
@@ -47,14 +48,14 @@ internal class SearchProductsQueryHandler(ILogger<SearchProductsQueryHandler> lo
                 Discount = discount is not null ? new(discount.Size, discount.ValidUntil) : null,
                 Image = image is not null ? $"{image.BucketName}/{image.Name}" : null,
                 Status = p.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted,
-                InFavorites = productsInFavorites.Contains(p.Id) is true
+                InFavorites = productsInFavorites.Contains(p.Id)
             };
         }).ToList();
 
         return new(count, productsVMs);
     }
 
-    private async Task<HashSet<int>> CheckProductsInFavorites(int? customerId, List<int> productIds,
+    private async Task<HashSet<int>> CheckProductsInFavoritesAsync(int? customerId, List<int> productIds,
         CancellationToken cancellationToken)
     {
         if (customerId is null)

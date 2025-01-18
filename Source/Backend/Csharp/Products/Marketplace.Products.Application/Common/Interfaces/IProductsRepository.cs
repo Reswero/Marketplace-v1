@@ -20,6 +20,12 @@ public interface IProductsRepository
     /// <param name="cancellationToken"></param>
     public Task<Product> GetAsync(int id, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Получить товары
+    /// </summary>
+    /// <param name="ids">Идентификаторыs</param>
+    /// <param name="cancellationToken"></param>
+    public Task<List<Product>> GetAsync(int[] ids, CancellationToken cancellationToken = default);
+    /// <summary>
     /// Обновить товар
     /// </summary>
     /// <param name="product">Товар</param>
