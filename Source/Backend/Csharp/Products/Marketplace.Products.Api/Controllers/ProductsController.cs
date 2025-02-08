@@ -165,7 +165,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     /// </summary>
     /// <param name="query"></param>
     [HttpGet("/internal/v1/products/existence")]
-    [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ExistingProductsVM), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CheckExistence([FromQuery] CheckProductsExistenceQuery query)
     {
