@@ -9,3 +9,6 @@ cache:
   address: "localhost:6379"
 http_server:
   address: "localhost:8088"
+products:
+  address: "http://localhost:8087"
+  timeout_ms: 500

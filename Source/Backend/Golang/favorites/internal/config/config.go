@@ -11,6 +11,7 @@ type Config struct {
 	Db
 	Cache
 	HttpServer `yaml:"http_server"`
+	Products
 }
 
 type Db struct {
@@ -27,6 +28,11 @@ type Cache struct {
 
 type HttpServer struct {
 	Address string `yaml:"address"`
+}
+
+type Products struct {
+	Address string `yaml:"address"`
+	Timeout int    `yaml:"timeout_ms"`
 }
 
 func MustLoad() *Config {
