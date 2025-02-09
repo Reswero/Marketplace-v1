@@ -10,6 +10,7 @@ type Config struct {
 	Environment string `yaml:"env"`
 	Cache
 	HttpServer `yaml:"http_server"`
+	Products
 }
 
 type Cache struct {
@@ -18,6 +19,11 @@ type Cache struct {
 
 type HttpServer struct {
 	Address string `yaml:"address"`
+}
+
+type Products struct {
+	Address string `yaml:"address"`
+	Timeout int    `yaml:"timeout_ms"`
 }
 
 func MustLoad() *Config {
