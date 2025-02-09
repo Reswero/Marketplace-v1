@@ -4,26 +4,37 @@ import (
 	"context"
 
 	domain "github.com/Reswero/Marketplace-v1/cart/internal/domain/cart"
+	"github.com/Reswero/Marketplace-v1/cart/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/cart/internal/usecase/adapters/cache"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
+	"github.com/Reswero/Marketplace-v1/pkg/products"
 )
 
 type Usecase struct {
-	cache cache.Cart
+	cache    cache.Cart
+	products *products.Service
 }
 
-func New(cache cache.Cart) *Usecase {
+func New(cache cache.Cart, products *products.Service) *Usecase {
 	return &Usecase{
-		cache: cache,
+		cache:    cache,
+		products: products,
 	}
 }
 
 func (u *Usecase) AddProduct(ctx context.Context, customerId, productId int) error {
 	const op = "usecase.cart.AddProduct"
 
-	// TODO: Call to Product service / check that product exists
+	existingIds, err := u.products.CheckProductsExistence(ctx, []int{productId})
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
 
-	err := u.cache.AddProduct(ctx, customerId, productId)
+	if len(existingIds) < 1 {
+		return usecase.ErrProductNotExists
+	}
+
+	err = u.cache.AddProduct(ctx, customerId, productId)
 	if err != nil {
 		return formatter.FmtError(op, err)
 	}
