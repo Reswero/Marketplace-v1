@@ -7,16 +7,19 @@ import (
 	"github.com/Reswero/Marketplace-v1/favorites/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/favorites/internal/usecase/adapters/repository"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
+	"github.com/Reswero/Marketplace-v1/pkg/products"
 )
 
 // Взаимодействие с избранными товарами покупателей
 type UseCase struct {
-	repo repository.Favorites
+	repo     repository.Favorites
+	products *products.Service
 }
 
-func New(r repository.Favorites) *UseCase {
+func New(r repository.Favorites, p *products.Service) *UseCase {
 	return &UseCase{
-		repo: r,
+		repo:     r,
+		products: p,
 	}
 }
 
@@ -24,14 +27,21 @@ func New(r repository.Favorites) *UseCase {
 func (u *UseCase) AddProduct(ctx context.Context, fav *usecase.FavoriteProductDto) error {
 	const op = "usecase.favorites.AddProduct"
 
-	// TODO: Check product existing
+	existingIds, err := u.products.CheckProductsExistence(ctx, []int{fav.ProductId})
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	if len(existingIds) < 1 {
+		return usecase.ErrProductNotExists
+	}
 
 	dFav := &product.FavoriteProduct{
 		CustomerId: fav.CustomerId,
 		ProductId:  fav.ProductId,
 	}
 
-	err := u.repo.AddProduct(ctx, dFav)
+	err = u.repo.AddProduct(ctx, dFav)
 	if err != nil {
 		return formatter.FmtError(op, err)
 	}

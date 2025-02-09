@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Marketplace.Products.Application.Products.ViewModels;
+using MediatR;
 
 namespace Marketplace.Products.Application.Products.Queries.CheckProductsExistence;
 
@@ -6,4 +7,4 @@ namespace Marketplace.Products.Application.Products.Queries.CheckProductsExisten
 /// Запрос проверки существования товаров
 /// </summary>
 /// <param name="Ids">Идентификаторы</param>
-public record CheckProductsExistenceQuery(int[] Ids) : IRequest<List<int>>;
+public record CheckProductsExistenceQuery(int[] Ids) : IRequest<ExistingProductsVM>;

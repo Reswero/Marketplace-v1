@@ -10,6 +10,7 @@ import (
 	favoritesRepository "github.com/Reswero/Marketplace-v1/favorites/internal/repository/favorites"
 	favoritesUsecase "github.com/Reswero/Marketplace-v1/favorites/internal/usecase/favorites"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
+	"github.com/Reswero/Marketplace-v1/pkg/products"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
 )
@@ -64,8 +65,10 @@ func main() {
 	// }
 	// defer cache.Close()
 
+	products := products.New(cfg.Products.Timeout, cfg.Products.Address)
+
 	favRepo := favoritesRepository.New(storage)
-	ucFavorites := favoritesUsecase.New(favRepo)
+	ucFavorites := favoritesUsecase.New(favRepo, products)
 
 	d := http.New(logger, cfg.Environment, ucFavorites)
 	if err = d.Start(cfg.HttpServer.Address); err != nil {

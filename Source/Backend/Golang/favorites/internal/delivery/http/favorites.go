@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -51,6 +52,10 @@ func (d *Delivery) AddToFavorites(c echo.Context) error {
 
 	err = d.ucFavorites.AddProduct(ctx, dto)
 	if err != nil {
+		if errors.Is(err, usecase.ErrProductNotExists) {
+			return c.NoContent(http.StatusNotFound)
+		}
+
 		d.logError(op, ErrAddingProductToFavorites, err)
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrAddingProductToFavorites))
 	}
