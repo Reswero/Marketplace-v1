@@ -1,11 +1,13 @@
 package http
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/Reswero/Marketplace-v1/cart/internal/delivery/http/mapper"
 	"github.com/Reswero/Marketplace-v1/cart/internal/delivery/http/viewmodel"
+	"github.com/Reswero/Marketplace-v1/cart/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/pkg/authorization"
 	responses "github.com/Reswero/Marketplace-v1/pkg/repsonses"
 	"github.com/labstack/echo/v4"
@@ -138,6 +140,10 @@ func (d *Delivery) AddProduct(c echo.Context) error {
 
 	err = d.ucCart.AddProduct(ctx, claims.AccountId, vm.Id)
 	if err != nil {
+		if errors.Is(err, usecase.ErrProductNotExists) {
+			return c.NoContent(http.StatusNotFound)
+		}
+
 		d.logError(op, ErrProductNotAdded, err)
 		return c.JSON(http.StatusInternalServerError, responses.NewStatus(http.StatusInternalServerError, ErrProductNotAdded))
 	}
