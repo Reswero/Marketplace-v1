@@ -1,5 +1,6 @@
 ﻿using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
+using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
 using Marketplace.Orders.Infrastructure.Orders.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDatabase(configuration);
+        services.AddServicesClients(configuration);
 
         services.AddScoped<IOrdersRepository, OrdersRepository>();
 
@@ -45,6 +47,21 @@ public static class DependencyInjection
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             options.UseNpgsql(connectionString);
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddServicesClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IProductsServiceClient, ProductsServiceClient>();
+        services.AddHttpClient<IProductsServiceClient>(client =>
+        {
+            var address = configuration["Services:Products:Address"]!;
+            var timeout = int.Parse(configuration["Services:Products:Timeout"]!);
+
+            client.BaseAddress = new Uri(address);
+            client.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
         return services;
