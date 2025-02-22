@@ -12,6 +12,10 @@ public record ProductShortInfoDto
     /// </summary>
     public int Id { get; set; }
     /// <summary>
+    /// Идентификатор продавца
+    /// </summary>
+    public int SellerId { get; set; }
+    /// <summary>
     /// Цена
     /// </summary>
     public int Price { get; set; }

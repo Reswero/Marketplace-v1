@@ -23,6 +23,7 @@ internal class GetProductsByIdsInternalQueryHandler(IProductsRepository reposito
             return new ProductShortInfoDto()
             {
                 Id = p.Id,
+                SellerId = p.SellerId,
                 Price = p.Price,
                 DiscountSize = discount is not null ? discount.Size : 0,
                 Status = p.DeletedAt is null ? ProductStatus.Available : ProductStatus.Deleted
