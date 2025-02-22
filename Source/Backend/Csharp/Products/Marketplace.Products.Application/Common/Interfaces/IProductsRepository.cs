@@ -3,14 +3,14 @@
 namespace Marketplace.Products.Application.Common.Interfaces;
 
 /// <summary>
-/// Репозиторий товар
+/// Репозиторий товаров
 /// </summary>
 public interface IProductsRepository
 {
     /// <summary>
     /// Добавить товар
     /// </summary>
-    /// <param name="product">Продукт</param>
+    /// <param name="product">Товар</param>
     /// <param name="cancellationToken"></param>
     public Task AddAsync(Product product, CancellationToken cancellationToken = default);
     /// <summary>
