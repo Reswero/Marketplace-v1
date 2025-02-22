@@ -34,7 +34,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Products.Infras
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85D59FBD-B38E-45F7-9041-1AA286BE3845}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Common.UnitTests", "Tests\Marketplace.Common.UnitTests\Marketplace.Common.UnitTests.csproj", "{3135C565-75B4-4931-9B79-6B879CC2F7E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Marketplace.Common.UnitTests", "Tests\Marketplace.Common.UnitTests\Marketplace.Common.UnitTests.csproj", "{3135C565-75B4-4931-9B79-6B879CC2F7E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{661368CF-348E-45DB-948F-F8047C8BD8B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Orders.Api", "Orders\Marketplace.Orders.Api\Marketplace.Orders.Api.csproj", "{8D4B9D79-08F6-44F0-93EF-BE61AB859413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Orders.Application", "Orders\Marketplace.Orders.Application\Marketplace.Orders.Application.csproj", "{CFAAF552-27C2-495A-92E6-A5C099D07744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Orders.Domain", "Orders\Marketplace.Orders.Domain\Marketplace.Orders.Domain.csproj", "{665A801A-BF73-42A8-9DDE-E7FA93BB259A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Orders.Infrastructure", "Orders\Marketplace.Orders.Infrastructure\Marketplace.Orders.Infrastructure.csproj", "{EA887273-109D-4071-8365-38BADBA877E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +92,22 @@ Global
 		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3135C565-75B4-4931-9B79-6B879CC2F7E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D4B9D79-08F6-44F0-93EF-BE61AB859413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D4B9D79-08F6-44F0-93EF-BE61AB859413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D4B9D79-08F6-44F0-93EF-BE61AB859413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D4B9D79-08F6-44F0-93EF-BE61AB859413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFAAF552-27C2-495A-92E6-A5C099D07744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFAAF552-27C2-495A-92E6-A5C099D07744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFAAF552-27C2-495A-92E6-A5C099D07744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFAAF552-27C2-495A-92E6-A5C099D07744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{665A801A-BF73-42A8-9DDE-E7FA93BB259A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{665A801A-BF73-42A8-9DDE-E7FA93BB259A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{665A801A-BF73-42A8-9DDE-E7FA93BB259A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{665A801A-BF73-42A8-9DDE-E7FA93BB259A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA887273-109D-4071-8365-38BADBA877E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA887273-109D-4071-8365-38BADBA877E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA887273-109D-4071-8365-38BADBA877E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA887273-109D-4071-8365-38BADBA877E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +123,10 @@ Global
 		{9E60D1AA-47B7-43EE-BA52-727559232367} = {83E63A85-7674-406C-8634-60F087B0DD88}
 		{CB9E8FE2-7FE7-475B-A61B-45C3A4439245} = {83E63A85-7674-406C-8634-60F087B0DD88}
 		{3135C565-75B4-4931-9B79-6B879CC2F7E4} = {85D59FBD-B38E-45F7-9041-1AA286BE3845}
+		{8D4B9D79-08F6-44F0-93EF-BE61AB859413} = {661368CF-348E-45DB-948F-F8047C8BD8B7}
+		{CFAAF552-27C2-495A-92E6-A5C099D07744} = {661368CF-348E-45DB-948F-F8047C8BD8B7}
+		{665A801A-BF73-42A8-9DDE-E7FA93BB259A} = {661368CF-348E-45DB-948F-F8047C8BD8B7}
+		{EA887273-109D-4071-8365-38BADBA877E1} = {661368CF-348E-45DB-948F-F8047C8BD8B7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9949857-944B-44B7-A4D3-A074C27BD291}
