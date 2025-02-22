@@ -8,7 +8,10 @@ namespace Marketplace.Orders.Infrastructure.Common.Persistence;
 internal class OrdersContext(DbContextOptions<OrdersContext> options)
     : DbContext(options), IUnitOfWork
 {
-    public List<Order> Orders { get; set; } = null!;
+    /// <summary>
+    /// Заказы
+    /// </summary>
+    public DbSet<Order> Orders { get; set; } = null!;
 
     /// <inheritdoc/>
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default)

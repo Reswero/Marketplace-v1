@@ -1,0 +1,14 @@
+﻿using Marketplace.Orders.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Marketplace.Orders.Infrastructure.Orders.Persistence;
+
+internal class OrdersConfiguration : IEntityTypeConfiguration<Order>
+{
+    public void Configure(EntityTypeBuilder<Order> builder)
+    {
+        builder.HasMany(o => o.Products)
+            .WithOne(p => p.Order);
+    }
+}

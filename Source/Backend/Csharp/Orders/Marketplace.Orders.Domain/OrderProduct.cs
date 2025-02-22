@@ -36,6 +36,9 @@ public class OrderProduct
     /// Идентификатор заказа
     /// </summary>
     public int OrderId { get; private set; }
+    /// <summary>
+    /// Заказ
+    /// </summary>
     public Order? Order { get; private set; } = null;
     /// <summary>
     /// Идентификатор товара
