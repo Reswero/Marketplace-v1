@@ -1,6 +1,6 @@
 ﻿using Marketplace.Products.Application.Common.Interfaces;
 using Marketplace.Products.Application.Products.DTOs;
-using Marketplace.Products.Application.Products.ViewModels;
+using Marketplace.Products.Application.Products.Models;
 using MediatR;
 
 namespace Marketplace.Products.Application.Products.Queries.GetProductsByIdsInternal;

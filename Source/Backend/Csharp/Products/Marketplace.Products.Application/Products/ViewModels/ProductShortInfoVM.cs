@@ -1,4 +1,6 @@
-﻿namespace Marketplace.Products.Application.Products.ViewModels;
+﻿using Marketplace.Products.Application.Products.Models;
+
+namespace Marketplace.Products.Application.Products.ViewModels;
 
 /// <summary>
 /// Моодель товара с краткой информацией

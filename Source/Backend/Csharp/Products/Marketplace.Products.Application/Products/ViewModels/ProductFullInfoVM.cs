@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Categories.ViewModels;
+using Marketplace.Products.Application.Products.Models;
 
 namespace Marketplace.Products.Application.Products.ViewModels;
 

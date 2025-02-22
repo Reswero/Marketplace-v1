@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Common.Interfaces;
+using Marketplace.Products.Application.Products.Models;
 using Marketplace.Products.Application.Products.ViewModels;
 using MediatR;
 using Microsoft.Extensions.Logging;
