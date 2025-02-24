@@ -3,43 +3,40 @@
 /// <summary>
 /// Статус заказа
 /// </summary>
-[Flags]
-public enum OrderStatus
+public class OrderStatus
 {
+    private OrderStatus() { }
+
     /// <summary>
-    /// Отсутствует
+    /// Конструктор
     /// </summary>
-    None = 0,
+    /// <param name="order">Заказ</param>
+    /// <param name="type">Тип статуса</param>
+    public OrderStatus(Order order, OrderStatusType type)
+    {
+        OrderId = order.Id;
+        Order = order;
+        Type = type;
+    }
+
     /// <summary>
-    /// Создан
+    /// Идентификатор
     /// </summary>
-    Created = 1,
+    public long Id { get; private set; }
     /// <summary>
-    /// Ожидает оплаты
+    /// Идентификатор заказа
     /// </summary>
-    Pendign = 2,
+    public long OrderId { get; private set; }
     /// <summary>
-    /// Оплачен
+    /// Заказ
     /// </summary>
-    Paid = 4,
+    public Order? Order { get; private set; }
     /// <summary>
-    /// Упакован
+    /// Тип статуса
     /// </summary>
-    Packed = 8,
+    public OrderStatusType Type { get; private set; }
     /// <summary>
-    /// Отправлено
+    /// Произошло в
     /// </summary>
-    Shipped = 16,
-    /// <summary>
-    /// Доставлено
-    /// </summary>
-    InDelivery = 32,
-    /// <summary>
-    /// Получен
-    /// </summary>
-    Obtained = 64,
-    /// <summary>
-    /// Отменен
-    /// </summary>
-    Cancelled = 128
+    public DateTimeOffset OccuredAt { get; private set; } = DateTimeOffset.UtcNow;
 }

@@ -16,7 +16,6 @@ public class Order
     public Order(int customerId)
     {
         CustomerId = customerId;
-        Status = OrderStatusType.Created;
     }
 
     /// <summary>
@@ -28,30 +27,13 @@ public class Order
     /// </summary>
     public int CustomerId { get; private set; }
     /// <summary>
-    /// Статус
-    /// </summary>
-    public OrderStatusType Status { get; private set; }
-    /// <summary>
     /// Дата создания
     /// </summary>
-    public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.Now;
-    /// <summary>
-    /// Дата доставки
-    /// </summary>
-    public DateTimeOffset? DeliveredAt { get; private set; } = null;
+    public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
     /// <summary>
     /// Товары
     /// </summary>
     public IReadOnlyList<OrderProduct> Products => _products;
-
-    /// <summary>
-    /// Установить статус
-    /// </summary>
-    /// <param name="status">Статус</param>
-    public void SetStatus(OrderStatusType status)
-    {
-        Status |= status;
-    }
 
     /// <summary>
     /// Добавить товары
