@@ -31,11 +31,11 @@ public class OrderProduct
     /// <summary>
     /// Идентификатор
     /// </summary>
-    public int Id { get; private set; }
+    public long Id { get; private set; }
     /// <summary>
     /// Идентификатор заказа
     /// </summary>
-    public int OrderId { get; private set; }
+    public long OrderId { get; private set; }
     /// <summary>
     /// Заказ
     /// </summary>
