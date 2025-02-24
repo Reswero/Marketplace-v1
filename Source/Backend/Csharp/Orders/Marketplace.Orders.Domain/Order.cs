@@ -1,4 +1,6 @@
-﻿namespace Marketplace.Orders.Domain;
+﻿using Marketplace.Orders.Domain.Exceptions;
+
+namespace Marketplace.Orders.Domain;
 
 /// <summary>
 /// Заказ
@@ -6,6 +8,7 @@
 public class Order
 {
     private readonly List<OrderProduct> _products = [];
+    private readonly List<OrderStatus> _statuses = [];
 
     private Order() { }
 
@@ -45,5 +48,17 @@ public class Order
             return;
 
         _products.AddRange(products);
+    }
+
+    /// <summary>
+    /// Добавить статус
+    /// </summary>
+    /// <param name="status">Статус</param>
+    public void AddStatus(OrderStatus status)
+    {
+        if (_statuses.Any(s => s.Type == status.Type))
+            throw new OrderStatusAlreadySettedException(status.Type);
+
+        _statuses.Add(status);
     }
 }
