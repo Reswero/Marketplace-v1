@@ -1,4 +1,5 @@
-﻿using Marketplace.Orders.Application.Common.Interfaces;
+﻿using Marketplace.Common.Identity.User;
+using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
 using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
 using Marketplace.Orders.Infrastructure.Orders.Persistence;
@@ -21,6 +22,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDatabase(configuration);
+        services.AddUserIdentity();
         services.AddServicesClients(configuration);
 
         services.AddScoped<IOrdersRepository, OrdersRepository>();
@@ -48,6 +50,14 @@ public static class DependencyInjection
 
             options.UseNpgsql(connectionString);
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddUserIdentity(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddHttpUserIdentityProvider();
 
         return services;
     }
