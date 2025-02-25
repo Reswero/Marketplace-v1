@@ -27,12 +27,6 @@ public interface IOrdersRepository
     /// <param name="cancellationToken"></param>
     public Task<List<Order>> GetByCustomerAsync(int customerId, Pagination pagination, CancellationToken cancellationToken = default);
     /// <summary>
-    /// Получить заказы по продавцу
-    /// </summary>
-    /// <param name="sellerId">Идентификатор продавца</param>
-    /// <param name="cancellationToken"></param>
-    public Task<List<Order>> GetBySellerAsync(int sellerId, Pagination pagination, CancellationToken cancellationToken = default);
-    /// <summary>
     /// Обновить заказ
     /// </summary>
     /// <param name="order">Заказ</param>

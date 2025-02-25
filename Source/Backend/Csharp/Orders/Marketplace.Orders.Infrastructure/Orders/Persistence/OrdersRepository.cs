@@ -41,15 +41,6 @@ internal class OrdersRepository(OrdersContext db) : IOrdersRepository
     }
 
     /// <inheritdoc/>
-    public async Task<List<Order>> GetBySellerAsync(int sellerId, Pagination pagination,
-        CancellationToken cancellationToken = default)
-    {
-        return await _db.Orders.Include(o => o.Products)
-            .Where(o => o.Products.Any(p => p.SellerId == sellerId))
-            .ToListAsync(cancellationToken);
-    }
-
-    /// <inheritdoc/>
     public Task UpdateAsync(Order order, CancellationToken cancellationToken = default)
     {
         _db.Orders.Update(order);
