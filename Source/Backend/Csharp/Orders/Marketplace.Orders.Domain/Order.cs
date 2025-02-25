@@ -34,6 +34,10 @@ public class Order
     /// </summary>
     public DateTimeOffset CreatedAt { get; private set; } = DateTimeOffset.UtcNow;
     /// <summary>
+    /// Статусы
+    /// </summary>
+    public IReadOnlyList<OrderStatus> Statuses { get; private set; }
+    /// <summary>
     /// Товары
     /// </summary>
     public IReadOnlyList<OrderProduct> Products => _products;
