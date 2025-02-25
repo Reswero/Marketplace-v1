@@ -1,5 +1,6 @@
 ﻿using Marketplace.Orders.Application.Common.Exceptions;
 using Marketplace.Orders.Application.Common.Interfaces;
+using Marketplace.Orders.Application.Common.Models;
 using Marketplace.Orders.Domain;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -28,15 +29,20 @@ internal class OrdersRepository(OrdersContext db) : IOrdersRepository
     }
 
     /// <inheritdoc/>
-    public async Task<List<Order>> GetByCustomerAsync(int customerId, CancellationToken cancellationToken = default)
+    public async Task<List<Order>> GetByCustomerAsync(int customerId, Pagination pagination,
+        CancellationToken cancellationToken = default)
     {
         return await _db.Orders.Include(o => o.Products)
             .Where(o => o.CustomerId == customerId)
+            .OrderByDescending(o => o.CreatedAt)
+            .Skip(pagination.Offset)
+            .Take(pagination.Limit)
             .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<List<Order>> GetBySellerAsync(int sellerId, CancellationToken cancellationToken = default)
+    public async Task<List<Order>> GetBySellerAsync(int sellerId, Pagination pagination,
+        CancellationToken cancellationToken = default)
     {
         return await _db.Orders.Include(o => o.Products)
             .Where(o => o.Products.Any(p => p.SellerId == sellerId))
