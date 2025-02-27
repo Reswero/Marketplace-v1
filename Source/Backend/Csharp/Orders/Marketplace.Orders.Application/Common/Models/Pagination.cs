@@ -5,6 +5,8 @@
 /// </summary>
 public class Pagination
 {
+    private const int _maxLimit = 200;
+
     /// <summary>
     /// Конструктор
     /// </summary>
@@ -16,7 +18,7 @@ public class Pagination
         ArgumentOutOfRangeException.ThrowIfNegative(limit);
 
         Offset = offset;
-        Limit = limit;
+        Limit = limit < _maxLimit ? limit : _maxLimit;
     }
 
     /// <summary>
