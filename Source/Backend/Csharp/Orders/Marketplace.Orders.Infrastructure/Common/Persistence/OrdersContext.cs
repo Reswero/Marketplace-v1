@@ -12,6 +12,10 @@ internal class OrdersContext(DbContextOptions<OrdersContext> options)
     /// Заказы
     /// </summary>
     public DbSet<Order> Orders { get; set; } = null!;
+    /// <summary>
+    /// Товары заказов
+    /// </summary>
+    public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
 
     /// <inheritdoc/>
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
