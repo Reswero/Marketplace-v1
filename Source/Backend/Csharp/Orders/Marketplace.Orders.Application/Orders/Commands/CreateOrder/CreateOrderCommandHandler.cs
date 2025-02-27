@@ -10,9 +10,6 @@ namespace Marketplace.Orders.Application.Orders.Commands.CreateOrder;
 /// <summary>
 /// Создать заказ
 /// </summary>
-/// <param name="repository"></param>
-/// <param name="unitOfWork"></param>
-/// <param name="productsClient"></param>
 internal class CreateOrderCommandHandler(IOrdersRepository repository, IUnitOfWork unitOfWork,
     IProductsServiceClient productsClient)
     : IRequestHandler<CreateOrderCommand, CreateObjectResultVM>

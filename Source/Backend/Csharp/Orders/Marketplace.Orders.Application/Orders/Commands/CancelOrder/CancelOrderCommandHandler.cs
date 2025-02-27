@@ -10,9 +10,6 @@ namespace Marketplace.Orders.Application.Orders.Commands.CancelOrder;
 /// <summary>
 /// Отменить заказ
 /// </summary>
-/// <param name="repository"></param>
-/// <param name="unitOfWork"></param>
-/// <param name="userIdentity"></param>
 internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWork unitOfWork,
     IUserIdentityProvider userIdentity)
     : IRequestHandler<CancelOrderCommand>
