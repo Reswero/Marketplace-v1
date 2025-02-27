@@ -20,6 +20,7 @@ internal class OrderProductsRepository(OrdersContext db)
         CancellationToken cancellationToken = default)
     {
         return await _db.OrderProducts.Include(p => p.Order)
+            .ThenInclude(o => o!.Statuses)
             .Where(p => p.SellerId == sellerId)
             .OrderByDescending(p => p.Order!.CreatedAt)
             .Skip(pagination.Offset)
