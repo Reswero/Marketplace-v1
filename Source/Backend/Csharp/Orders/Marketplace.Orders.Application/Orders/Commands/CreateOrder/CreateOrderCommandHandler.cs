@@ -48,14 +48,6 @@ internal class CreateOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         await _repository.AddAsync(order, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        // TODO: call to payment service
-        OrderStatus pendingStatus = new(order, OrderStatusType.Pending);
-        order.AddStatus(pendingStatus);
-
-        await _repository.UpdateAsync(order, cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        // TODO: return link to payment
         return new CreateObjectResultVM(order.Id);
     }
 }
