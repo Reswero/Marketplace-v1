@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Marketplace.Orders.Infrastructure;
 
 /// <summary>
-/// Инъекция зависимостей слоя инфраструктуры
+/// Внедрение зависимостей слоя инфраструктуры
 /// </summary>
 public static class DependencyInjection
 {
