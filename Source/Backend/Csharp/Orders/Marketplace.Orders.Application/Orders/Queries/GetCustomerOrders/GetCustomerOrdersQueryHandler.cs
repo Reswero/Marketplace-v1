@@ -28,7 +28,8 @@ internal class GetCustomerOrdersQueryHandler(IUserIdentityProvider userIdentity,
             {
                 Id = o.Id,
                 ProductCount = o.Products.Select(p => p.Quantity).Sum(),
-                TotalPrice = o.Products.Select(p => p.ProductPrice * p.Quantity).Sum(),
+                TotalPrice =
+                    (int) o.Products.Select(p => Math.Ceiling(p.ProductPrice * p.Quantity * (1 - p.DiscountSize / (double) 100))).Sum(),
                 CurrentStatus = new(currentStatus.Type, currentStatus.OccuredAt)
             };
         }).ToList();
