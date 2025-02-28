@@ -1,3 +1,8 @@
+using Marketplace.Common.Authorization.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Reflection;
+using Marketplace.Orders.Application;
+using Marketplace.Orders.Infrastructure;
 
 namespace Marketplace.Orders.Api;
 
@@ -7,25 +12,30 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddHeaderAuthorization();
+            options.IncludeXmlComments(Assembly.GetExecutingAssembly(), true);
+        });
+
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie();
+        builder.Services.AddApplication();
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        app.Services.InitializeDatabase();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-
-        app.UseAuthorization();
-
+        app.UseHeaderAuthorization();
 
         app.MapControllers();
 
