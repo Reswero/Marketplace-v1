@@ -14,6 +14,7 @@ public class NewOrder
     public NewOrder(Order order)
     {
         Id = order.Id;
+        Order = order;
     }
 
     /// <summary>
