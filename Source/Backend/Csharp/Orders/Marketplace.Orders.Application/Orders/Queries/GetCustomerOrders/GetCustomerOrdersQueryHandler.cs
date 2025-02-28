@@ -27,6 +27,7 @@ internal class GetCustomerOrdersQueryHandler(IUserIdentityProvider userIdentity,
             return new OrderShortInfoVM
             {
                 Id = o.Id,
+                ProductsIds = o.Products.Select(p => p.ProductId).ToArray(),
                 ProductCount = o.Products.Select(p => p.Quantity).Sum(),
                 TotalPrice =
                     (int) o.Products.Select(p => Math.Ceiling(p.ProductPrice * p.Quantity * (1 - p.DiscountSize / (double) 100))).Sum(),

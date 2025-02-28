@@ -12,6 +12,10 @@ public record OrderShortInfoVM
     /// </summary>
     public long Id { get; set; }
     /// <summary>
+    /// Идентификаторы товаров
+    /// </summary>
+    public required int[] ProductsIds { get; set; }
+    /// <summary>
     /// Количество товаров
     /// </summary>
     public int ProductCount { get; set; }
