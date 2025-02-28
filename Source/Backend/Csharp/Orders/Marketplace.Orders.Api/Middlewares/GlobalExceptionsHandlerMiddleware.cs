@@ -24,7 +24,8 @@ public class GlobalExceptionsHandlerMiddleware(ILogger<GlobalExceptionsHandlerMi
         {
             await _next.Invoke(context);
         }
-        catch (ImpossibleToPayOrderException e)
+        catch (Exception e) when (e is ImpossibleToPayOrderException ||
+                                  e is ProductNotAvailableException)
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
         }

@@ -2,6 +2,7 @@
 using Marketplace.Orders.Application.Common.Exceptions;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Application.Common.ViewModels;
+using Marketplace.Orders.Application.Integrations.Products;
 using Marketplace.Orders.Domain;
 using MediatR;
 
@@ -37,6 +38,9 @@ internal class CreateOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         {
             var product = products[i];
             var requestProduct = requestProducts[product.Id];
+
+            if (product.Status != ProductStatus.Available)
+                throw new ProductNotAvailableException(product.Id);
 
             OrderProduct orderProduct = new(order, product.Id, product.SellerId,
                 requestProduct.Quantity, product.Price, product.DiscountSize);
