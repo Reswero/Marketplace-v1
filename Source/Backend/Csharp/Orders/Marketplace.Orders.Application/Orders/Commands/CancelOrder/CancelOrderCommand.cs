@@ -6,4 +6,4 @@ namespace Marketplace.Orders.Application.Orders.Commands.CancelOrder;
 /// Команда на отмену заказа
 /// </summary>
 /// <param name="OrderId">Идентификатор заказа</param>
-public record CancelOrderCommand(int OrderId) : IRequest;
+public record CancelOrderCommand(long OrderId) : IRequest;

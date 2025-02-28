@@ -7,4 +7,4 @@ namespace Marketplace.Orders.Application.Orders.Queries.GetOrderPaymentLink;
 /// Запрос на получение ссылки для оплаты заказа
 /// </summary>
 /// <param name="OrderId">Идентификатор заказа</param>
-public record GetOrderPaymentLinkQuery(int OrderId) : IRequest<PaymentVM>;
+public record GetOrderPaymentLinkQuery(long OrderId) : IRequest<PaymentVM>;
