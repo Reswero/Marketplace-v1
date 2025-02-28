@@ -1,4 +1,5 @@
 ﻿using Marketplace.Products.Application.Common.Interfaces;
+using Marketplace.Products.Application.Products.Models;
 using Marketplace.Products.Application.Products.ViewModels;
 using Marketplace.Products.Application.Users.Models;
 using Marketplace.Products.Application.Users.ViewModels;

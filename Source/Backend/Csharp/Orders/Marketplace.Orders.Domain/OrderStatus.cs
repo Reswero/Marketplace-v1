@@ -1,0 +1,42 @@
+﻿namespace Marketplace.Orders.Domain;
+
+/// <summary>
+/// Статус заказа
+/// </summary>
+public class OrderStatus
+{
+    private OrderStatus() { }
+
+    /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="order">Заказ</param>
+    /// <param name="type">Тип статуса</param>
+    public OrderStatus(Order order, OrderStatusType type)
+    {
+        OrderId = order.Id;
+        Order = order;
+        Type = type;
+    }
+
+    /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public long Id { get; private set; }
+    /// <summary>
+    /// Идентификатор заказа
+    /// </summary>
+    public long OrderId { get; private set; }
+    /// <summary>
+    /// Заказ
+    /// </summary>
+    public Order? Order { get; private set; }
+    /// <summary>
+    /// Тип статуса
+    /// </summary>
+    public OrderStatusType Type { get; private set; }
+    /// <summary>
+    /// Произошло в
+    /// </summary>
+    public DateTimeOffset OccuredAt { get; private set; } = DateTimeOffset.UtcNow;
+}

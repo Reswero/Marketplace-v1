@@ -1,4 +1,4 @@
-﻿namespace Marketplace.Products.Application.Products.ViewModels;
+﻿namespace Marketplace.Orders.Application.Integrations.Products;
 
 /// <summary>
 /// Состояния товара
