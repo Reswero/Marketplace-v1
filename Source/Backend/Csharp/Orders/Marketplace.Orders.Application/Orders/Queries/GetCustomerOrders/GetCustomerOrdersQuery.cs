@@ -8,4 +8,4 @@ namespace Marketplace.Orders.Application.Orders.Queries.GetCustomerOrders;
 /// Запрос на получение заказов покупателя 
 /// </summary>
 /// <param name="Pagination">Пагинация</param>
-public record GetCustomerOrdersQuery(PaginationVM Pagination) : IRequest<List<OrderVM>>;
+public record GetCustomerOrdersQuery(PaginationVM Pagination) : IRequest<List<OrderShortInfoVM>>;
