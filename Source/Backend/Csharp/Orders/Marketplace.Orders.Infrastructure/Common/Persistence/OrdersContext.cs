@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace Marketplace.Orders.Infrastructure.Common.Persistence;
 
+/// <summary>
+/// Контекст БД
+/// </summary>
+/// <param name="options"></param>
 internal class OrdersContext(DbContextOptions<OrdersContext> options)
     : DbContext(options), IUnitOfWork
 {
@@ -16,6 +20,10 @@ internal class OrdersContext(DbContextOptions<OrdersContext> options)
     /// Товары заказов
     /// </summary>
     public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
+    /// <summary>
+    /// Новые заказы
+    /// </summary>
+    public DbSet<NewOrder> NewOrders { get; set; } = null!;
 
     /// <inheritdoc/>
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
