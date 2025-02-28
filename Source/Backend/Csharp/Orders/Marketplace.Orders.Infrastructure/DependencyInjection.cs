@@ -7,6 +7,7 @@ using Marketplace.Orders.Infrastructure.Orders.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Marketplace.Orders.Infrastructure;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
     /// <param name="configuration">Конфигурация</param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddLogger(configuration);
         services.AddDatabase(configuration);
         services.AddUserIdentity();
         services.AddServicesClients(configuration);
@@ -40,6 +42,22 @@ public static class DependencyInjection
         var db = scope.ServiceProvider.GetRequiredService<OrdersContext>();
         
         db.Database.EnsureCreated();
+    }
+
+    private static IServiceCollection AddLogger(this IServiceCollection services, IConfiguration configuration)
+    {
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        services.AddLogging(builder =>
+        {
+            builder.AddSerilog(dispose: true);
+        });
+
+        return services;
     }
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
