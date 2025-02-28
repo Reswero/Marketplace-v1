@@ -101,6 +101,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IOrdersRepository, OrdersRepository>();
         services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
+        services.AddScoped<INewOrdersRepository, NewOrdersRepository>();
 
         return services;
     }
