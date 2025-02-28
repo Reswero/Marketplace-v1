@@ -36,7 +36,7 @@ public class Order
     /// <summary>
     /// Статусы
     /// </summary>
-    public IReadOnlyList<OrderStatus> Statuses { get; private set; }
+    public IReadOnlyList<OrderStatus> Statuses => _statuses;
     /// <summary>
     /// Товары
     /// </summary>

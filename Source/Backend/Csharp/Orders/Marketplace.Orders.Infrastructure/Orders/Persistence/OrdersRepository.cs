@@ -24,6 +24,7 @@ internal class OrdersRepository(OrdersContext db) : IOrdersRepository
     public async Task<Order> GetAsync(long id, CancellationToken cancellationToken = default)
     {
         return await _db.Orders.Include(o => o.Products)
+            .Include(o => o.Statuses)
             .Where(o => o.Id == id).FirstOrDefaultAsync(cancellationToken)
                 ?? throw new OrderNotFoundException(id);
     }
@@ -33,6 +34,7 @@ internal class OrdersRepository(OrdersContext db) : IOrdersRepository
         CancellationToken cancellationToken = default)
     {
         return await _db.Orders.Include(o => o.Products)
+            .Include(o => o.Statuses)
             .Where(o => o.CustomerId == customerId)
             .OrderByDescending(o => o.CreatedAt)
             .Skip(pagination.Offset)

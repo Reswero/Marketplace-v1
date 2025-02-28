@@ -10,5 +10,7 @@ internal class OrdersConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.HasMany(o => o.Products)
             .WithOne(p => p.Order);
+        builder.HasMany(o => o.Statuses)
+            .WithOne(p => p.Order);
     }
 }
