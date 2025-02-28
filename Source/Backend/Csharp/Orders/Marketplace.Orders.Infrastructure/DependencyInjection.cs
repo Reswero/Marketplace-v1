@@ -4,6 +4,7 @@ using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
 using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
 using Marketplace.Orders.Infrastructure.Orders.Persistence;
+using Marketplace.Orders.Infrastructure.Orders.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ public static class DependencyInjection
         services.AddUserIdentity();
         services.AddServicesClients(configuration);
         services.AddRepositories();
+        services.AddOrdersWorkers();
 
         return services;
     }
@@ -40,7 +42,7 @@ public static class DependencyInjection
     {
         using var scope = provider.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<OrdersContext>();
-        
+
         db.Database.EnsureCreated();
     }
 
@@ -102,6 +104,14 @@ public static class DependencyInjection
         services.AddScoped<IOrdersRepository, OrdersRepository>();
         services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
         services.AddScoped<INewOrdersRepository, NewOrdersRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddOrdersWorkers(this IServiceCollection services)
+    {
+        services.AddScoped<NewOrdersWorker>();
+        services.AddHostedService<NewOrdersBackgroundService>();
 
         return services;
     }
