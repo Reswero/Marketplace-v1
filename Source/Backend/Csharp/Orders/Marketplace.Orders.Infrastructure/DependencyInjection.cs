@@ -1,4 +1,5 @@
 ﻿using Marketplace.Common.Identity.User;
+using Marketplace.Common.Transactions;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
 using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
@@ -24,8 +25,7 @@ public static class DependencyInjection
         services.AddDatabase(configuration);
         services.AddUserIdentity();
         services.AddServicesClients(configuration);
-
-        services.AddScoped<IOrdersRepository, OrdersRepository>();
+        services.AddRepositories();
 
         return services;
     }
@@ -51,6 +51,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString);
         });
 
+        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<OrdersContext>());
+
         return services;
     }
 
@@ -73,6 +75,14 @@ public static class DependencyInjection
             client.BaseAddress = new Uri(address);
             client.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IOrdersRepository, OrdersRepository>();
+        services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
 
         return services;
     }
