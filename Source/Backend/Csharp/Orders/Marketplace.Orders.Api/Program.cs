@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Reflection;
 using Marketplace.Orders.Application;
 using Marketplace.Orders.Infrastructure;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Marketplace.Orders.Api;
 
@@ -12,7 +14,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {

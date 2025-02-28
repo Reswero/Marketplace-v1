@@ -67,7 +67,7 @@ public static class DependencyInjection
     private static IServiceCollection AddServicesClients(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IProductsServiceClient, ProductsServiceClient>();
-        services.AddHttpClient<IProductsServiceClient>(client =>
+        services.AddHttpClient<IProductsServiceClient, ProductsServiceClient>(client =>
         {
             var address = configuration["Services:Products:Address"]!;
             var timeout = int.Parse(configuration["Services:Products:Timeout"]!);
