@@ -5,6 +5,7 @@ using Marketplace.Orders.Application;
 using Marketplace.Orders.Infrastructure;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Marketplace.Orders.Api.Extensions;
 
 namespace Marketplace.Orders.Api;
 
@@ -41,6 +42,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseGlobalExceptionsHandler();
         app.UseHeaderAuthorization();
 
         app.MapControllers();
