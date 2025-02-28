@@ -11,11 +11,12 @@ namespace Marketplace.Orders.Application.Orders.Commands.CreateOrder;
 /// <summary>
 /// Создать заказ
 /// </summary>
-internal class CreateOrderCommandHandler(IOrdersRepository repository, IUnitOfWork unitOfWork,
-    IProductsServiceClient productsClient)
+internal class CreateOrderCommandHandler(IOrdersRepository ordersRepository, INewOrdersRepository newOrdersRepository,
+    IUnitOfWork unitOfWork, IProductsServiceClient productsClient)
     : IRequestHandler<CreateOrderCommand, CreateObjectResultVM>
 {
-    private readonly IOrdersRepository _repository = repository;
+    private readonly IOrdersRepository _ordersRepository = ordersRepository;
+    private readonly INewOrdersRepository _newOrdersRepository = newOrdersRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IProductsServiceClient _productsClient = productsClient;
 
@@ -52,7 +53,10 @@ internal class CreateOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         OrderStatus createdStatus = new(order, OrderStatusType.Created);
         order.AddStatus(createdStatus);
 
-        await _repository.AddAsync(order, cancellationToken);
+        NewOrder newOrder = new(order);
+
+        await _ordersRepository.AddAsync(order, cancellationToken);
+        await _newOrdersRepository.AddAsync(newOrder, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         return new CreateObjectResultVM(order.Id);
