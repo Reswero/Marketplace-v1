@@ -8,6 +8,8 @@ internal class OrdersConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        builder.HasIndex(o => o.CustomerId);
+
         builder.HasMany(o => o.Products)
             .WithOne(p => p.Order);
         builder.HasMany(o => o.Statuses)
