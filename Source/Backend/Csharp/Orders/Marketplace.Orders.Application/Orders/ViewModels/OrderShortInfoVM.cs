@@ -22,5 +22,5 @@ public record OrderShortInfoVM
     /// <summary>
     /// Теущий статус
     /// </summary>
-    public required CurrentStatusVM CurrentStatus { get; set; }
+    public required OrderStatusVM CurrentStatus { get; set; }
 }
