@@ -21,7 +21,7 @@ internal class OrdersRepository(OrdersContext db) : IOrdersRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Order> GetAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Order> GetAsync(long id, CancellationToken cancellationToken = default)
     {
         return await _db.Orders.Include(o => o.Products)
             .Where(o => o.Id == id).FirstOrDefaultAsync(cancellationToken)

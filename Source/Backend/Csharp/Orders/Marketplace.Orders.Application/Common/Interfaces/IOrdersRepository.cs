@@ -19,7 +19,7 @@ public interface IOrdersRepository
     /// </summary>
     /// <param name="id">Идентификатор</param>
     /// <param name="cancellationToken"></param>
-    public Task<Order> GetAsync(int id, CancellationToken cancellationToken = default);
+    public Task<Order> GetAsync(long id, CancellationToken cancellationToken = default);
     /// <summary>
     /// Получить заказы по покупателю
     /// </summary>
