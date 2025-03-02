@@ -11,6 +11,7 @@ type Config struct {
 	Cache
 	HttpServer `yaml:"http_server"`
 	Products
+	Orders
 }
 
 type Cache struct {
@@ -22,6 +23,11 @@ type HttpServer struct {
 }
 
 type Products struct {
+	Address string `yaml:"address"`
+	Timeout int    `yaml:"timeout_ms"`
+}
+
+type Orders struct {
 	Address string `yaml:"address"`
 	Timeout int    `yaml:"timeout_ms"`
 }

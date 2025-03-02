@@ -6,3 +6,6 @@ http_server:
 products:
   address: "http://localhost:8087"
   timeout_ms: 500
+orders:
+  address: "http://localhost:8090"
+  timeout_ms: 500

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	domain "github.com/Reswero/Marketplace-v1/cart/internal/domain/cart"
+	"github.com/Reswero/Marketplace-v1/cart/internal/pkg/orders"
 	"github.com/Reswero/Marketplace-v1/cart/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/cart/internal/usecase/adapters/cache"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
@@ -13,12 +14,14 @@ import (
 type Usecase struct {
 	cache    cache.Cart
 	products *products.Service
+	orders   *orders.Client
 }
 
-func New(cache cache.Cart, products *products.Service) *Usecase {
+func New(cache cache.Cart, products *products.Service, orders *orders.Client) *Usecase {
 	return &Usecase{
 		cache:    cache,
 		products: products,
+		orders:   orders,
 	}
 }
 
@@ -89,13 +92,15 @@ func (u *Usecase) Clear(ctx context.Context, customerId int) error {
 func (u *Usecase) Checkout(ctx context.Context, customerId int) error {
 	const op = "usecase.cart.Checkout"
 
-	product, err := u.cache.GetProducts(ctx, customerId)
+	products, err := u.cache.GetProducts(ctx, customerId)
 	if err != nil {
 		return formatter.FmtError(op, err)
 	}
 
-	_ = product
-	// TODO: Call to Orders service
+	err = u.orders.CreateOrder(products)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
 
 	err = u.cache.Clear(ctx, customerId)
 	if err != nil {

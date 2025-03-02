@@ -7,6 +7,7 @@ import (
 	cartCache "github.com/Reswero/Marketplace-v1/cart/internal/cache/cart"
 	"github.com/Reswero/Marketplace-v1/cart/internal/config"
 	"github.com/Reswero/Marketplace-v1/cart/internal/delivery/http"
+	"github.com/Reswero/Marketplace-v1/cart/internal/pkg/orders"
 	cartUsecase "github.com/Reswero/Marketplace-v1/cart/internal/usecase/cart"
 	"github.com/Reswero/Marketplace-v1/pkg/products"
 	"github.com/Reswero/Marketplace-v1/pkg/redis"
@@ -39,9 +40,10 @@ func main() {
 	}
 
 	products := products.New(cfg.Products.Timeout, cfg.Products.Address)
+	orders := orders.New(cfg.Orders.Timeout, cfg.Orders.Address)
 
 	cartCache := cartCache.New(cache)
-	ucCart := cartUsecase.New(cartCache, products)
+	ucCart := cartUsecase.New(cartCache, products, orders)
 
 	d := http.New(logger, cfg.Environment, ucCart)
 	if err = d.Start(cfg.HttpServer.Address); err != nil {
