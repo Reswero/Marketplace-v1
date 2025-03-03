@@ -1,7 +1,7 @@
 ﻿namespace Marketplace.Orders.Domain;
 
 /// <summary>
-/// Тип статуса заказа
+/// Тип статуса для заказа
 /// </summary>
 public enum OrderStatusType
 {
@@ -18,7 +18,7 @@ public enum OrderStatusType
     /// </summary>
     Paid = 40,
     /// <summary>
-    /// Упакован
+    /// Собран
     /// </summary>
     Packed = 60,
     /// <summary>

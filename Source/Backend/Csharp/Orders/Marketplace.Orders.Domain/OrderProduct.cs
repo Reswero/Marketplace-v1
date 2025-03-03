@@ -1,10 +1,14 @@
-﻿namespace Marketplace.Orders.Domain;
+﻿using Marketplace.Orders.Domain.Exceptions;
+
+namespace Marketplace.Orders.Domain;
 
 /// <summary>
 /// Товар заказа
 /// </summary>
 public class OrderProduct
 {
+    private readonly List<OrderProductStatus> _statuses = [];
+
     private OrderProduct() { }
 
     /// <summary>
@@ -60,4 +64,21 @@ public class OrderProduct
     /// Размер скидки
     /// </summary>
     public int DiscountSize { get; private set; }
+    /// <summary>
+    /// Статусы
+    /// </summary>
+    public List<OrderProductStatus> Statuses => _statuses;
+
+    /// <summary>
+    /// Добавить статус
+    /// </summary>
+    /// <param name="status">Статус</param>
+    /// <exception cref="StatusAlreadySettedException"></exception>
+    public void AddStatus(OrderProductStatus status)
+    {
+        if (_statuses.Any(s => s.Type == status.Type))
+            throw new StatusAlreadySettedException(status.Type);
+
+        _statuses.Add(status);
+    }
 }
