@@ -28,6 +28,12 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         OrderStatus cancelledStatus = new(order, OrderStatusType.Cancelled);
         order.AddStatus(cancelledStatus);
 
+        foreach (var product in order.Products)
+        {
+            OrderProductStatus cancelledProductStatus = new(product, OrderProductStatusType.Cancelled);
+            product.AddStatus(cancelledProductStatus);
+        }
+
         await _repository.UpdateAsync(order, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
     }
