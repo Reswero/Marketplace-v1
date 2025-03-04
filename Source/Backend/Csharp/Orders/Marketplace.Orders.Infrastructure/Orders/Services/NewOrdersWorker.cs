@@ -39,6 +39,12 @@ internal class NewOrdersWorker(INewOrdersRepository newOrdersRepository, IOrders
                 OrderStatus cancelledStatus = new(order, OrderStatusType.Cancelled);
                 order.AddStatus(cancelledStatus);
 
+                foreach (var product in order.Products)
+                {
+                    OrderProductStatus cancelledProductStatus = new(product, OrderProductStatusType.Cancelled);
+                    product.AddStatus(cancelledProductStatus);
+                }
+
                 await _ordersRepository.UpdateAsync(order, cancellationToken);
                 await _newOrdersRepository.DeleteAsync(newOrder, cancellationToken);
             } 
