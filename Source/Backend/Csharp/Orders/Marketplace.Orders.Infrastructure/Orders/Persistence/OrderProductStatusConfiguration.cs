@@ -8,6 +8,6 @@ internal class OrderProductStatusConfiguration : IEntityTypeConfiguration<OrderP
 {
     public void Configure(EntityTypeBuilder<OrderProductStatus> builder)
     {
-        builder.HasIndex(s => new { s.OrderProductId, s.Type });
+        builder.HasKey(s => new { s.OrderProductId, s.Type });
     }
 }
