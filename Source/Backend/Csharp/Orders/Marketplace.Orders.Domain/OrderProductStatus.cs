@@ -20,10 +20,6 @@ public class OrderProductStatus
     }
 
     /// <summary>
-    /// Идентификатор
-    /// </summary>
-    public long Id { get; private set; }
-    /// <summary>
     /// Идентификатор товара из заказа
     /// </summary>
     public long OrderProductId { get; private set; }

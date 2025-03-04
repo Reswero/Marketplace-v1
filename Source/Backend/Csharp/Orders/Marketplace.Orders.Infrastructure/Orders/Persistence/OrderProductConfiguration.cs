@@ -9,5 +9,8 @@ internal class OrderProductConfiguration : IEntityTypeConfiguration<OrderProduct
     public void Configure(EntityTypeBuilder<OrderProduct> builder)
     {
         builder.HasIndex(p => p.SellerId);
+
+        builder.HasMany(p => p.Statuses)
+            .WithOne(p => p.OrderProduct);
     }
 }
