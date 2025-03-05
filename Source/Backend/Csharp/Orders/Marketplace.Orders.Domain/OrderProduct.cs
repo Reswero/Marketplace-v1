@@ -67,7 +67,7 @@ public class OrderProduct
     /// <summary>
     /// Статусы
     /// </summary>
-    public List<OrderProductStatus> Statuses => _statuses;
+    public IReadOnlyList<OrderProductStatus> Statuses => _statuses;
 
     /// <summary>
     /// Добавить статус
