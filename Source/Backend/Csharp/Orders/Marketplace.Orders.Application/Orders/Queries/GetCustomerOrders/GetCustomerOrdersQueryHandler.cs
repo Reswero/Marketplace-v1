@@ -2,6 +2,7 @@
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Application.Common.Models;
 using Marketplace.Orders.Application.Orders.ViewModels;
+using Marketplace.Orders.Domain;
 using MediatR;
 
 namespace Marketplace.Orders.Application.Orders.Queries.GetCustomerOrders;
@@ -27,12 +28,30 @@ internal class GetCustomerOrdersQueryHandler(IUserIdentityProvider userIdentity,
             return new OrderShortInfoVM
             {
                 Id = o.Id,
-                ProductsIds = o.Products.Select(p => p.ProductId).ToArray(),
-                ProductCount = o.Products.Select(p => p.Quantity).Sum(),
                 TotalPrice =
                     (int) o.Products.Select(p => Math.Ceiling(p.ProductPrice * p.Quantity * (1 - p.DiscountSize / (double) 100))).Sum(),
-                CurrentStatus = new(currentStatus.Type, currentStatus.OccuredAt)
+                CurrentStatus = new(currentStatus.Type, currentStatus.OccuredAt),
+                Products = GetProductVMs(o.Products)
             };
         }).ToList();
+    }
+
+    private static List<OrderProductShortInfoVM> GetProductVMs(IReadOnlyList<OrderProduct> products)
+    {
+        List<OrderProductShortInfoVM> productVMs = new(products.Count);
+
+        foreach (var product in products)
+        {
+            var currentStatus = product.Statuses.OrderBy(s => s.Type).Last();
+
+            productVMs.Add(new OrderProductShortInfoVM
+            {
+                ProductId = product.ProductId,
+                Quantity = product.Quantity,
+                CurrentStatusType = currentStatus.Type
+            });
+        }
+
+        return productVMs;
     }
 }

@@ -1,6 +1,4 @@
-﻿using Marketplace.Orders.Domain;
-
-namespace Marketplace.Orders.Application.Orders.ViewModels;
+﻿namespace Marketplace.Orders.Application.Orders.ViewModels;
 
 /// <summary>
 /// Модель краткой информации о заказе
@@ -12,14 +10,6 @@ public record OrderShortInfoVM
     /// </summary>
     public long Id { get; set; }
     /// <summary>
-    /// Идентификаторы товаров
-    /// </summary>
-    public required int[] ProductsIds { get; set; }
-    /// <summary>
-    /// Количество товаров
-    /// </summary>
-    public int ProductCount { get; set; }
-    /// <summary>
     /// Итоговая стоимость
     /// </summary>
     public int TotalPrice { get; set; }
@@ -27,4 +17,8 @@ public record OrderShortInfoVM
     /// Теущий статус
     /// </summary>
     public required OrderStatusVM CurrentStatus { get; set; }
+    /// <summary>
+    /// Товары
+    /// </summary>
+    public required List<OrderProductShortInfoVM> Products { get; set; }
 }
