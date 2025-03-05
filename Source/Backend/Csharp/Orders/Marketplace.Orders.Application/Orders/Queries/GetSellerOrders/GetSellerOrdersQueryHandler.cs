@@ -33,7 +33,9 @@ internal class GetSellerOrdersQueryHandler(IOrderProductsRepository repository, 
             ProductPrice = p.ProductPrice,
             DiscountSize = p.DiscountSize,
             CreatedAt = p.Order!.CreatedAt,
-            CurrentStatus = p.Order!.Statuses.OrderBy(s => s.Type).Last().Type,
+            Statuses = p.Statuses.OrderBy(s => s.Type)
+                .Select(s => new OrderProductStatusVM(s.Type, s.OccuredAt))
+                .ToList()
         }).ToList();
     }
 }

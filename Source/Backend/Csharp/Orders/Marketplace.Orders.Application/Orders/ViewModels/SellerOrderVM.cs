@@ -36,7 +36,7 @@ public record SellerOrderVM
     /// </summary>
     public DateTimeOffset CreatedAt { get; set; }
     /// <summary>
-    /// Текущий статус
+    /// Статусы
     /// </summary>
-    public OrderStatusType CurrentStatus { get; set; }
+    public required List<OrderProductStatusVM> Statuses { get; set; }
 }
