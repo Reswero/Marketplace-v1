@@ -71,11 +71,12 @@ public class OrdersController(IMediator mediator) : ControllerBase
     /// Отмена заказа покупателя
     /// </summary>
     /// <param name="orderId">Идентификатор заказа</param>
+    /// <param name="productIds">Идентификаторы товаров</param>
     [HttpDelete("customer/orders/{orderId:long}")]
     [AccountTypeAuthorize(AccountType.Customer)]
-    public async Task<IActionResult> CancelOrder(long orderId)
+    public async Task<IActionResult> CancelOrder(long orderId, [FromQuery] HashSet<int>? productIds)
     {
-        await _mediator.Send(new CancelOrderCommand(orderId));
+        await _mediator.Send(new CancelOrderCommand(orderId, productIds));
         return Ok();
     }
 

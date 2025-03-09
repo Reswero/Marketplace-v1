@@ -25,16 +25,37 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         if (_userIdentity.Id is null || order.CustomerId != _userIdentity.Id)
             throw new AccessDeniedException();
 
-        OrderStatus cancelledStatus = new(order, OrderStatusType.Cancelled);
-        order.AddStatus(cancelledStatus);
-
-        foreach (var product in order.Products)
+        if (request.ProductIds is null || request.ProductIds.Count == 0)
         {
-            OrderProductStatus cancelledProductStatus = new(product, OrderProductStatusType.Cancelled);
-            product.AddStatus(cancelledProductStatus);
+            CancelProducts(order.Products, null);
+            CancelOrder(order);
+        }
+        else
+        {
+            CancelProducts(order.Products, request.ProductIds);
+            if (request.ProductIds.Count == order.Products.Count)
+                CancelOrder(order);
         }
 
         await _repository.UpdateAsync(order, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+    }
+
+    private static void CancelOrder(Order order)
+    {
+        OrderStatus cancelledStatus = new(order, OrderStatusType.Cancelled);
+        order.AddStatus(cancelledStatus);
+    }
+
+    private static void CancelProducts(IReadOnlyList<OrderProduct> products, HashSet<int>? productIds)
+    {
+        foreach (var product in products)
+        {
+            if (productIds is not null && productIds.Contains(product.ProductId) is false)
+                throw new ProductNotFoundException(product.ProductId);
+
+            OrderProductStatus cancelledStatus = new(product, OrderProductStatusType.Cancelled);
+            product.AddStatus(cancelledStatus);
+        }
     }
 }
