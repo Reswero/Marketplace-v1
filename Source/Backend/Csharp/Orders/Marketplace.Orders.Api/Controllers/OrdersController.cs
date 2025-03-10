@@ -74,7 +74,7 @@ public class OrdersController(IMediator mediator) : ControllerBase
     /// <param name="productIds">Идентификаторы товаров</param>
     [HttpDelete("customer/orders/{orderId:long}")]
     [AccountTypeAuthorize(AccountType.Customer)]
-    public async Task<IActionResult> CancelOrder(long orderId, [FromQuery] HashSet<int>? productIds)
+    public async Task<IActionResult> CancelOrder(long orderId, [FromQuery] int[]? productIds)
     {
         await _mediator.Send(new CancelOrderCommand(orderId, productIds));
         return Ok();

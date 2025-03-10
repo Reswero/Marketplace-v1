@@ -25,15 +25,21 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         if (_userIdentity.Id is null || order.CustomerId != _userIdentity.Id)
             throw new AccessDeniedException();
 
-        if (request.ProductIds is null || request.ProductIds.Count == 0)
+        if (order.Statuses.Any(s => s.Type == OrderStatusType.Cancelled))
+            throw new OrderAlreadyCancelled();
+
+        if (request.ProductIds is null || request.ProductIds.Length == 0)
         {
-            CancelProducts(order.Products, null);
+            CancelProducts(order.Products);
             CancelOrder(order);
         }
         else
         {
             CancelProducts(order.Products, request.ProductIds);
-            if (request.ProductIds.Count == order.Products.Count)
+            var cancelledProductsCount = order.Products.Where(p => p.Statuses.Any(s => s.Type == OrderProductStatusType.Cancelled))
+                .Count();
+
+            if (cancelledProductsCount == order.Products.Count)
                 CancelOrder(order);
         }
 
@@ -47,12 +53,20 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         order.AddStatus(cancelledStatus);
     }
 
-    private static void CancelProducts(IReadOnlyList<OrderProduct> products, HashSet<int>? productIds)
+    private static void CancelProducts(IReadOnlyList<OrderProduct> products, int[]? productIdsToCancel = null)
     {
-        foreach (var product in products)
+        var productsDict = products.ToDictionary(p => p.ProductId);
+
+        if (productIdsToCancel is null || productIdsToCancel.Length == 0)
+            productIdsToCancel = [.. productsDict.Keys];
+
+        foreach (var id in productIdsToCancel)
         {
-            if (productIds is not null && productIds.Contains(product.ProductId) is false)
-                throw new ProductNotFoundException(product.ProductId);
+            if (productsDict.TryGetValue(id, out var product) is false)
+                throw new ProductNotFoundException(id);
+
+            if (product.Statuses.Any(s => s.Type == OrderProductStatusType.Cancelled))
+                throw new ProductAlreadyCancelled();
 
             OrderProductStatus cancelledStatus = new(product, OrderProductStatusType.Cancelled);
             product.AddStatus(cancelledStatus);
