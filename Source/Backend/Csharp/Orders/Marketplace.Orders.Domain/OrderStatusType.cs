@@ -3,7 +3,7 @@
 /// <summary>
 /// Тип статуса для заказа
 /// </summary>
-public enum OrderStatusType
+public enum OrderStatusType : byte
 {
     /// <summary>
     /// Создан
