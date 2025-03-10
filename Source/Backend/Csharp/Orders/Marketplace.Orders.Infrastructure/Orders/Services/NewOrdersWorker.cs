@@ -45,8 +45,8 @@ internal class NewOrdersWorker(INewOrdersRepository newOrdersRepository, IOrders
                     product.AddStatus(cancelledProductStatus);
                 }
 
-                await _ordersRepository.UpdateAsync(order, cancellationToken);
                 await _newOrdersRepository.DeleteAsync(newOrder, cancellationToken);
+                await _ordersRepository.UpdateAsync(order, cancellationToken);
             } 
         }
 
