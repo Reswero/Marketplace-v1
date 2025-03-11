@@ -16,7 +16,7 @@ internal class OrderProductsRepository(OrdersContext db)
     private readonly OrdersContext _db = db;
 
     /// <inheritdoc/>
-    public async Task<List<OrderProduct>> GetSellerProductsAsync(int sellerId, Pagination pagination,
+    public async Task<List<OrderProduct>> GetBySellerAsync(int sellerId, Pagination pagination,
         CancellationToken cancellationToken = default)
     {
         return await _db.OrderProducts.Include(p => p.Order)

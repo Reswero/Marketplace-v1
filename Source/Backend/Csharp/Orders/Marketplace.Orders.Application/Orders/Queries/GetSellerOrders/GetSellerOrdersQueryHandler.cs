@@ -22,7 +22,7 @@ internal class GetSellerOrdersQueryHandler(IOrderProductsRepository repository, 
             throw new AccessDeniedException();
 
         Pagination pagination = new(request.Pagination.Offset, request.Pagination.Limit);
-        var products = await _repository.GetSellerProductsAsync(_userIndentity.Id.Value, pagination, cancellationToken);
+        var products = await _repository.GetBySellerAsync(_userIndentity.Id.Value, pagination, cancellationToken);
 
         return products.Select(p => new SellerOrderVM()
         {
