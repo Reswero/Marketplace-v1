@@ -3,6 +3,7 @@ using Marketplace.Orders.Application.Common.Exceptions;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Application.Common.Models;
 using Marketplace.Orders.Application.Orders.ViewModels;
+using Marketplace.Orders.Domain;
 using MediatR;
 
 namespace Marketplace.Orders.Application.Orders.Queries.GetSellerOrders;
@@ -24,18 +25,19 @@ internal class GetSellerOrdersQueryHandler(IOrderProductsRepository repository, 
         Pagination pagination = new(request.Pagination.Offset, request.Pagination.Limit);
         var products = await _repository.GetBySellerAsync(_userIndentity.Id.Value, pagination, cancellationToken);
 
-        return products.Select(p => new SellerOrderVM()
-        {
-            OrderId = p.OrderId,
-            OrderProductId = p.Id,
-            ProductId = p.ProductId,
-            Quantity = p.Quantity,
-            ProductPrice = p.ProductPrice,
-            DiscountSize = p.DiscountSize,
-            CreatedAt = p.Order!.CreatedAt,
-            Statuses = p.Statuses.OrderBy(s => s.Type)
-                .Select(s => new OrderProductStatusVM(s.Type, s.OccuredAt))
-                .ToList()
-        }).ToList();
+        return products.Where(p => p.Order!.Statuses.Any(s => s.Type >= OrderStatusType.Paid))
+            .Select(p => new SellerOrderVM()
+            {
+                OrderId = p.OrderId,
+                OrderProductId = p.Id,
+                ProductId = p.ProductId,
+                Quantity = p.Quantity,
+                ProductPrice = p.ProductPrice,
+                DiscountSize = p.DiscountSize,
+                CreatedAt = p.Order!.CreatedAt,
+                Statuses = p.Statuses.OrderBy(s => s.Type)
+                    .Select(s => new OrderProductStatusVM(s.Type, s.OccuredAt))
+                    .ToList()
+            }).ToList();
     }
 }
