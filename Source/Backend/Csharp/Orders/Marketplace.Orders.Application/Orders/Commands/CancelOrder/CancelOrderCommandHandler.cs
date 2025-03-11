@@ -25,8 +25,8 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         if (_userIdentity.Id is null || order.CustomerId != _userIdentity.Id)
             throw new AccessDeniedException();
 
-        if (order.Statuses.Any(s => s.Type == OrderStatusType.Cancelled))
-            throw new OrderAlreadyCancelled();
+        if (order.Statuses.Any(s => s.Type >= OrderStatusType.Obtained))
+            throw new ImpossibleToCancelOrderException();
 
         if (request.ProductIds is null || request.ProductIds.Length == 0)
         {
@@ -64,9 +64,6 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
         {
             if (productsDict.TryGetValue(id, out var product) is false)
                 throw new ProductNotFoundException(id);
-
-            if (product.Statuses.Any(s => s.Type == OrderProductStatusType.Cancelled))
-                throw new ProductAlreadyCancelled();
 
             OrderProductStatus cancelledStatus = new(product, OrderProductStatusType.Cancelled);
             product.AddStatus(cancelledStatus);

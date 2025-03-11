@@ -3,7 +3,7 @@
 /// <summary>
 /// Статус уже установлен
 /// </summary>
-internal class StatusAlreadySettedException : Exception
+public class StatusAlreadySettedException : Exception
 {
     /// <summary>
     /// Статус уже установлен для заказа
