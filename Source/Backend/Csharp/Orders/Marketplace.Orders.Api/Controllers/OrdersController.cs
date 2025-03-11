@@ -2,6 +2,7 @@
 using Marketplace.Common.Authorization.Models;
 using Marketplace.Orders.Application.Orders.Commands.CancelOrder;
 using Marketplace.Orders.Application.Orders.Commands.CreateOrder;
+using Marketplace.Orders.Application.Orders.Commands.PackOrderProduct;
 using Marketplace.Orders.Application.Orders.Queries.GetCustomerOrder;
 using Marketplace.Orders.Application.Orders.Queries.GetCustomerOrders;
 using Marketplace.Orders.Application.Orders.Queries.GetOrderPaymentLink;
@@ -90,5 +91,17 @@ public class OrdersController(IMediator mediator) : ControllerBase
     {
         var orders = await _mediator.Send(query);
         return Ok(orders);
+    }
+
+    /// <summary>
+    /// Установление товару статус "Упакован"
+    /// </summary>
+    /// <param name="orderProductId">Идентификатор товара из заказа</param>
+    [HttpPost("seller/orders/{orderProductId:int}/pack")]
+    [AccountTypeAuthorize(AccountType.Seller)]
+    public async Task<IActionResult> PackOrder(int orderProductId)
+    {
+        await _mediator.Send(new PackOrderProductCommand(orderProductId));
+        return Ok();
     }
 }
