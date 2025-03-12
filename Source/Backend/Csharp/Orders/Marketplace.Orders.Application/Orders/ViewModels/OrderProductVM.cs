@@ -3,8 +3,26 @@
 /// <summary>
 /// Модель товара заказа
 /// </summary>
-/// <param name="ProductId">Идентификатор товара</param>
-/// <param name="Quantity">Количество</param>
-/// <param name="ProductPrice">Цена товара</param>
-/// <param name="DiscountSize">Размер скидки</param>
-public record OrderProductVM(int ProductId, int Quantity, int ProductPrice, int DiscountSize);
+public record OrderProductVM()
+{
+    /// <summary>
+    /// Идентификатор товара
+    /// </summary>
+    public int ProductId { get; set; }
+    /// <summary>
+    /// Количество
+    /// </summary>
+    public int Quantity { get; set; }
+    /// <summary>
+    /// Цена товара
+    /// </summary>
+    public int ProductPrice { get; set; }
+    /// <summary>
+    /// Размер скидки
+    /// </summary>
+    public int DiscountSize { get; set; }
+    /// <summary>
+    /// Статусы
+    /// </summary>
+    public List<OrderProductStatusVM> Statuses { get; set; } = [];
+}

@@ -58,10 +58,11 @@ public class Order
     /// Добавить статус
     /// </summary>
     /// <param name="status">Статус</param>
+    /// <exception cref="StatusAlreadySettedException"></exception>
     public void AddStatus(OrderStatus status)
     {
         if (_statuses.Any(s => s.Type == status.Type))
-            throw new OrderStatusAlreadySettedException(status.Type);
+            throw new StatusAlreadySettedException(status.Type);
 
         _statuses.Add(status);
     }

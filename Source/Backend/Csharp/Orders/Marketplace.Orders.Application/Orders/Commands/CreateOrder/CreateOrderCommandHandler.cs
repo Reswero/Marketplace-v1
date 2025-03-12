@@ -46,6 +46,9 @@ internal class CreateOrderCommandHandler(IOrdersRepository ordersRepository, INe
             OrderProduct orderProduct = new(order, product.Id, product.SellerId,
                 requestProduct.Quantity, product.Price, product.DiscountSize);
             orderProducts[i] = orderProduct;
+
+            OrderProductStatus createdProductStatus = new(orderProduct, OrderProductStatusType.Packing);
+            orderProduct.AddStatus(createdProductStatus);
         }
 
         order.AddProducts(orderProducts);

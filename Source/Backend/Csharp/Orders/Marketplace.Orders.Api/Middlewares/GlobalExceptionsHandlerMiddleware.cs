@@ -1,5 +1,6 @@
 ﻿using Marketplace.Common.Responses;
 using Marketplace.Orders.Application.Common.Exceptions;
+using Marketplace.Orders.Domain.Exceptions;
 using System.Net.Mime;
 
 namespace Marketplace.Orders.Api.Middlewares;
@@ -25,7 +26,9 @@ public class GlobalExceptionsHandlerMiddleware(ILogger<GlobalExceptionsHandlerMi
             await _next.Invoke(context);
         }
         catch (Exception e) when (e is ImpossibleToPayOrderException ||
-                                  e is ProductNotAvailableException)
+                                  e is ProductNotAvailableException ||
+                                  e is ImpossibleToCancelOrderException ||
+                                  e is StatusAlreadySettedException)
         {
             await HandleExceptionAsync(context, e, StatusCodes.Status400BadRequest);
         }
