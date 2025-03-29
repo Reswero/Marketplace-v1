@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "payment.grpc";
+
+// Сервис оплаты
+service PaymentService {
+    rpc GetLink(PaymentLinkRequest) returns (PaymentLinkResponse); // Получить ссылку на оплату
+}
+
+message PaymentLinkRequest {
+    int64 order_id = 1; // Идентификатор заказа
+    int32 payble_amount = 2; // Стоимость к оплате
+}
+
+message PaymentLinkResponse {
+    string link = 1; // Ссылка на оплату
+}
