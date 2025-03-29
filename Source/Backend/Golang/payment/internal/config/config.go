@@ -27,7 +27,7 @@ func MustLoad() *Config {
 
 	cfg := &Config{}
 	if err := cleanenv.ReadConfig(path, *cfg); err != nil {
-		panic(fmt.Sprintf("error while reading config. %w", err))
+		panic(fmt.Errorf("error while reading config. %w", err))
 	}
 
 	return cfg
