@@ -1,0 +1,3 @@
+env: "dev"
+grpc_server:
+  address: "localhost:8020"
