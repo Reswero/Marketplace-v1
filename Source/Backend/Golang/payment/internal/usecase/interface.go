@@ -1,9 +1,13 @@
 package usecase
 
-import "context"
+import (
+	"context"
 
-// Взаимодействие с оплатами заказов пользователей
+	"github.com/Reswero/Marketplace-v1/payment/internal/domain/order"
+)
+
+// Взаимодействие с платежами пользователей
 type Payments interface {
-	// Получить ссылку на оплату заказа
-	GetLink(ctx context.Context, orderId int64, paybleAmount int) (string, error)
+	// Получить ссылку на платёж
+	GetLink(ctx context.Context, order *order.Order) (string, error)
 }
