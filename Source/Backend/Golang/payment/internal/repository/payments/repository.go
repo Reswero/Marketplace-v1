@@ -25,7 +25,7 @@ func New(s *postgres.Storage) *Repository {
 }
 
 // Добавить платёж в ожидание
-func (r *Repository) AddPendingPayment(ctx context.Context, payment payment.Payment) error {
+func (r *Repository) AddPendingPayment(ctx context.Context, payment *payment.Payment) error {
 	const op = "repository.payments.AddPendingOrder"
 
 	sql, args, err := r.Builder.Insert(pendingPaymentsTable).

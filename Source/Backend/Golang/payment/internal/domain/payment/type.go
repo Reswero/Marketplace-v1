@@ -9,14 +9,14 @@ import (
 // Платёж
 type Payment struct {
 	// Заказ
-	Order order.Order
+	Order *order.Order
 	// Идентфикатор
 	Id string
 	// Действительно до
 	ValidUntil time.Time
 }
 
-func New(order order.Order, id string) *Payment {
+func New(order *order.Order, id string) *Payment {
 	return &Payment{
 		Order:      order,
 		Id:         id,
