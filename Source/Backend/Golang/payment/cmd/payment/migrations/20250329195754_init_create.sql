@@ -3,7 +3,7 @@
 CREATE TABLE pending_orders (
     order_id BIGINT PRIMARY KEY,
     payment_amount INTEGER NOT NULL,
-    payment_url VARCHAR(20) NOT NULL,
+    payment_id VARCHAR(20) NOT NULL,
     valid_until TIMESTAMP NOT NULL,
     UNIQUE(payment_url)
 );
