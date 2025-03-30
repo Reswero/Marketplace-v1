@@ -6,7 +6,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/payment/internal/domain/order"
 )
 
-// Оплата
+// Платёж
 type Payment struct {
 	// Заказ
 	Order order.Order
