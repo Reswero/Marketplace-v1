@@ -29,7 +29,7 @@ func (s *Server) GetLink(ctx context.Context, request *pb.PaymentLinkRequest) (*
 
 	order := order.New(request.GetOrderId(), int(request.GetPaybleAmount()))
 
-	link, err := s.ucPayments.GetLink(ctx, order)
+	link, err := s.ucPayments.CreatePayment(ctx, order)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "unknown error")
 	}

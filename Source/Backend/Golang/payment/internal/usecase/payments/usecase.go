@@ -24,8 +24,8 @@ func New(repo repository.Payments) *UseCase {
 	}
 }
 
-func (u *UseCase) GetLink(ctx context.Context, order *order.Order) (string, error) {
-	const op = "usecase.payments.GetLink"
+func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string, error) {
+	const op = "usecase.payments.CreatePayment"
 
 	id := ""
 	for id == "" {

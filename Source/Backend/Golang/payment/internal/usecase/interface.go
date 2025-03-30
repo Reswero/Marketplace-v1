@@ -8,6 +8,6 @@ import (
 
 // Взаимодействие с платежами пользователей
 type Payments interface {
-	// Получить ссылку на платёж
-	GetLink(ctx context.Context, order *order.Order) (string, error)
+	// Создать платёж. Возвращает идентификатор платежа
+	CreatePayment(ctx context.Context, order *order.Order) (string, error)
 }
