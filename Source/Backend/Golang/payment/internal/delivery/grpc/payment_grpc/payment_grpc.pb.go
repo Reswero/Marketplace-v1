@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PaymentService_GetLink_FullMethodName = "/payment.PaymentService/GetLink"
+	PaymentService_CreatePayment_FullMethodName = "/payment.PaymentService/CreatePayment"
 )
 
 // PaymentServiceClient is the client API for PaymentService service.
@@ -28,7 +28,7 @@ const (
 //
 // Сервис оплаты
 type PaymentServiceClient interface {
-	GetLink(ctx context.Context, in *PaymentLinkRequest, opts ...grpc.CallOption) (*PaymentLinkResponse, error)
+	CreatePayment(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error)
 }
 
 type paymentServiceClient struct {
@@ -39,10 +39,10 @@ func NewPaymentServiceClient(cc grpc.ClientConnInterface) PaymentServiceClient {
 	return &paymentServiceClient{cc}
 }
 
-func (c *paymentServiceClient) GetLink(ctx context.Context, in *PaymentLinkRequest, opts ...grpc.CallOption) (*PaymentLinkResponse, error) {
+func (c *paymentServiceClient) CreatePayment(ctx context.Context, in *PaymentRequest, opts ...grpc.CallOption) (*PaymentResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PaymentLinkResponse)
-	err := c.cc.Invoke(ctx, PaymentService_GetLink_FullMethodName, in, out, cOpts...)
+	out := new(PaymentResponse)
+	err := c.cc.Invoke(ctx, PaymentService_CreatePayment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *paymentServiceClient) GetLink(ctx context.Context, in *PaymentLinkReque
 //
 // Сервис оплаты
 type PaymentServiceServer interface {
-	GetLink(context.Context, *PaymentLinkRequest) (*PaymentLinkResponse, error)
+	CreatePayment(context.Context, *PaymentRequest) (*PaymentResponse, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
 
@@ -66,8 +66,8 @@ type PaymentServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPaymentServiceServer struct{}
 
-func (UnimplementedPaymentServiceServer) GetLink(context.Context, *PaymentLinkRequest) (*PaymentLinkResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLink not implemented")
+func (UnimplementedPaymentServiceServer) CreatePayment(context.Context, *PaymentRequest) (*PaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePayment not implemented")
 }
 func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
 func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
@@ -90,20 +90,20 @@ func RegisterPaymentServiceServer(s grpc.ServiceRegistrar, srv PaymentServiceSer
 	s.RegisterService(&PaymentService_ServiceDesc, srv)
 }
 
-func _PaymentService_GetLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PaymentLinkRequest)
+func _PaymentService_CreatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PaymentServiceServer).GetLink(ctx, in)
+		return srv.(PaymentServiceServer).CreatePayment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PaymentService_GetLink_FullMethodName,
+		FullMethod: PaymentService_CreatePayment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PaymentServiceServer).GetLink(ctx, req.(*PaymentLinkRequest))
+		return srv.(PaymentServiceServer).CreatePayment(ctx, req.(*PaymentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -116,8 +116,8 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PaymentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetLink",
-			Handler:    _PaymentService_GetLink_Handler,
+			MethodName: "CreatePayment",
+			Handler:    _PaymentService_CreatePayment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

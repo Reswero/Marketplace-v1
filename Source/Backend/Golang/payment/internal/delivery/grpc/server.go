@@ -24,17 +24,17 @@ func newServer(logger *slog.Logger, ucPayments usecase.Payments) *Server {
 	}
 }
 
-func (s *Server) GetLink(ctx context.Context, request *pb.PaymentLinkRequest) (*pb.PaymentLinkResponse, error) {
+func (s *Server) CreateOrder(ctx context.Context, request *pb.PaymentRequest) (*pb.PaymentResponse, error) {
 	const op = "delivery.payment.GetLink"
 
 	order := order.New(request.GetOrderId(), int(request.GetPaybleAmount()))
 
-	link, err := s.ucPayments.CreatePayment(ctx, order)
+	id, err := s.ucPayments.CreatePayment(ctx, order)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "unknown error")
 	}
 
-	return &pb.PaymentLinkResponse{
-		Link: link,
+	return &pb.PaymentResponse{
+		Id: id,
 	}, nil
 }

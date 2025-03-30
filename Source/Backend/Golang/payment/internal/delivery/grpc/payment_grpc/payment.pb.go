@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PaymentLinkRequest struct {
+type PaymentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`                // Идентификатор заказа
 	PaybleAmount  int32                  `protobuf:"varint,2,opt,name=payble_amount,json=paybleAmount,proto3" json:"payble_amount,omitempty"` // Стоимость к оплате
@@ -29,20 +29,20 @@ type PaymentLinkRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PaymentLinkRequest) Reset() {
-	*x = PaymentLinkRequest{}
+func (x *PaymentRequest) Reset() {
+	*x = PaymentRequest{}
 	mi := &file_payment_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PaymentLinkRequest) String() string {
+func (x *PaymentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PaymentLinkRequest) ProtoMessage() {}
+func (*PaymentRequest) ProtoMessage() {}
 
-func (x *PaymentLinkRequest) ProtoReflect() protoreflect.Message {
+func (x *PaymentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_payment_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,46 +54,46 @@ func (x *PaymentLinkRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PaymentLinkRequest.ProtoReflect.Descriptor instead.
-func (*PaymentLinkRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PaymentRequest.ProtoReflect.Descriptor instead.
+func (*PaymentRequest) Descriptor() ([]byte, []int) {
 	return file_payment_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PaymentLinkRequest) GetOrderId() int64 {
+func (x *PaymentRequest) GetOrderId() int64 {
 	if x != nil {
 		return x.OrderId
 	}
 	return 0
 }
 
-func (x *PaymentLinkRequest) GetPaybleAmount() int32 {
+func (x *PaymentRequest) GetPaybleAmount() int32 {
 	if x != nil {
 		return x.PaybleAmount
 	}
 	return 0
 }
 
-type PaymentLinkResponse struct {
+type PaymentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Link          string                 `protobuf:"bytes,1,opt,name=link,proto3" json:"link,omitempty"` // Ссылка на оплату
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // Ссылка на оплату
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PaymentLinkResponse) Reset() {
-	*x = PaymentLinkResponse{}
+func (x *PaymentResponse) Reset() {
+	*x = PaymentResponse{}
 	mi := &file_payment_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PaymentLinkResponse) String() string {
+func (x *PaymentResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PaymentLinkResponse) ProtoMessage() {}
+func (*PaymentResponse) ProtoMessage() {}
 
-func (x *PaymentLinkResponse) ProtoReflect() protoreflect.Message {
+func (x *PaymentResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_payment_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -105,14 +105,14 @@ func (x *PaymentLinkResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PaymentLinkResponse.ProtoReflect.Descriptor instead.
-func (*PaymentLinkResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use PaymentResponse.ProtoReflect.Descriptor instead.
+func (*PaymentResponse) Descriptor() ([]byte, []int) {
 	return file_payment_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PaymentLinkResponse) GetLink() string {
+func (x *PaymentResponse) GetId() string {
 	if x != nil {
-		return x.Link
+		return x.Id
 	}
 	return ""
 }
@@ -121,14 +121,14 @@ var File_payment_proto protoreflect.FileDescriptor
 
 const file_payment_proto_rawDesc = "" +
 	"\n" +
-	"\rpayment.proto\x12\apayment\"T\n" +
-	"\x12PaymentLinkRequest\x12\x19\n" +
+	"\rpayment.proto\x12\apayment\"P\n" +
+	"\x0ePaymentRequest\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\x03R\aorderId\x12#\n" +
-	"\rpayble_amount\x18\x02 \x01(\x05R\fpaybleAmount\")\n" +
-	"\x13PaymentLinkResponse\x12\x12\n" +
-	"\x04link\x18\x01 \x01(\tR\x04link2V\n" +
-	"\x0ePaymentService\x12D\n" +
-	"\aGetLink\x12\x1b.payment.PaymentLinkRequest\x1a\x1c.payment.PaymentLinkResponseB\x0eZ\fpayment.grpcb\x06proto3"
+	"\rpayble_amount\x18\x02 \x01(\x05R\fpaybleAmount\"!\n" +
+	"\x0fPaymentResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id2T\n" +
+	"\x0ePaymentService\x12B\n" +
+	"\rCreatePayment\x12\x17.payment.PaymentRequest\x1a\x18.payment.PaymentResponseB\x0eZ\fpayment.grpcb\x06proto3"
 
 var (
 	file_payment_proto_rawDescOnce sync.Once
@@ -144,12 +144,12 @@ func file_payment_proto_rawDescGZIP() []byte {
 
 var file_payment_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_payment_proto_goTypes = []any{
-	(*PaymentLinkRequest)(nil),  // 0: payment.PaymentLinkRequest
-	(*PaymentLinkResponse)(nil), // 1: payment.PaymentLinkResponse
+	(*PaymentRequest)(nil),  // 0: payment.PaymentRequest
+	(*PaymentResponse)(nil), // 1: payment.PaymentResponse
 }
 var file_payment_proto_depIdxs = []int32{
-	0, // 0: payment.PaymentService.GetLink:input_type -> payment.PaymentLinkRequest
-	1, // 1: payment.PaymentService.GetLink:output_type -> payment.PaymentLinkResponse
+	0, // 0: payment.PaymentService.CreatePayment:input_type -> payment.PaymentRequest
+	1, // 1: payment.PaymentService.CreatePayment:output_type -> payment.PaymentResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
