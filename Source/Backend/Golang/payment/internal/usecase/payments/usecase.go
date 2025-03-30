@@ -52,3 +52,26 @@ func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string
 
 	return payment.Id, nil
 }
+
+func (u *UseCase) ConfirmPayment(ctx context.Context, orderId int64) error {
+	const op = "usecase.payments.ConfirmPayment"
+
+	payment, err := u.repo.GetPendingPayment(ctx, orderId)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	payment.Confirm()
+
+	err = u.repo.DeletePendingPayment(ctx, payment.Order.Id)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	err = u.repo.AddPaidPayment(ctx, payment)
+	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	return nil
+}
