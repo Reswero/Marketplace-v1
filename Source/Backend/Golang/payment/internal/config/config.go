@@ -8,11 +8,21 @@ import (
 )
 
 type Config struct {
+	Env  string `yaml:"env"`
 	Grpc `yaml:"grpc_server"`
+	Db
 }
 
 type Grpc struct {
 	Address string `yaml:"address"`
+}
+
+type Db struct {
+	IpAddress string `yaml:"ip_address"`
+	Port      int    `yaml:"port"`
+	User      string `yaml:"user"`
+	Password  string `yaml:"password"`
+	DbName    string `yaml:"db_name"`
 }
 
 func MustLoad() *Config {

@@ -1,3 +1,9 @@
 env: "dev"
 grpc_server:
   address: "localhost:8020"
+db:
+  ip_address: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "root"
+  db_name: "marketplace-payment"
