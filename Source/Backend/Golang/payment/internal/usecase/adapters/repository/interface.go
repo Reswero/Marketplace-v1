@@ -7,6 +7,6 @@ import (
 )
 
 type Payments interface {
-	AddPendingPayment(ctx context.Context, payment payment.Payment) error
+	AddPendingPayment(ctx context.Context, payment *payment.Payment) error
 	CheckPaymentIdExists(ctx context.Context, paymentId string) (bool, error)
 }

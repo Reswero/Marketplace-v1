@@ -45,7 +45,7 @@ func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string
 	}
 
 	payment := payment.New(order, id)
-	err := u.repo.AddPendingPayment(ctx, *payment)
+	err := u.repo.AddPendingPayment(ctx, payment)
 	if err != nil {
 		return "", formatter.FmtError(op, err)
 	}

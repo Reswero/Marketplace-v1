@@ -25,7 +25,7 @@ func newServer(logger *slog.Logger, ucPayments usecase.Payments) *Server {
 }
 
 func (s *Server) CreateOrder(ctx context.Context, request *pb.PaymentRequest) (*pb.PaymentResponse, error) {
-	const op = "delivery.payment.GetLink"
+	const op = "delivery.payment.CreateOrder"
 
 	order := order.New(request.GetOrderId(), int(request.GetPaybleAmount()))
 
