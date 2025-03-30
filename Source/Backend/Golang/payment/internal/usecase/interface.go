@@ -11,5 +11,5 @@ type Payments interface {
 	// Создать платёж. Возвращает идентификатор платежа
 	CreatePayment(ctx context.Context, order *order.Order) (string, error)
 	// Подтвердить платёж
-	ConfirmPayment(ctx context.Context, orderId int64) error
+	ConfirmPayment(ctx context.Context, paymentId string) error
 }
