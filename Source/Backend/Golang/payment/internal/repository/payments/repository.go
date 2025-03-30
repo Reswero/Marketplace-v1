@@ -89,8 +89,8 @@ func (r *Repository) DeletePendingPayment(ctx context.Context, orderId int64) er
 	return nil
 }
 
-func (r *Repository) CheckPaymentIdExists(ctx context.Context, paymentId string) (bool, error) {
-	const op = "repository.payments.CheckPaymentIdExists"
+func (r *Repository) CheckPendingPaymentExists(ctx context.Context, paymentId string) (bool, error) {
+	const op = "repository.payments.CheckPendingPaymentExists"
 
 	sql, args, err := r.Builder.Select("payment_id").
 		From(pendingPaymentsTable).

@@ -34,7 +34,7 @@ func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string
 			return "", formatter.FmtError(op, err)
 		}
 
-		exists, err := u.repo.CheckPaymentIdExists(ctx, id)
+		exists, err := u.repo.CheckPendingPaymentExists(ctx, id)
 		if err != nil {
 			return op, formatter.FmtError(op, err)
 		}
