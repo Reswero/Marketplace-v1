@@ -46,12 +46,12 @@ func (r *Repository) AddPendingPayment(ctx context.Context, payment *payment.Pay
 }
 
 // Получить ожидающий платёж
-func (r *Repository) GetPendingPayment(ctx context.Context, orderId int64) (*payment.Payment, error) {
+func (r *Repository) GetPendingPayment(ctx context.Context, paymentId string) (*payment.Payment, error) {
 	const op = "repository.payments.GetPendingPayment"
 
 	sql, args, err := r.Builder.Select("order_id, payment_amount, payment_id, valid_until").
 		From(pendingPaymentsTable).
-		Where(squirrel.Eq{"order_id": orderId}).
+		Where(squirrel.Eq{"payment_id": paymentId}).
 		ToSql()
 	if err != nil {
 		return nil, formatter.FmtError(op, err)
@@ -71,11 +71,11 @@ func (r *Repository) GetPendingPayment(ctx context.Context, orderId int64) (*pay
 	return payment, nil
 }
 
-func (r *Repository) DeletePendingPayment(ctx context.Context, orderId int64) error {
+func (r *Repository) DeletePendingPayment(ctx context.Context, paymentId string) error {
 	const op = "repository.payments.DeletePendingPayment"
 
 	sql, args, err := r.Builder.Delete(pendingPaymentsTable).
-		Where(squirrel.Eq{"order_id": orderId}).
+		Where(squirrel.Eq{"payment_id": paymentId}).
 		ToSql()
 	if err != nil {
 		return formatter.FmtError(op, err)
