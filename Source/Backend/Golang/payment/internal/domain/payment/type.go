@@ -14,6 +14,8 @@ type Payment struct {
 	Id string
 	// Действительно до
 	ValidUntil time.Time
+	// Дата оплаты
+	PaidAt time.Time
 }
 
 func New(order *order.Order, id string) *Payment {
@@ -21,5 +23,11 @@ func New(order *order.Order, id string) *Payment {
 		Order:      order,
 		Id:         id,
 		ValidUntil: time.Now().Add(time.Minute * 30),
+		PaidAt:     time.Time{},
 	}
+}
+
+// Подтвердить оплату платежа
+func (p *Payment) Confirm() {
+	p.PaidAt = time.Now()
 }
