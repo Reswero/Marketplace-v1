@@ -10,10 +10,15 @@ import (
 type Config struct {
 	Env  string `yaml:"env"`
 	Grpc `yaml:"grpc_server"`
+	Http `yaml:"http_server"`
 	Db
 }
 
 type Grpc struct {
+	Address string `yaml:"address"`
+}
+
+type Http struct {
 	Address string `yaml:"address"`
 }
 
@@ -36,7 +41,7 @@ func MustLoad() *Config {
 	}
 
 	cfg := &Config{}
-	if err := cleanenv.ReadConfig(path, *cfg); err != nil {
+	if err := cleanenv.ReadConfig(path, cfg); err != nil {
 		panic(fmt.Errorf("error while reading config. %w", err))
 	}
 
