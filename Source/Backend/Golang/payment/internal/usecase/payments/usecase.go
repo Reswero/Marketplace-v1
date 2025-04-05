@@ -24,12 +24,12 @@ func New(repo repository.Payments) *UseCase {
 	}
 }
 
-func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string, error) {
+func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (id string, err error) {
 	const op = "usecase.payments.CreatePayment"
 
-	id := ""
+	id = ""
 	for id == "" {
-		id, err := generator.GetRandomAsciiString(paymentIdLength)
+		id, err = generator.GetRandomAsciiString(paymentIdLength)
 		if err != nil {
 			return "", formatter.FmtError(op, err)
 		}
@@ -40,12 +40,12 @@ func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (string
 		}
 
 		if exists {
-			continue
+			id = ""
 		}
 	}
 
 	payment := payment.New(order, id)
-	err := u.repo.AddPendingPayment(ctx, payment)
+	err = u.repo.AddPendingPayment(ctx, payment)
 	if err != nil {
 		return "", formatter.FmtError(op, err)
 	}
