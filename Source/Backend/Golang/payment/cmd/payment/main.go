@@ -7,6 +7,7 @@ import (
 
 	"github.com/Reswero/Marketplace-v1/payment/internal/config"
 	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/grpc"
+	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/http"
 	"github.com/Reswero/Marketplace-v1/payment/internal/repository/payments"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
 	"github.com/jackc/pgx/v5/stdlib"
@@ -18,6 +19,20 @@ import (
 //go:embed migrations
 var embedMigrations embed.FS
 
+// @title Payment Service
+// @version 1.0
+// @description Сервис оплаты заказов
+
+// @host localhost:8096
+// @basePath /v1
+
+// @securityDefinitions.apiKey AccountId
+// @in header
+// @name X-Account-Id
+
+// @securityDefinitions.apiKey AccountType
+// @in header
+// @name X-Account-Type
 func main() {
 	cfg := config.MustLoad()
 
@@ -48,8 +63,16 @@ func main() {
 	paymentsRepo := payments.New(storage)
 	ucPayments := usecase.New(paymentsRepo)
 
-	delivery := grpc.New(logger, cfg.Env, ucPayments)
-	if err = delivery.Start(cfg.Grpc.Address); err != nil {
+	go func() {
+		httpDelivey := http.New(logger, cfg.Env, ucPayments)
+		if err = httpDelivey.Start(cfg.Http.Address); err != nil {
+			logger.Error("failed while running http server", slog.String("error", err.Error()))
+			panic(err)
+		}
+	}()
+
+	grpcDelivery := grpc.New(logger, cfg.Env, ucPayments)
+	if err = grpcDelivery.Start(cfg.Grpc.Address); err != nil {
 		logger.Error("failed while running grpc server", slog.String("error", err.Error()))
 		panic(err)
 	}
