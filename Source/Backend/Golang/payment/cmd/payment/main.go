@@ -8,7 +8,8 @@ import (
 	"github.com/Reswero/Marketplace-v1/payment/internal/config"
 	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/grpc"
 	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/http"
-	"github.com/Reswero/Marketplace-v1/payment/internal/repository/payments"
+	"github.com/Reswero/Marketplace-v1/payment/internal/pkg/payments"
+	repo "github.com/Reswero/Marketplace-v1/payment/internal/repository/payments"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
@@ -60,8 +61,12 @@ func main() {
 		panic(err)
 	}
 
-	paymentsRepo := payments.New(storage)
+	paymentsRepo := repo.New(storage)
 	ucPayments := usecase.New(paymentsRepo)
+
+	unpaidDaemon := payments.NewUnpaidPaymentsDaemon(logger, paymentsRepo)
+	go unpaidDaemon.Start()
+	defer unpaidDaemon.Stop()
 
 	go func() {
 		httpDelivey := http.New(logger, cfg.Env, ucPayments)
