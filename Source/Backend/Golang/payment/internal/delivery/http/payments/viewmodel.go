@@ -1,5 +1,5 @@
 package payments
 
-type PaymentVM struct {
+type PaymentVm struct {
 	Id string `json:"id"`
 }

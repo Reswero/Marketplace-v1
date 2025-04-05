@@ -3,10 +3,12 @@ package http
 import (
 	"log/slog"
 
+	_ "github.com/Reswero/Marketplace-v1/payment/internal/delivery/http/docs"
 	"github.com/Reswero/Marketplace-v1/payment/internal/usecase"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"github.com/Reswero/Marketplace-v1/pkg/validation"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type Delivery struct {
@@ -24,6 +26,10 @@ func New(logger *slog.Logger, env string, ucPayments usecase.Payments) *Delivery
 
 	d.router.Validator = validation.NewValidator()
 	d.AddPaymentRoutes()
+
+	if env == "dev" {
+		d.router.GET("/swagger/*", echoSwagger.WrapHandler)
+	}
 
 	return d
 }
