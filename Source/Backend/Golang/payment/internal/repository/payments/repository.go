@@ -31,7 +31,7 @@ func (r *Repository) AddPendingPayment(ctx context.Context, payment *payment.Pay
 
 	sql, args, err := r.Builder.Insert(pendingPaymentsTable).
 		Columns("order_id", "payment_amount", "payment_id", "valid_until").
-		Values(payment.Order.Id, payment.Order.PaymentAmount, payment.Id, payment.ValidUntil).
+		Values(payment.Order.Id, payment.Order.PaymentAmount, payment.Id, payment.ValidUntil.UTC()).
 		ToSql()
 	if err != nil {
 		return formatter.FmtError(op, err)
@@ -69,6 +69,41 @@ func (r *Repository) GetPendingPayment(ctx context.Context, paymentId string) (*
 	}
 
 	return payment, nil
+}
+
+// Получить все ожидающие платежи
+func (r *Repository) GetPendingPayments(ctx context.Context) ([]*payment.Payment, error) {
+	const op = "repository.payments.GetPendingPayments"
+
+	sql, args, err := r.Builder.Select("order_id, payment_amount, payment_id, valid_until").
+		From(pendingPaymentsTable).
+		ToSql()
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+	defer rows.Close()
+
+	payments := make([]*payment.Payment, 0)
+	for rows.Next() {
+		payment := &payment.Payment{
+			Order: &order.Order{},
+		}
+
+		err = rows.Scan(&payment.Order.Id, &payment.Order.PaymentAmount,
+			&payment.Id, &payment.ValidUntil)
+		if err != nil {
+			return nil, formatter.FmtError(op, err)
+		}
+
+		payments = append(payments, payment)
+	}
+
+	return payments, nil
 }
 
 func (r *Repository) DeletePendingPayment(ctx context.Context, paymentId string) error {

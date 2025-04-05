@@ -63,6 +63,8 @@ func (u *UseCase) ConfirmPayment(ctx context.Context, paymentId string) error {
 
 	payment.Confirm()
 
+	// TODO: add transaction
+
 	err = u.repo.DeletePendingPayment(ctx, payment.Id)
 	if err != nil {
 		return formatter.FmtError(op, err)
