@@ -1,7 +1,7 @@
 package password
 
 import (
-	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/generator"
+	"github.com/Reswero/Marketplace-v1/pkg/generator"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -1,0 +1,63 @@
+basePath: /v1
+definitions:
+  github_com_Reswero_Marketplace-v1_payment_internal_delivery_http_payments.PaymentVm:
+    properties:
+      id:
+        type: string
+    type: object
+  responses.StatusResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:8096
+info:
+  contact: {}
+  description: Сервис оплаты заказов
+  title: Payment Service
+  version: "1.0"
+paths:
+  /payments:
+    post:
+      consumes:
+      - application/json
+      description: Подтверждение оплата заказа покупателя
+      operationId: confirm-payment
+      parameters:
+      - description: Платёж
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_Reswero_Marketplace-v1_payment_internal_delivery_http_payments.PaymentVm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.StatusResponse'
+      security:
+      - AccountId: []
+      - AccountType: []
+      summary: Подтверждение оплаты заказа
+      tags:
+      - payments
+securityDefinitions:
+  AccountId:
+    in: header
+    name: X-Account-Id
+    type: apiKey
+  AccountType:
+    in: header
+    name: X-Account-Type
+    type: apiKey
+swagger: "2.0"

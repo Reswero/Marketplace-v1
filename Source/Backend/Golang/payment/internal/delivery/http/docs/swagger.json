@@ -1,0 +1,98 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Сервис оплаты заказов",
+        "title": "Payment Service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8096",
+    "basePath": "/v1",
+    "paths": {
+        "/payments": {
+            "post": {
+                "security": [
+                    {
+                        "AccountId": []
+                    },
+                    {
+                        "AccountType": []
+                    }
+                ],
+                "description": "Подтверждение оплата заказа покупателя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Подтверждение оплаты заказа",
+                "operationId": "confirm-payment",
+                "parameters": [
+                    {
+                        "description": "Платёж",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_Reswero_Marketplace-v1_payment_internal_delivery_http_payments.PaymentVm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.StatusResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_Reswero_Marketplace-v1_payment_internal_delivery_http_payments.PaymentVm": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "AccountId": {
+            "type": "apiKey",
+            "name": "X-Account-Id",
+            "in": "header"
+        },
+        "AccountType": {
+            "type": "apiKey",
+            "name": "X-Account-Type",
+            "in": "header"
+        }
+    }
+}

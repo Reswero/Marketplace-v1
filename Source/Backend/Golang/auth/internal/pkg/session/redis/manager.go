@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/Reswero/Marketplace-v1/auth/internal/domain/account"
-	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/generator"
 	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/session"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
+	"github.com/Reswero/Marketplace-v1/pkg/generator"
 	"github.com/Reswero/Marketplace-v1/pkg/redis"
 	redisdb "github.com/redis/go-redis/v9"
 )

@@ -3,7 +3,7 @@ package generator_test
 import (
 	"testing"
 
-	"github.com/Reswero/Marketplace-v1/auth/internal/pkg/generator"
+	"github.com/Reswero/Marketplace-v1/pkg/generator"
 )
 
 func TestRandomAsciiStringGenerator(t *testing.T) {
