@@ -19,7 +19,7 @@ message CreatePaymentRequest {
 
 // Запрос на получение платежа
 message GetPaymentRequest {
-    string order_id = 1; // Идентификатор заказа
+    int64 order_id = 1; // Идентификатор заказа
 }
 
 // Ответ с идентификатором платежа

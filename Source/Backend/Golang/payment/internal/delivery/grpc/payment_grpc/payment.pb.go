@@ -77,7 +77,7 @@ func (x *CreatePaymentRequest) GetPaybleAmount() int32 {
 // Запрос на получение платежа
 type GetPaymentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // Идентификатор заказа
+	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // Идентификатор заказа
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -112,11 +112,11 @@ func (*GetPaymentRequest) Descriptor() ([]byte, []int) {
 	return file_payment_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetPaymentRequest) GetOrderId() string {
+func (x *GetPaymentRequest) GetOrderId() int64 {
 	if x != nil {
 		return x.OrderId
 	}
-	return ""
+	return 0
 }
 
 // Ответ с идентификатором платежа
@@ -173,7 +173,7 @@ const file_payment_proto_rawDesc = "" +
 	"\border_id\x18\x01 \x01(\x03R\aorderId\x12#\n" +
 	"\rpayble_amount\x18\x02 \x01(\x05R\fpaybleAmount\".\n" +
 	"\x11GetPaymentRequest\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\tR\aorderId\"#\n" +
+	"\border_id\x18\x01 \x01(\x03R\aorderId\"#\n" +
 	"\x11PaymentIdResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id2\xa2\x01\n" +
 	"\x0ePaymentService\x12J\n" +
