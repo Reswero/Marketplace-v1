@@ -4,7 +4,7 @@ using MediatR;
 namespace Marketplace.Orders.Application.Orders.Queries.GetOrderPaymentLink;
 
 /// <summary>
-/// Запрос на получение ссылки для оплаты заказа
+/// Запрос на получение идентификатора платежа заказа
 /// </summary>
 /// <param name="OrderId">Идентификатор заказа</param>
 public record GetOrderPaymentLinkQuery(long OrderId) : IRequest<PaymentVM>;
