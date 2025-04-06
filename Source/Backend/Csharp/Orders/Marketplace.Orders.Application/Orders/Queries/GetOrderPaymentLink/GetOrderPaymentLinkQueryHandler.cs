@@ -9,15 +9,16 @@ using MediatR;
 namespace Marketplace.Orders.Application.Orders.Queries.GetOrderPaymentLink;
 
 /// <summary>
-/// Получить ссылку на оплату заказа
+/// Получить идентификатор платежа для заказа
 /// </summary>
 internal class GetOrderPaymentLinkQueryHandler(IOrdersRepository repository, IUnitOfWork unitOfWork,
-    IUserIdentityProvider userIdentity)
+    IUserIdentityProvider userIdentity, IPaymentServiceClient paymentClient)
     : IRequestHandler<GetOrderPaymentLinkQuery, PaymentVM>
 {
     private readonly IOrdersRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IUserIdentityProvider _userIdentity = userIdentity;
+    private readonly IPaymentServiceClient _paymentClient = paymentClient;
 
     public async Task<PaymentVM> Handle(GetOrderPaymentLinkQuery request, CancellationToken cancellationToken)
     {
@@ -38,10 +39,7 @@ internal class GetOrderPaymentLinkQueryHandler(IOrdersRepository repository, IUn
             await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        // TODO: call to Payment service
-        // var link = await paymentService.GetLinkToOrder(order, cancellationToken);
-
-        // return new(link);
-        return new("http://payment/order");
+        var paymentId = await _paymentClient.GetPaymentAsync(order.Id, cancellationToken);
+        return new(paymentId);
     }
 }

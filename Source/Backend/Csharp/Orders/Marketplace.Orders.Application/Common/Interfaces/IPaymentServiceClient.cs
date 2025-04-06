@@ -14,4 +14,10 @@ public interface IPaymentServiceClient
     /// <param name="cancellationToken"></param>
     /// <returns>Идентификатор платежа</returns>
     public Task<string> CreatePaymentAsync(PaymentInfo info, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Получить идентификатор платежа
+    /// </summary>
+    /// <param name="orderId">Идентификатор заказа</param>
+    /// <param name="cancellationToken"></param>
+    public Task<string> GetPaymentAsync(long orderId, CancellationToken cancellationToken = default);
 }

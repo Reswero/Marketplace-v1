@@ -16,13 +16,25 @@ internal class PaymentServiceClient(PaymentService.PaymentServiceClient client)
     /// <inheritdoc/>
     public async Task<string> CreatePaymentAsync(PaymentInfo info, CancellationToken cancellationToken = default)
     {
-        PaymentRequest request = new()
+        CreatePaymentRequest request = new()
         {
             OrderId = info.OrderId,
             PaybleAmount = info.TotalPrice
         };
 
         var response = await _client.CreatePaymentAsync(request, cancellationToken: cancellationToken);
+        return response.Id;
+    }
+
+    /// <inheritdoc/>
+    public async Task<string> GetPaymentAsync(long orderId, CancellationToken cancellationToken = default)
+    {
+        GetPaymentRequest request = new()
+        {
+            OrderId = orderId
+        };
+
+        var response = await _client.GetPaymentAsync(request, cancellationToken: cancellationToken);
         return response.Id;
     }
 }
