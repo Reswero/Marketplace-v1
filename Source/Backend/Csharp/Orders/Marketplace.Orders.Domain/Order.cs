@@ -66,4 +66,20 @@ public class Order
 
         _statuses.Add(status);
     }
+
+    /// <summary>
+    /// Получить итоговую цену
+    /// </summary>
+    public int GetTotalPrice()
+    {
+        int totalPrice = 0;
+        foreach (var product in Products)
+        {
+            var discount = 1 - product.DiscountSize / (double)100;
+            var price = Math.Ceiling(product.ProductPrice * product.Quantity * discount);
+            totalPrice += (int)price;
+        }
+        
+        return totalPrice;
+    }
 }
