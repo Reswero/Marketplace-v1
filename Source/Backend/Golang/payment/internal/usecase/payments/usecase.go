@@ -53,6 +53,17 @@ func (u *UseCase) CreatePayment(ctx context.Context, order *order.Order) (id str
 	return payment.Id, nil
 }
 
+func (u *UseCase) GetPayment(ctx context.Context, orderId int64) (*payment.Payment, error) {
+	const op = "usecase.payments.GetPayment"
+
+	payment, err := u.repo.GetPendingPaymentByOrderId(ctx, orderId)
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	return payment, nil
+}
+
 func (u *UseCase) ConfirmPayment(ctx context.Context, paymentId string) error {
 	const op = "usecase.payments.ConfirmPayment"
 
