@@ -28,18 +28,11 @@ internal class GetCustomerOrdersQueryHandler(IUserIdentityProvider userIdentity,
             return new OrderShortInfoVM
             {
                 Id = o.Id,
-                TotalPrice = o.Products.Select(GetProductPrice).Sum(),
+                TotalPrice = o.GetTotalPrice(),
                 CurrentStatus = new(currentStatus.Type, currentStatus.OccuredAt),
                 Products = GetProductVMs(o.Products)
             };
         }).ToList();
-    }
-
-    private static int GetProductPrice(OrderProduct product)
-    {
-        var discount = 1 - product.DiscountSize / (double) 100;
-        var price = Math.Ceiling(product.ProductPrice * product.Quantity * discount);
-        return (int) price;
     }
 
     private static List<OrderProductShortInfoVM> GetProductVMs(IReadOnlyList<OrderProduct> products)

@@ -1,14 +1,19 @@
-﻿using Marketplace.Common.Identity.User;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
+using Marketplace.Common.Identity.User;
 using Marketplace.Common.Transactions;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
+using Marketplace.Orders.Infrastructure.Integrations.Payment;
 using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
 using Marketplace.Orders.Infrastructure.Orders.Persistence;
 using Marketplace.Orders.Infrastructure.Orders.Services;
+using Marketplace.Payment.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System.Threading;
 
 namespace Marketplace.Orders.Infrastructure;
 
@@ -94,6 +99,17 @@ public static class DependencyInjection
 
             client.BaseAddress = new Uri(address);
             client.Timeout = TimeSpan.FromMilliseconds(timeout);
+        });
+
+        services.AddScoped<IPaymentServiceClient, PaymentServiceClient>();
+        services.AddGrpcClient<PaymentService.PaymentServiceClient>(options =>
+        {
+            var address = configuration["Services:Payment:Address"]!;
+            options.Address = new Uri(address);
+        }).ConfigureChannel((provider, options) =>
+        {
+            var timeout = int.Parse(configuration["Services:Payment:Timeout"]!);
+            options.HttpClient!.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
         return services;
