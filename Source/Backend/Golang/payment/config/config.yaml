@@ -9,3 +9,5 @@ db:
   user: "postgres"
   password: "root"
   db_name: "marketplace-payment"
+orders:
+  address: "127.0.0.1:8099"

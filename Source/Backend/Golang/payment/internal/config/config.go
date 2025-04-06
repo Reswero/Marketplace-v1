@@ -12,6 +12,7 @@ type Config struct {
 	Grpc `yaml:"grpc_server"`
 	Http `yaml:"http_server"`
 	Db
+	Orders
 }
 
 type Grpc struct {
@@ -28,6 +29,10 @@ type Db struct {
 	User      string `yaml:"user"`
 	Password  string `yaml:"password"`
 	DbName    string `yaml:"db_name"`
+}
+
+type Orders struct {
+	Address string `yaml:"address"`
 }
 
 func MustLoad() *Config {
