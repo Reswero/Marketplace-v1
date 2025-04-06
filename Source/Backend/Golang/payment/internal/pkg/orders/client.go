@@ -6,6 +6,7 @@ import (
 	pb "github.com/Reswero/Marketplace-v1/payment/internal/pkg/orders/orders_grpc"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Client struct {
@@ -14,7 +15,7 @@ type Client struct {
 }
 
 func NewClient(address string) (*Client, error) {
-	conn, err := grpc.NewClient(address)
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
