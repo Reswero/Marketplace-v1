@@ -1,6 +1,7 @@
 ﻿using Marketplace.Common.Transactions;
 using Marketplace.Orders.Application.Common.Exceptions;
 using Marketplace.Orders.Application.Common.Interfaces;
+using Marketplace.Orders.Application.Common.Models.Services.Payment;
 using Marketplace.Orders.Application.Common.ViewModels;
 using Marketplace.Orders.Application.Integrations.Products;
 using Marketplace.Orders.Domain;
@@ -12,13 +13,14 @@ namespace Marketplace.Orders.Application.Orders.Commands.CreateOrder;
 /// Создать заказ
 /// </summary>
 internal class CreateOrderCommandHandler(IOrdersRepository ordersRepository, INewOrdersRepository newOrdersRepository,
-    IUnitOfWork unitOfWork, IProductsServiceClient productsClient)
+    IUnitOfWork unitOfWork, IProductsServiceClient productsClient, IPaymentServiceClient paymentClient)
     : IRequestHandler<CreateOrderCommand, CreateObjectResultVM>
 {
     private readonly IOrdersRepository _ordersRepository = ordersRepository;
     private readonly INewOrdersRepository _newOrdersRepository = newOrdersRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IProductsServiceClient _productsClient = productsClient;
+    private readonly IPaymentServiceClient _paymentClient = paymentClient;
 
     public async Task<CreateObjectResultVM> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
@@ -61,6 +63,9 @@ internal class CreateOrderCommandHandler(IOrdersRepository ordersRepository, INe
         await _ordersRepository.AddAsync(order, cancellationToken);
         await _newOrdersRepository.AddAsync(newOrder, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        PaymentInfo payment = new(order.Id, order.GetTotalPrice());
+        await _paymentClient.CreatePaymentAsync(payment, cancellationToken);
 
         return new CreateObjectResultVM(order.Id);
     }
