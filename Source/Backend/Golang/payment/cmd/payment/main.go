@@ -8,6 +8,7 @@ import (
 	"github.com/Reswero/Marketplace-v1/payment/internal/config"
 	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/grpc"
 	"github.com/Reswero/Marketplace-v1/payment/internal/delivery/http"
+	"github.com/Reswero/Marketplace-v1/payment/internal/pkg/orders"
 	"github.com/Reswero/Marketplace-v1/payment/internal/pkg/payments"
 	repo "github.com/Reswero/Marketplace-v1/payment/internal/repository/payments"
 	"github.com/Reswero/Marketplace-v1/pkg/postgres"
@@ -62,7 +63,14 @@ func main() {
 	}
 
 	paymentsRepo := repo.New(storage)
-	ucPayments := usecase.New(paymentsRepo)
+	ordersClient, err := orders.NewClient(cfg.Orders.Address)
+	if err != nil {
+		logger.Error("failed to create orders gRPC-client", slog.String("error", err.Error()))
+		panic(err)
+	}
+	defer ordersClient.Close()
+
+	ucPayments := usecase.New(paymentsRepo, ordersClient)
 
 	unpaidDaemon := payments.NewUnpaidPaymentsDaemon(logger, paymentsRepo)
 	go unpaidDaemon.Start()
