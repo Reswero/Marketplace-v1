@@ -4,6 +4,10 @@ using Marketplace.Payment.Grpc;
 
 namespace Marketplace.Orders.Infrastructure.Integrations.Payment;
 
+/// <summary>
+/// Клиент к сервису платежей
+/// </summary>
+/// <param name="client"></param>
 internal class PaymentServiceClient(PaymentService.PaymentServiceClient client)
     : IPaymentServiceClient
 {
