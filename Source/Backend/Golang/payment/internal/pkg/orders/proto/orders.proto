@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+package orders;
+
+option csharp_namespace = "Marketplace.Orders.Server";
+option go_package = "orders.grpc";
+
+// Сервис заказов
+service OrdersService {
+	rpc ConfirmOrderPayment (ConfirmOrderPaymentRequest) returns (ConfirmOrderPaymentResponse); // Подтвердить оплату заказа
+}
+
+// Запрос на подтверждение оплаты заказа
+message ConfirmOrderPaymentRequest {
+	int64 order_id = 1; // Идентификатор заказа
+}
+
+// Ответ на подтверждение оплаты заказа
+message ConfirmOrderPaymentResponse {
+
+}
