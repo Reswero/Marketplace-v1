@@ -31,7 +31,8 @@ func (s *Server) CreatePayment(ctx context.Context, request *pb.CreatePaymentReq
 
 	id, err := s.ucPayments.CreatePayment(ctx, order)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "unknown error")
+		s.logger.Error("error while creating payment", slog.String("error", err.Error()))
+		return nil, status.Error(codes.Unknown, "error while creating payment")
 	}
 
 	return &pb.PaymentIdResponse{
@@ -39,10 +40,16 @@ func (s *Server) CreatePayment(ctx context.Context, request *pb.CreatePaymentReq
 	}, nil
 }
 
-func (s *Server) GetPayment(context.Context, *pb.GetPaymentRequest) (*pb.PaymentIdResponse, error) {
+func (s *Server) GetPayment(ctx context.Context, request *pb.GetPaymentRequest) (*pb.PaymentIdResponse, error) {
 	const op = "delivery.payment.GetPayment"
 
+	payment, err := s.ucPayments.GetPayment(ctx, request.OrderId)
+	if err != nil {
+		s.logger.Error("error while getting payment", slog.String("error", err.Error()))
+		return nil, status.Error(codes.Unknown, "error while getting payment")
+	}
+
 	return &pb.PaymentIdResponse{
-		Id: "",
+		Id: payment.Id,
 	}, nil
 }
