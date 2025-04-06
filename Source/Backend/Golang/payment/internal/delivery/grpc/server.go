@@ -24,7 +24,7 @@ func newServer(logger *slog.Logger, ucPayments usecase.Payments) *Server {
 	}
 }
 
-func (s *Server) CreatePayment(ctx context.Context, request *pb.PaymentRequest) (*pb.PaymentResponse, error) {
+func (s *Server) CreatePayment(ctx context.Context, request *pb.CreatePaymentRequest) (*pb.PaymentIdResponse, error) {
 	const op = "delivery.payment.CreateOrder"
 
 	order := order.New(request.GetOrderId(), int(request.GetPaybleAmount()))
@@ -34,7 +34,15 @@ func (s *Server) CreatePayment(ctx context.Context, request *pb.PaymentRequest) 
 		return nil, status.Error(codes.Unknown, "unknown error")
 	}
 
-	return &pb.PaymentResponse{
+	return &pb.PaymentIdResponse{
 		Id: id,
+	}, nil
+}
+
+func (s *Server) GetPayment(context.Context, *pb.GetPaymentRequest) (*pb.PaymentIdResponse, error) {
+	const op = "delivery.payment.GetPayment"
+
+	return &pb.PaymentIdResponse{
+		Id: "",
 	}, nil
 }
