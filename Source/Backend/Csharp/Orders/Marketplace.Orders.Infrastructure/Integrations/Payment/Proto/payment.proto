@@ -7,14 +7,22 @@ option csharp_namespace = "Marketplace.Payment.Grpc";
 
 // Сервис оплаты
 service PaymentService {
-    rpc CreatePayment(PaymentRequest) returns (PaymentResponse); // Получить ссылку на оплату
+    rpc CreatePayment (CreatePaymentRequest) returns (PaymentIdResponse); // Создать платёж
+    rpc GetPayment (GetPaymentRequest) returns (PaymentIdResponse); // Получить платёж
 }
 
-message PaymentRequest {
+// Запрос на создание заказа
+message CreatePaymentRequest {
     int64 order_id = 1; // Идентификатор заказа
     int32 payble_amount = 2; // Стоимость к оплате
 }
 
-message PaymentResponse {
-    string id = 1; // Ссылка на оплату
+// Запрос на получение платежа
+message GetPaymentRequest {
+    int64 order_id = 1; // Идентификатор заказа
+}
+
+// Ответ с идентификатором платежа
+message PaymentIdResponse {
+    string id = 1; // Идентификатор платежа
 }
