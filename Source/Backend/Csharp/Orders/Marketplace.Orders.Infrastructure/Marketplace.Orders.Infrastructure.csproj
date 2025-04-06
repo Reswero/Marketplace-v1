@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Protobuf Include="Integrations\Payment\Proto\payment.proto" GrpcServices="Client" />
+    <Protobuf Include="..\Marketplace.Orders.Proto\orders.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>
