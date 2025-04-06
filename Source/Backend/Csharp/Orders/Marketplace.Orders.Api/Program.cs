@@ -6,6 +6,7 @@ using Marketplace.Orders.Infrastructure;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Marketplace.Orders.Api.Extensions;
+using Marketplace.Orders.Infrastructure.Orders.Services;
 
 namespace Marketplace.Orders.Api;
 
@@ -31,6 +32,7 @@ public class Program
             .AddCookie();
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddGrpc();
 
         var app = builder.Build();
 
@@ -46,6 +48,7 @@ public class Program
         app.UseHeaderAuthorization();
 
         app.MapControllers();
+        app.MapGrpcService<OrdersGrpcService>();
 
         app.Run();
     }
