@@ -71,6 +71,32 @@ func (r *Repository) GetPendingPayment(ctx context.Context, paymentId string) (*
 	return payment, nil
 }
 
+// Получить ожидающий платёж по идентификатору заказа
+func (r *Repository) GetPendingPaymentByOrderId(ctx context.Context, orderId int64) (*payment.Payment, error) {
+	const op = "repository.payments.GetPendingPaymentByOrderId"
+
+	sql, args, err := r.Builder.Select("order_id, payment_amount, payment_id, valid_until").
+		From(pendingPaymentsTable).
+		Where(squirrel.Eq{"order_id": orderId}).
+		ToSql()
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	row := r.Pool.QueryRow(ctx, sql, args...)
+
+	payment := &payment.Payment{
+		Order: &order.Order{},
+	}
+	err = row.Scan(&payment.Order.Id, &payment.Order.PaymentAmount,
+		&payment.Id, &payment.ValidUntil)
+	if err != nil {
+		return nil, formatter.FmtError(op, err)
+	}
+
+	return payment, nil
+}
+
 // Получить все ожидающие платежи
 func (r *Repository) GetPendingPayments(ctx context.Context) ([]*payment.Payment, error) {
 	const op = "repository.payments.GetPendingPayments"
