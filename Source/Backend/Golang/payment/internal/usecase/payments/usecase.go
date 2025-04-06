@@ -5,6 +5,7 @@ import (
 
 	"github.com/Reswero/Marketplace-v1/payment/internal/domain/order"
 	"github.com/Reswero/Marketplace-v1/payment/internal/domain/payment"
+	"github.com/Reswero/Marketplace-v1/payment/internal/pkg/orders"
 	"github.com/Reswero/Marketplace-v1/payment/internal/usecase/adapters/repository"
 	"github.com/Reswero/Marketplace-v1/pkg/formatter"
 	"github.com/Reswero/Marketplace-v1/pkg/generator"
@@ -15,12 +16,14 @@ const (
 )
 
 type UseCase struct {
-	repo repository.Payments
+	repo         repository.Payments
+	ordersClient *orders.Client
 }
 
-func New(repo repository.Payments) *UseCase {
+func New(repo repository.Payments, o *orders.Client) *UseCase {
 	return &UseCase{
-		repo: repo,
+		repo:         repo,
+		ordersClient: o,
 	}
 }
 
@@ -83,6 +86,12 @@ func (u *UseCase) ConfirmPayment(ctx context.Context, paymentId string) error {
 
 	err = u.repo.AddPaidPayment(ctx, payment)
 	if err != nil {
+		return formatter.FmtError(op, err)
+	}
+
+	err = u.ordersClient.ConfirmPayment(ctx, payment.Order.Id)
+	if err != nil {
+		// TODO: Add to outbox
 		return formatter.FmtError(op, err)
 	}
 
