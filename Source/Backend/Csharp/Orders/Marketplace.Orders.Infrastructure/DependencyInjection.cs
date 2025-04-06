@@ -106,10 +106,6 @@ public static class DependencyInjection
         {
             var address = configuration["Services:Payment:Address"]!;
             options.Address = new Uri(address);
-        }).ConfigureChannel((provider, options) =>
-        {
-            var timeout = int.Parse(configuration["Services:Payment:Timeout"]!);
-            options.HttpClient!.Timeout = TimeSpan.FromMilliseconds(timeout);
         });
 
         return services;
