@@ -10,4 +10,8 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.Delivery.Infrastructure\Marketplace.Delivery.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
