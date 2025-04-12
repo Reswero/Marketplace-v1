@@ -20,6 +20,11 @@ public interface IOrderDeliveriesRepository
     /// <param name="cancellationToken"></param>
     public Task<OrderDelivery> GetAsync(long orderId, CancellationToken cancellationToken = default);
     /// <summary>
+    /// Получить доставки заказов находящиеся в обработке
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    public Task<List<OrderDelivery>> GetProcessingAsync(CancellationToken cancellationToken = default);
+    /// <summary>
     /// Обновить доставку заказа
     /// </summary>
     /// <param name="delivery">Доставка заказа</param>
