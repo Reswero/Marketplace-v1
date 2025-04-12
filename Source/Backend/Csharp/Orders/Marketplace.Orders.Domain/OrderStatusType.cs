@@ -22,11 +22,11 @@ public enum OrderStatusType : byte
     /// </summary>
     Packed = 60,
     /// <summary>
-    /// Отправлено
+    /// Отправлен
     /// </summary>
     Shipped = 80,
     /// <summary>
-    /// Доставлено
+    /// В доставке
     /// </summary>
     InDelivery = 100,
     /// <summary>

@@ -4,4 +4,4 @@
 
 /Source/Backend/Golang/auth/cmd/auth/users.db
 /Source/Backend/Golang/.vscode/launch.json
-/Source/Backend/Csharp/Orders/Marketplace.Orders.Api/appsettings.Development.json
+appsettings.Development.json
