@@ -41,7 +41,7 @@ public static class DependencyInjection
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             options.UseNpgsql(connectionString);
         });
-        services.AddScoped<IUnitOfWork, DeliveriesContext>();
+        services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DeliveriesContext>());
 
         return services;
     }
