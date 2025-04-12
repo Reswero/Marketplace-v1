@@ -7,7 +7,7 @@ option csharp_namespace = "Marketplace.Delivery.Server";
 // Сервис доставки
 service DeliveryService {
 	rpc CreateDelivery (CreateDeliveryRequest) returns (CreateDeliveryResponse); // Создать доставку
-	rpc CancelDelivery (CancelDeliveryRequest) returns (CreateDeliveryResponse); // Отменить доставку
+	rpc CancelDelivery (CancelDeliveryRequest) returns (CancelDeliveryResponse); // Отменить доставку
 }
 
 // Запрос на создание доставки товара
