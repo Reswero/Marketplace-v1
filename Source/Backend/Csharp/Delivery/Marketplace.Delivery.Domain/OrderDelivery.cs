@@ -1,4 +1,6 @@
-﻿namespace Marketplace.Delivery.Domain;
+﻿using Marketplace.Delivery.Domain.Exceptions;
+
+namespace Marketplace.Delivery.Domain;
 
 /// <summary>
 /// Доставка
@@ -26,4 +28,17 @@ public class OrderDelivery
     /// Статусы
     /// </summary>
     public IReadOnlyList<OrderDeliveryStatus> Statuses => _statuses;
+
+    /// <summary>
+    /// Добавить статус
+    /// </summary>
+    /// <param name="status">Статус</param>
+    /// <exception cref="StatusAlreadySettedException"></exception>
+    public void AddStatus(OrderDeliveryStatus status)
+    {
+        if (_statuses.Any(s => s.Type == status.Type))
+            throw new StatusAlreadySettedException(status.Type);
+
+        _statuses.Add(status);
+    }
 }
