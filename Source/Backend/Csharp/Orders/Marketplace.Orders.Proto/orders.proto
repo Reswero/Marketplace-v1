@@ -5,9 +5,12 @@ package orders;
 option csharp_namespace = "Marketplace.Orders.Server";
 option go_package = "orders.grpc";
 
+import "google/protobuf/timestamp.proto";
+
 // Сервис заказов
 service OrdersService {
 	rpc ConfirmOrderPayment (ConfirmOrderPaymentRequest) returns (ConfirmOrderPaymentResponse); // Подтвердить оплату заказа
+	rpc ChangeDeliveryStatus (ChangeDeliveryStatusRequest) returns (ChangeDeliveryStatusResponse); // Изменить статус доставки
 }
 
 // Запрос на подтверждение оплаты заказа
@@ -18,4 +21,25 @@ message ConfirmOrderPaymentRequest {
 // Ответ на подтверждение оплаты заказа
 message ConfirmOrderPaymentResponse {
 
+}
+
+// Запрос на изменения статуса доставки заказа
+message ChangeDeliveryStatusRequest {
+	int64 order_id = 1; // Идентификатор заказа
+	DeliveryStatus new_status = 2; // Новый статус
+	google.protobuf.Timestamp occured_at = 3; // Произошло в
+}
+
+// Ответ на изменение статуса доставки заказа
+message ChangeDeliveryStatusResponse {
+
+}
+
+// Статус доставки
+enum DeliveryStatus {
+	UNKNOWN = 0; // Неизвестно
+	PACKED = 1; // Упакован
+	SHIPPED = 2; // Отправлен
+	IN_DELIVERY = 3; // В доставке
+	OBTAINED = 4; // Получен
 }
