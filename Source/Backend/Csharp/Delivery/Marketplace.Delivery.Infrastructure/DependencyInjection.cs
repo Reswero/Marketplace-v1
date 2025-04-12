@@ -26,6 +26,14 @@ public static class DependencyInjection
         return services;
     }
 
+    public static void InitializeDatabase(this IServiceProvider provider)
+    {
+        using var scope = provider.CreateScope();
+        using var db = scope.ServiceProvider.GetRequiredService<DeliveriesContext>();
+
+        db.Database.EnsureCreated();
+    }
+
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContextFactory<DeliveriesContext>(options =>
