@@ -2,6 +2,7 @@
 using Marketplace.Delivery.Application.Common.Interfaces;
 using Marketplace.Delivery.Infrastructure.Common.Persistence;
 using Marketplace.Delivery.Infrastructure.Deliveries.Persistence;
+using Marketplace.Delivery.Infrastructure.Deliveries.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public static class DependencyInjection
     {
         services.AddDatabase(configuration);
         services.AddRepositories();
+        services.AddWorkers();
 
         return services;
     }
@@ -49,6 +51,14 @@ public static class DependencyInjection
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IOrderDeliveriesRepository, OrderDeliveriesRepository>();
+        return services;
+    }
+    
+    private static IServiceCollection AddWorkers(this IServiceCollection services)
+    {
+        services.AddScoped<ProcessingDeliveriesWorker>();
+        services.AddHostedService<ProcessingDeliveriesBackgroundService>();
+
         return services;
     }
 }
