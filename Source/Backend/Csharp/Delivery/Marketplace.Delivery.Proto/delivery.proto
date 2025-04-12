@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+package delivery;
+
+option csharp_namespace = "Marketplace.Delivery.Server";
+
+// Сервис доставки
+service DeliveryService {
+	rpc CreateDelivery (CreateDeliveryRequest) returns (CreateDeliveryResponse); // Создать доставку
+}
+
+// Запрос на создание доставки товара
+message CreateDeliveryRequest {
+	int64 order_id = 1; // Идентификатор заказа
+}
+
+// Ответ на создание доставки товара
+message CreateDeliveryResponse {
+
+}

@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Delivery.Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Delivery.Infrastructure", "Delivery\Marketplace.Delivery.Infrastructure\Marketplace.Delivery.Infrastructure.csproj", "{6FD1E4B9-DDDE-4739-B2E2-6188A5C39452}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Delivery.Proto", "Delivery\Marketplace.Delivery.Proto\Marketplace.Delivery.Proto.csproj", "{69319E04-F7FC-4C05-9E7E-AF23BFF089BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{6FD1E4B9-DDDE-4739-B2E2-6188A5C39452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FD1E4B9-DDDE-4739-B2E2-6188A5C39452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FD1E4B9-DDDE-4739-B2E2-6188A5C39452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69319E04-F7FC-4C05-9E7E-AF23BFF089BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69319E04-F7FC-4C05-9E7E-AF23BFF089BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69319E04-F7FC-4C05-9E7E-AF23BFF089BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69319E04-F7FC-4C05-9E7E-AF23BFF089BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +170,7 @@ Global
 		{3AC1E4A8-3C16-435B-94B2-46EDCE0AD86F} = {8322A424-051C-4145-9900-289BAC64AEC9}
 		{2CE7B407-3DB9-4B80-9016-143EC9793B8A} = {8322A424-051C-4145-9900-289BAC64AEC9}
 		{6FD1E4B9-DDDE-4739-B2E2-6188A5C39452} = {8322A424-051C-4145-9900-289BAC64AEC9}
+		{69319E04-F7FC-4C05-9E7E-AF23BFF089BB} = {8322A424-051C-4145-9900-289BAC64AEC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9949857-944B-44B7-A4D3-A074C27BD291}
