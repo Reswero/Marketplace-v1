@@ -31,8 +31,8 @@ internal class OrderDeliveriesRepository(DeliveriesContext db)
     /// <inheritdoc/>
     public async Task<List<OrderDelivery>> GetProcessingAsync(CancellationToken cancellationToken = default)
     {
-        return await _db.Deliveries.Where(d =>
-            d.Statuses.All(s => s.Type < OrderDeliveryStatusType.Obtained))
+        return await _db.Deliveries.Include(d => d.Statuses)
+            .Where(d => d.Statuses.All(s => s.Type < OrderDeliveryStatusType.Obtained))
             .ToListAsync(cancellationToken);
     }
 
