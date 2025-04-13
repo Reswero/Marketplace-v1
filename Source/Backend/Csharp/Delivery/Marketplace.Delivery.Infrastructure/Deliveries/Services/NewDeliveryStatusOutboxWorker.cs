@@ -21,6 +21,9 @@ internal class NewDeliveryStatusOutboxWorker(IOutboxQueue<NewDeliveryStatus> out
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var statusCount = await _outbox.CountAsync(cancellationToken);
+        if (statusCount == 0)
+            return;
+
         var statuses = await _outbox.PeekAsync(statusCount, cancellationToken);
 
         foreach (var status in statuses)
