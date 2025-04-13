@@ -10,6 +10,7 @@ using Marketplace.Orders.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Marketplace.Delivery.Infrastructure;
 
@@ -27,6 +28,7 @@ public static class DependencyInjection
     {
         Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
+        services.AddLogger(configuration);
         services.AddDatabase(configuration);
         services.AddRepositories();
         services.AddServicesClients(configuration);
@@ -41,6 +43,20 @@ public static class DependencyInjection
         using var db = scope.ServiceProvider.GetRequiredService<DeliveriesContext>();
 
         db.Database.EnsureCreated();
+    }
+
+    private static IServiceCollection AddLogger(this IServiceCollection services, IConfiguration configuration)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        services.AddLogging(builder =>
+        {
+            builder.AddSerilog(dispose: true);
+        });
+
+        return services;
     }
 
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
