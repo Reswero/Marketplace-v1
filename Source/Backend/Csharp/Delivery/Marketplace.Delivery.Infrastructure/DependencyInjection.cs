@@ -1,5 +1,7 @@
-﻿using Marketplace.Common.Transactions;
+﻿using Marketplace.Common.Outbox.Queue;
+using Marketplace.Common.Transactions;
 using Marketplace.Delivery.Application.Common.Interfaces;
+using Marketplace.Delivery.Domain;
 using Marketplace.Delivery.Infrastructure.Common.Persistence;
 using Marketplace.Delivery.Infrastructure.Deliveries.Persistence;
 using Marketplace.Delivery.Infrastructure.Deliveries.Services;
@@ -23,6 +25,8 @@ public static class DependencyInjection
     /// <param name="configuration">Конфигурация</param>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
         services.AddDatabase(configuration);
         services.AddRepositories();
         services.AddServicesClients(configuration);
@@ -73,6 +77,9 @@ public static class DependencyInjection
             var address = configuration["Services:Orders:Address"]!;
             options.Address = new Uri(address);
         });
+
+        services.AddScoped<IOutboxQueue<NewDeliveryStatus>>(provider => new OutboxQueue<NewDeliveryStatus>("statuses.db"));
+        services.AddScoped<IOrdersServiceClientOutboxed, OrdersServiceClientOutboxed>();
 
         return services;
     }
