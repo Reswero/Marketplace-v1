@@ -11,11 +11,12 @@ namespace Marketplace.Orders.Infrastructure.Orders.Services;
 /// </summary>
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
-public class OrdersGrpcService(IOrdersRepository repository, IUnitOfWork unitOfWork)
+public class OrdersGrpcService(IOrdersRepository repository, IUnitOfWork unitOfWork, IDeliveryServiceClient deliveryClient)
     : OrdersService.OrdersServiceBase
 {
     private readonly IOrdersRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IDeliveryServiceClient _deliveryClient = deliveryClient;
 
     /// <summary>
     /// Подтверждение оплаты заказа
@@ -32,6 +33,8 @@ public class OrdersGrpcService(IOrdersRepository repository, IUnitOfWork unitOfW
 
         await _repository.UpdateAsync(order, context.CancellationToken);
         await _unitOfWork.CommitAsync(context.CancellationToken);
+
+        await _deliveryClient.CreateDeliveryAsync(order.Id, context.CancellationToken);
 
         return new ConfirmOrderPaymentResponse();
     }
