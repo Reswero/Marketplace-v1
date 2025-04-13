@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Marketplace.Delivery.Application.Common.Interfaces;
 using Marketplace.Delivery.Domain;
 using Marketplace.Orders.Grpc;
 
@@ -9,6 +10,7 @@ namespace Marketplace.Delivery.Infrastructure.Integrations.Orders;
 /// </summary>
 /// <param name="client"></param>
 internal class OrdersServiceClient(OrdersService.OrdersServiceClient client)
+    : IOrdersServiceClient
 {
     private readonly OrdersService.OrdersServiceClient _client = client;
 
