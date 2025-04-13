@@ -25,7 +25,7 @@ internal class GetCustomerOrderQueryHandler(IOrdersRepository repository, IUserI
 
         return new()
         {
-            Id = order.CustomerId,
+            Id = order.Id,
             Products = GetProductVMs(order.Products),
             Statuses = order.Statuses.Select(s => new OrderStatusVM(s.Type, s.OccuredAt)).ToList()
         };
