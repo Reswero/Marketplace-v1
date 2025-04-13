@@ -2,7 +2,7 @@
 
 package orders;
 
-option csharp_namespace = "Marketplace.Orders.Server";
+option csharp_namespace = "Marketplace.Orders.Grpc";
 option go_package = "orders.grpc";
 
 import "google/protobuf/timestamp.proto";
