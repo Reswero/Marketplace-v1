@@ -20,6 +20,20 @@ public class OrderProductStatus
     }
 
     /// <summary>
+    /// Конструктор
+    /// </summary>
+    /// <param name="product">Товара из заказа</param>
+    /// <param name="type">Тип</param>
+    /// <param name="occuredAt">Произошло в</param>
+    public OrderProductStatus(OrderProduct product, OrderProductStatusType type, DateTimeOffset occuredAt)
+    {
+        OrderProductId = product.ProductId;
+        OrderProduct = product;
+        Type = type;
+        OccuredAt = occuredAt;
+    }
+
+    /// <summary>
     /// Идентификатор товара из заказа
     /// </summary>
     public long OrderProductId { get; private set; }
