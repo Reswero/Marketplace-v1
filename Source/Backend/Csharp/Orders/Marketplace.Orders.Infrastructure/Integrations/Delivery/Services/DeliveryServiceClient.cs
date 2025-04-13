@@ -12,14 +12,14 @@ internal class DeliveryServiceClient(DeliveryService.DeliveryServiceClient clien
     private readonly DeliveryService.DeliveryServiceClient _client = client;
 
     /// <inheritdoc/>
-    public async Task CreateDeliveryAsync(int orderId, CancellationToken cancellationToken = default)
+    public async Task CreateDeliveryAsync(long orderId, CancellationToken cancellationToken = default)
     {
         CreateDeliveryRequest request = new() { OrderId = orderId };
         await _client.CreateDeliveryAsync(request, cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task CancelDeliveryAsync(int orderId, CancellationToken cancellationToken = default)
+    public async Task CancelDeliveryAsync(long orderId, CancellationToken cancellationToken = default)
     {
         CancelDeliveryRequest request = new() { OrderId = orderId };
         await _client.CancelDeliveryAsync(request, cancellationToken: cancellationToken);
