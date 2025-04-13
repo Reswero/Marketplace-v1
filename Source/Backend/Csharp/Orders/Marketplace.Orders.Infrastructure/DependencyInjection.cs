@@ -2,8 +2,10 @@
 using Grpc.Net.Client;
 using Marketplace.Common.Identity.User;
 using Marketplace.Common.Transactions;
+using Marketplace.Delivery.Server;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Infrastructure.Common.Persistence;
+using Marketplace.Orders.Infrastructure.Integrations.Delivery.Services;
 using Marketplace.Orders.Infrastructure.Integrations.Payment;
 using Marketplace.Orders.Infrastructure.Integrations.Products.Services;
 using Marketplace.Orders.Infrastructure.Orders.Persistence;
@@ -105,6 +107,13 @@ public static class DependencyInjection
         services.AddGrpcClient<PaymentService.PaymentServiceClient>(options =>
         {
             var address = configuration["Services:Payment:Address"]!;
+            options.Address = new Uri(address);
+        });
+
+        services.AddScoped<IDeliveryServiceClient, DeliveryServiceClient>();
+        services.AddGrpcClient<DeliveryService.DeliveryServiceClient>(options =>
+        {
+            var address = configuration["Services:Delivery:Address"]!;
             options.Address = new Uri(address);
         });
 
