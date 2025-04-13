@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Protobuf Include="..\Marketplace.Delivery.Proto\delivery.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\Orders\Marketplace.Orders.Proto\orders.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>
