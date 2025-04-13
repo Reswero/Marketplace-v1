@@ -10,11 +10,11 @@ namespace Marketplace.Delivery.Infrastructure.Deliveries.Services;
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
 internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository, IUnitOfWork unitOfWork,
-    IOrdersServiceClient ordersClient)
+    IOrdersServiceClientOutboxed ordersClient)
 {
     private readonly IOrderDeliveriesRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IOrdersServiceClient _ordersClient = ordersClient;
+    private readonly IOrdersServiceClientOutboxed _ordersClient = ordersClient;
 
     /// <summary>
     /// Выполнить обработку
@@ -48,11 +48,6 @@ internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository,
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
-
-        // TODO: try catch, save to outbox
-        foreach (var status in newStatuses)
-        {
-            await _ordersClient.ChangeDeliveryStatusAsync(status, cancellationToken);
-        }
+        await _ordersClient.ChangeDeliveryStatusesAsync(newStatuses, cancellationToken);
     }
 }
