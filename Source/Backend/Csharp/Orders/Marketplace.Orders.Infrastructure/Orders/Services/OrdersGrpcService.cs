@@ -61,6 +61,22 @@ public class OrdersGrpcService(IOrdersRepository repository, IUnitOfWork unitOfW
         OrderStatus newStatus = new(order, statusType, occuredAt);
         order.AddStatus(newStatus);
 
+        foreach (var product in order.Products)
+        {
+            var productStatusType = request.NewStatus switch
+            {
+                DeliveryStatus.Unknown => throw new NotSupportedException(),
+                DeliveryStatus.Packed => OrderProductStatusType.Packed,
+                DeliveryStatus.Shipped => OrderProductStatusType.Shipped,
+                DeliveryStatus.InDelivery => OrderProductStatusType.InDelivery,
+                DeliveryStatus.Obtained => OrderProductStatusType.Obtained,
+                _ => throw new NotSupportedException()
+            };
+
+            OrderProductStatus newProductStatus = new(product, productStatusType, occuredAt);
+            product.AddStatus(newProductStatus);
+        }
+
         await _repository.UpdateAsync(order, context.CancellationToken);
         await _unitOfWork.CommitAsync(context.CancellationToken);
 
