@@ -3,6 +3,8 @@ using Marketplace.Delivery.Application.Common.Interfaces;
 using Marketplace.Delivery.Infrastructure.Common.Persistence;
 using Marketplace.Delivery.Infrastructure.Deliveries.Persistence;
 using Marketplace.Delivery.Infrastructure.Deliveries.Services;
+using Marketplace.Delivery.Infrastructure.Integrations.Orders;
+using Marketplace.Orders.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,7 @@ public static class DependencyInjection
     {
         services.AddDatabase(configuration);
         services.AddRepositories();
+        services.AddServicesClients(configuration);
         services.AddWorkers();
 
         return services;
@@ -58,6 +61,18 @@ public static class DependencyInjection
     {
         services.AddScoped<ProcessingDeliveriesWorker>();
         services.AddHostedService<ProcessingDeliveriesBackgroundService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServicesClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IOrdersServiceClient, OrdersServiceClient>();
+        services.AddGrpcClient<OrdersService.OrdersServiceClient>(options =>
+        {
+            var address = configuration["Services:Orders:Address"]!;
+            options.Address = new Uri(address);
+        });
 
         return services;
     }
