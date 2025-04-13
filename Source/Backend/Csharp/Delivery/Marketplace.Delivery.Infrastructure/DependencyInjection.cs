@@ -66,6 +66,9 @@ public static class DependencyInjection
         services.AddScoped<ProcessingDeliveriesWorker>();
         services.AddHostedService<ProcessingDeliveriesBackgroundService>();
 
+        services.AddScoped<NewDeliveryStatusOutboxWorker>();
+        services.AddHostedService<NewDeliveryStatusOutboxBackgroundService>();
+
         return services;
     }
 
