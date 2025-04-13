@@ -9,10 +9,12 @@ namespace Marketplace.Delivery.Infrastructure.Deliveries.Services;
 /// </summary>
 /// <param name="repository"></param>
 /// <param name="unitOfWork"></param>
-internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository, IUnitOfWork unitOfWork)
+internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository, IUnitOfWork unitOfWork,
+    IOrdersServiceClientOutboxed ordersClient)
 {
     private readonly IOrderDeliveriesRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IOrdersServiceClientOutboxed _ordersClient = ordersClient;
 
     /// <summary>
     /// Выполнить обработку
@@ -28,6 +30,8 @@ internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository,
         }
 
         var orders = await _repository.GetProcessingAsync(cancellationToken);
+        List<NewDeliveryStatus> newStatuses = new(orders.Count);
+
         foreach (var order in orders)
         {
             var lastStatus = order.Statuses.MaxBy(s => s.Type);
@@ -38,8 +42,12 @@ internal class ProcessingDeliveriesWorker(IOrderDeliveriesRepository repository,
             order.AddStatus(nextStatus);
 
             await _repository.UpdateAsync(order, cancellationToken);
+
+            NewDeliveryStatus newStatus = new(order.Id, nextStatus.Type, nextStatus.OccuredAt);
+            newStatuses.Add(newStatus);
         }
 
         await _unitOfWork.CommitAsync(cancellationToken);
+        await _ordersClient.ChangeDeliveryStatusesAsync(newStatuses, cancellationToken);
     }
 }

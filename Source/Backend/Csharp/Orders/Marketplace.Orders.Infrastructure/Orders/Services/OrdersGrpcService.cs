@@ -2,7 +2,7 @@
 using Marketplace.Common.Transactions;
 using Marketplace.Orders.Application.Common.Interfaces;
 using Marketplace.Orders.Domain;
-using Marketplace.Orders.Server;
+using Marketplace.Orders.Grpc;
 
 namespace Marketplace.Orders.Infrastructure.Orders.Services;
 
