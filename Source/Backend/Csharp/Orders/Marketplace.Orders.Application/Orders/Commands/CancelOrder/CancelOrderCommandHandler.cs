@@ -11,12 +11,13 @@ namespace Marketplace.Orders.Application.Orders.Commands.CancelOrder;
 /// Отменить заказ
 /// </summary>
 internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWork unitOfWork,
-    IUserIdentityProvider userIdentity)
+    IUserIdentityProvider userIdentity, IDeliveryServiceClient deliveryClient)
     : IRequestHandler<CancelOrderCommand>
 {
     private readonly IOrdersRepository _repository = repository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IUserIdentityProvider _userIdentity = userIdentity;
+    private readonly IDeliveryServiceClient _deliveryClient = deliveryClient;
 
     public async Task Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
@@ -45,6 +46,8 @@ internal class CancelOrderCommandHandler(IOrdersRepository repository, IUnitOfWo
 
         await _repository.UpdateAsync(order, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        await _deliveryClient.CancelDeliveryAsync(order.Id, cancellationToken);
     }
 
     private static void CancelOrder(Order order)
